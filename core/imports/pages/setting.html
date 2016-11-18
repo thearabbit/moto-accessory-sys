@@ -1,0 +1,24 @@
+<!--Setting-->
+<template name="Core_setting">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#autoForm collection=collection id="Core_setting" doc=data type="update"}}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{> afQuickField name='headOffice'}}
+                        {{> afQuickField name='baseCurrency'}}
+                        {{> afQuickField name='roundNumber'}}
+                    </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name='language'}}
+                    </div>
+                </div>
+
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+    <!-- /.box-body -->
+</template>

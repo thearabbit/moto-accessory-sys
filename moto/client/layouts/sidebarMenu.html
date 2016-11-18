@@ -1,0 +1,67 @@
+<template name="Moto_sidebarMenu">
+    <li class="{{isActiveRoute name='moto.home'}}">
+        <a href="{{pathFor 'moto.home'}}">
+            <i class="fa fa-home"></i> <span>{{_ "moto.sidebarMenu.home"}}</span>
+        </a>
+    </li>
+
+    <!--Data-->
+    {{#if isInRole 'data-insert,data-update,data-remove' 'Moto'}}
+        <li class="header"><i class="fa fa-database"></i> DATA</li>
+        <li class="{{isActiveRoute name='moto.customer'}}">
+            <a href="{{pathFor 'moto.customer'}}">
+                <i class="fa fa-circle-o"></i> <span>Customer</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moto.order'}}">
+            <a href="{{pathFor 'moto.order'}}">
+                <i class="fa fa-circle-o"></i> <span>Order</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='core.exchange'}}">
+            <a href="{{pathFor 'core.exchange'}}">
+                <i class="fa fa-cog"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+            </a>
+        </li>
+    {{/if}}
+
+    <!--Report-->
+    {{#if isInRole 'reporter' 'Moto'}}
+        <li class="header"><i class="fa fa-file-text-o"></i> REPORT</li>
+        <li class="{{isActiveRoute name='moto.itemListReport'}}">
+            <a href="{{pathFor 'moto.itemListReport'}}">
+                <i class="fa fa-file-o"></i> <span>Item List</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moto.invoiceReport'}}">
+            <a href="{{pathFor 'moto.invoiceReport'}}">
+                <i class="fa fa-file-o"></i> <span>Invoice</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moto.orderReport'}}">
+            <a href="{{pathFor 'moto.orderReport'}}">
+                <i class="fa fa-file-o"></i> <span>Order</span>
+            </a>
+        </li>
+    {{/if}}
+
+    <!--Settings-->
+    {{#if isInRole 'setting' 'Moto'}}
+        <li class="header"><i class="fa fa-cogs"></i> SETTING</li>
+        <li class="{{isActiveRoute name='moto.item'}}">
+            <a href="{{pathFor 'moto.item'}}">
+                <i class="fa fa-cog"></i> <span>{{_ "moto.sidebarMenu.item"}}</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moto.location'}}">
+            <a href="{{pathFor 'moto.location'}}">
+                <i class="fa fa-sitemap"></i> <span>Location</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moto.lookupValue'}}">
+            <a href="{{pathFor 'moto.lookupValue'}}">
+                <i class="fa fa-cog"></i> <span>Lookup Value</span>
+            </a>
+        </li>
+    {{/if}}
+</template>
