@@ -2,8 +2,8 @@ import {Meteor} from  'meteor/meteor';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Collection
-import {LookupValue} from '../../common/collections/lookupValue';
-import {Branch} from '../../../core/common/collections/branch.js';
+import {Branch} from '../../../core/common/collections/branch';
+import {Currency} from '../../../core/common/collections/currency';
 
 export const SelectOpts = {
     branch: function (selectOne) {
@@ -15,6 +15,19 @@ export const SelectOpts = {
         Branch.find()
             .forEach(function (obj) {
                 list.push({label: obj.enName, value: obj._id});
+            });
+
+        return list;
+    },
+    currency: function (selectOne) {
+        let list = [];
+        if (selectOne) {
+            list.push({label: '(Select One)', value: ''});
+        }
+
+        Currency.find()
+            .forEach(function (obj) {
+                list.push({label: obj._id + ' (' + obj.num + ')', value: obj._id})
             });
 
         return list;

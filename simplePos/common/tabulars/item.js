@@ -25,6 +25,17 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {
             data: "_id",
             title: "ID",
+            render: function (val, type, doc) {
+                let level = _.isArray(doc.ancestors) ? doc.ancestors.length : 0;
+                level = Spacebars.SafeString(_.repeat('&nbsp;', level * 5));
+
+                // Check type
+                if (doc.type == 'C') {
+                    return Spacebars.SafeString(`${level}<span class="text-green">${val}</span>`);
+                }
+
+                return `${level}${val}`;
+            }
             // titleFn: function () {
             //     return TAPi18n.__('simplePos.item.schema._id.label');
             // }
@@ -46,16 +57,16 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return numeral(val).format('$ 0,0.00');
             }
         },
-        {
-            data: "ancestors",
-            title: "Parent",
-            // titleFn: function () {
-            //     return TAPi18n.__('simplePos.item.schema.ancestors.label');
-            // },
-            render: function (val, type, doc) {
-                return val;
-            }
-        },
+        // {
+        //     data: "ancestors",
+        //     title: "Parent",
+        //     // titleFn: function () {
+        //     //     return TAPi18n.__('simplePos.item.schema.ancestors.label');
+        //     // },
+        //     render: function (val, type, doc) {
+        //         return val;
+        //     }
+        // },
         {
             data: "type",
             title: "Type",
@@ -82,6 +93,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         }
     ],
+    extraFields: ['ancestors'],
 });
 
 export const ItemTabular = new Tabular.Table(tabularData);

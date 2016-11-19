@@ -20,56 +20,49 @@ Meteor.isClient && require('../../imports/pages/item.html');
 let tabularData = _.assignIn(_.clone(tabularOpts), {
     name: 'moto.item',
     collection: Item,
+    order: [[1, 'asc']],
     columns: [
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Moto_itemAction},
         {
-            data: "_id",
-            title: "ID",
-            // titleFn: function () {
-            //     return TAPi18n.__('moto.item.schema._id.label');
-            // }
+            data: "order",
+            title: "Order",
+            visible: false
+        },
+        {
+            data: "code",
+            title: "Code",
+            render: function (val, type, doc) {
+                let level = _.isArray(doc.ancestors) ? doc.ancestors.length : 0;
+                level = Spacebars.SafeString(_.repeat('&nbsp;', level * 5));
+
+                // Check type
+                if (doc.type == 'I') {
+                    return Spacebars.SafeString(`${level}<span class="text-green">${val}</span>`);
+                }
+
+                return `${level}${val}`;
+            }
         },
         {
             data: "name",
             title: "Name",
-            // titleFn: function () {
-            //     return TAPi18n.__('moto.item.schema.name.label');
-            // }
         },
         {
             data: "price",
             title: "Price",
-            // titleFn: function () {
-            //     return TAPi18n.__('moto.item.schema.price.label');
-            // },
             render: function (val, type, doc) {
-                return numeral(val).format('$ 0,0.00');
-            }
-        },
-        {
-            data: "ancestors",
-            title: "Parent",
-            // titleFn: function () {
-            //     return TAPi18n.__('moto.item.schema.ancestors.label');
-            // },
-            render: function (val, type, doc) {
-                return val;
+                if (doc.type == 'I') {
+                    return `${doc.currencyId} ` + numeral(val).format('0,0.00') + ` [ ៛ ` + numeral(doc.khrPrice).format('0,0.00') + `]`;
+                }
             }
         },
         {
             data: "type",
             title: "Type",
-            // titleFn: function () {
-            //     return TAPi18n.__('moto.item.schema.type.label');
-            // }
         },
         {
             data: "photo",
             title: "Photo",
-            // titleFn: function () {
-            //     return TAPi18n.__('moto.item.schema.photo.label');
-            // },
-            // visible: false, // Disable column
             render: function (val, type, doc) {
                 if (val) {
                     let img = Files.findOne(val);
@@ -80,8 +73,9 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
 
                 return null;
             }
-        }
+        },
     ],
+    extraFields: ['currencyId', 'khrPrice', 'ancestors'],
 });
 
 export const ItemTabular = new Tabular.Table(tabularData);

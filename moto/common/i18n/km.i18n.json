@@ -17,23 +17,35 @@
         "_id": {
           "label": "លេខកូដ"
         },
-        "name": {
-          "label": "ឈ្មោះ"
-        },
-        "price": {
-          "label": "តម្លៃ"
-        },
         "type": {
           "label": "ប្រភេទ"
         },
         "parent": {
           "label": "មេ"
         },
-        "ancestors": {
-          "label": "មេ"
+        "code": {
+          "label": "លេខកូដ"
+        },
+        "name": {
+          "label": "ឈ្មោះ"
+        },
+        "currencyId": {
+          "label": "រូបិយប័ណ្ណ"
+        },
+        "price": {
+          "label": "តម្លៃ"
+        },
+        "khrPrice": {
+          "label": "តម្លៃប្រាក់រៀល"
+        },
+        "supplierId": {
+          "label": "អ្នកផ្គត់ផ្គង់"
         },
         "photo": {
           "label": "រូបភាព"
+        },
+        "ancestors": {
+          "label": "មេ"
         }
       }
     },

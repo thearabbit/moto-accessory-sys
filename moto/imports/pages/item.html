@@ -30,16 +30,46 @@
             {{#autoForm collection=collection id="Moto_itemForm" doc=data.doc type=data.formType
                         resetOnSuccess=false}}
                 <div class="row">
-                    <div class="col-md-12">
-                        {{> afQuickField name="type"}}
-                        {{> afQuickField name="parent"}}
-                        {{> afQuickField name="name"}}
-                        {{#if showPrice}}
-                            {{> afQuickField name="price"}}
-                        {{/if}}
-                        {{> afQuickField name="photo"}}
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{> afQuickField name="type"}}
+                            </div>
+                            <div class="col-md-8">
+                                {{> afQuickField name="parent"}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-3">
+                                {{> afQuickField name="code"}}
+                            </div>
+                            <div class="col-md-9">
+                                {{> afQuickField name="name"}}
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                {{#if showTypeObj}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Item Info</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{> afQuickField name="currencyId"}}
+                                    {{> afQuickField name="price"}}
+                                    {{> afQuickField name="khrPrice"}}
+                                </div>
+                                <div class="col-md-6">
+                                    {{> afQuickField name="supplierId"}}
+                                    {{> afQuickField name="photo"}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
 
                 {{> formFooterWithButton}}
             {{/autoForm}}

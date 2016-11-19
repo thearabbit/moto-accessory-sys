@@ -52,8 +52,8 @@ Meteor.startup(function () {
                 name: 'Item Type',
                 private: false,
                 options: [
-                    {label: 'Parent', value: 'P', order: 1},
-                    {label: 'Child', value: 'C', order: 2},
+                    {label: 'Category', value: 'C', order: 1},
+                    {label: 'Item', value: 'I', order: 2},
                 ]
             },
         ];

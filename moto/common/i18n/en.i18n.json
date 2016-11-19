@@ -17,23 +17,35 @@
         "_id": {
           "label": "ID"
         },
-        "name": {
-          "label": "Name"
-        },
-        "price": {
-          "label": "Price"
-        },
         "type": {
           "label": "Type"
         },
         "parent": {
           "label": "Parent"
         },
-        "ancestors": {
-          "label": "Ancestors"
+        "code": {
+          "label": "Code"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "currencyId": {
+          "label": "Currency"
+        },
+        "price": {
+          "label": "Price"
+        },
+        "khrPrice": {
+          "label": "KHR price"
+        },
+        "supplierId": {
+          "label": "Supplier"
         },
         "photo": {
           "label": "Photo"
+        },
+        "ancestors": {
+          "label": "Ancestors"
         }
       }
     },

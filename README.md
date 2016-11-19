@@ -1,21 +1,6 @@
-# Rabbit Core (Meteor 1.3.x)
-
-#### Meteor Packages
-```js
-
-```
-
-### Local Packages
-```js
-
-```
-
-### NPM Packages
-```js
-
-```
+# Moto Accessory System
 
 ### Changelog
-- v 2.0.1 (2016-08-15)
-    - Add `phone option` to `autoform-inputmask` 
+- v 0.0.1 (2016-11-16)
+    - init
 

@@ -90,8 +90,8 @@ SelectOptsMethod.location = new ValidatedMethod({
 });
 
 // Item
-SelectOptsMethod.parentItem = new ValidatedMethod({
-    name: 'moto.selectOptsMethod.parentItem',
+SelectOptsMethod.item = new ValidatedMethod({
+    name: 'moto.selectOptsMethod.item',
     validate: null,
     run(options) {
         if (!this.isSimulation) {
@@ -100,22 +100,23 @@ SelectOptsMethod.parentItem = new ValidatedMethod({
             let list = [], selector = {};
             let searchText = options.searchText;
             let values = options.values;
+            let params = options.params || {};
 
             if (searchText) {
                 selector = {
                     $or: [
-                        {_id: {$regex: searchText, $options: 'i'}},
+                        {code: {$regex: searchText, $options: 'i'}},
                         {name: {$regex: searchText, $options: 'i'}}
                     ]
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
             }
-            selector.type = 'P';
+            _.assignIn(selector, params);
 
             let data = Item.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = `${value._id} : ${value.name}`;
+                let label = `${value.code} : ${value.name}`;
                 if (value.ancestors) {
                     let getAncestors = Item.find({_id: {$in: value.ancestors}}, {sort: {_id: 1}}).fetch();
                     label += ' [' + _.map(getAncestors, (o) => {
@@ -180,18 +181,18 @@ SelectOptsMethod.orderItem = new ValidatedMethod({
             if (searchText) {
                 selector = {
                     $or: [
-                        {_id: {$regex: searchText, $options: 'i'}},
+                        {code: {$regex: searchText, $options: 'i'}},
                         {name: {$regex: searchText, $options: 'i'}}
                     ]
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
             }
-            selector.type = 'C';
+            selector.type = 'I';
 
             let data = Item.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = `${value._id} : ${value.name}`;
+                let label = `${value.code} : ${value.name}`;
                 if (value.ancestors) {
                     let getAncestors = Item.find({_id: {$in: value.ancestors}}, {sort: {_id: 1}}).fetch();
                     label += ' [' + _.map(getAncestors, (o) => {

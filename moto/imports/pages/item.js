@@ -7,31 +7,6 @@ import {fa} from 'meteor/theara:fa-helpers';
 import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {TAPi18n} from 'meteor/tap:i18n';
 
-// --------- Tabular Config -------------
-import {$} from 'meteor/jquery';
-
-// Bootstrap Theme
-import dataTablesBootstrap from 'datatables.net-bs';
-import 'datatables.net-bs/css/dataTables.bootstrap.css';
-
-// Buttons Core
-import dataTableButtons from 'datatables.net-buttons-bs';
-
-// Import whichever buttons you are using
-import columnVisibilityButton from 'datatables.net-buttons/js/buttons.colVis.js';
-import html5ExportButtons from 'datatables.net-buttons/js/buttons.html5.js';
-import flashExportButtons from 'datatables.net-buttons/js/buttons.flash.js';
-import printButton from 'datatables.net-buttons/js/buttons.print.js';
-
-// Then initialize everything you imported
-dataTablesBootstrap(window, $);
-dataTableButtons(window, $);
-columnVisibilityButton(window, $);
-html5ExportButtons(window, $);
-flashExportButtons(window, $);
-printButton(window, $);
-// --------- /Tabular Config -------------
-
 // Lib
 import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
 import {renderTemplate} from '../../../core/client/libs/render-template.js';
@@ -63,7 +38,8 @@ let indexTmpl = Template.Moto_item,
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('item');
+    createNewAlertify('item', {size: 'lg'});
+    createNewAlertify('itemShow');
 });
 
 indexTmpl.helpers({
@@ -90,7 +66,7 @@ indexTmpl.events({
         );
     },
     'click .js-display' (event, instance) {
-        alertify.item(fa('eye', TAPi18n.__('moto.item.title')), renderTemplate(showTmpl, {itemId: this._id}));
+        alertify.itemShow(fa('eye', TAPi18n.__('moto.item.title')), renderTemplate(showTmpl, {itemId: this._id}));
     }
 });
 
@@ -98,7 +74,7 @@ indexTmpl.events({
 formTmpl.onCreated(function () {
     this.type = new ReactiveVar();
 
-    this.autorun(()=> {
+    this.autorun(() => {
         // Lookup value
         this.subscribe('moto.lookupValue', ['Item Type']);
 
@@ -128,9 +104,9 @@ formTmpl.helpers({
 
         return data;
     },
-    showPrice(){
+    showTypeObj(){
         let type = Template.instance().type.get();
-        return type == 'C' ? true : false;
+        return type == 'I' ? true : false;
     }
 });
 
@@ -142,7 +118,7 @@ formTmpl.events({
 
 // Show
 showTmpl.onCreated(function () {
-    this.autorun(()=> {
+    this.autorun(() => {
         let currentData = Template.currentData();
         this.subscribe('moto.itemById', currentData.itemId);
     });
@@ -170,6 +146,24 @@ showTmpl.helpers({
 
 // Hook
 let hooksObject = {
+    // before: {
+    //     insert: function (doc) {
+    //         // if (doc.code && doc.parent) {
+    //         //     let parentCode = _.trim(_.split($('[name="parent"] option:selected').text(), " : ")[0]);
+    //         //     doc.code = `${parentCode}${doc.code}`;
+    //         // }
+    //
+    //         return doc;
+    //     },
+    //     update: function (doc) {
+    //         // if (doc.$set.code && doc.$set.parent) {
+    //         //     let parentCode = _.trim(_.split($('[name="parent"] option:selected').text(), " : ")[0]);
+    //         //     doc.$set.code = parentCode + doc.$set.code;
+    //         // }
+    //
+    //         return doc;
+    //     }
+    // },
     onSuccess (formType, result) {
         if (formType == 'update') {
             alertify.item().close();
@@ -179,10 +173,15 @@ let hooksObject = {
         $('[name="name"]').val('');
         $('[name="name"]').focus();
         $('[name="price"]').val('');
+        $('[name="khrPrice"]').val('');
     },
     onError (formType, error) {
         displayError(error.message);
-    }
+    },
+    // docToForm: function (doc, ss) {
+    //     doc.code = _.last(doc.code.match(/\d{2}/g));
+    //     return doc;
+    // },
 };
 
 AutoForm.addHooks(['Moto_itemForm'], hooksObject);

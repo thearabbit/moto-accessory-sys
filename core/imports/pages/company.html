@@ -1,5 +1,14 @@
 <!--List-->
 <template name="Core_company">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <button type="button" class="btn btn-primary js-update"><i
+                    class="fa fa-pencil"></i> {{_ "form.btnEdit"}}
+            </button>
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
     <div class="box-body">
         {{#if subsReady "core.company"}}
             {{#with data}}
@@ -23,12 +32,6 @@
                     <dt>{{_ "core.company.websiteLbl"}}</dt>
                     <dd>{{website}}</dd>
                 </dl>
-
-                {{#formFooter}}
-                    <button type="button" class="btn btn-primary js-update"><i
-                            class="fa fa-pencil"></i> {{_ "form.btnEdit"}}
-                    </button>
-                {{/formFooter}}
             {{/with}}
         {{else}}
             {{> loading}}
