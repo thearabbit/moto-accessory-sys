@@ -109,6 +109,23 @@ MotoRoutes.route('/employee', {
     }
 });
 
+// Supplier
+import '../imports/pages/supplier.js';
+MotoRoutes.route('/supplier', {
+    name: 'moto.supplier',
+    title: __('moto.supplier.title'),
+    action: function (params, queryParams) {
+        Layout.main('Moto_supplier');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moto.supplier.title'),
+        // icon: 'product-hunt',
+        parent: 'moto.home'
+    }
+});
+
 // Customer
 import '../imports/pages/customer.js';
 MotoRoutes.route('/customer', {

@@ -15,6 +15,9 @@
     "employee": {
       "title": "Employee"
     },
+    "supplier": {
+      "title": "Supplier"
+    },
     "item": {
       "title": "Item",
       "schema": {

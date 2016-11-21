@@ -32,17 +32,10 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return moment(val).format('DD/MM/YYYY');
             }
         },
-        // {
-        //     data: "dob",
-        //     title: "Date of Birth",
-        //     render: function (val, type, doc) {
-        //         return moment(val).format('DD/MM/YYYY');
-        //     }
-        // },
         {data: "position", title: "Position"},
         {data: 'contact', title: 'Contact', tmpl: Meteor.isClient && Template.Moto_employeeContact},
     ],
-    extraFields: ['address'],
+    extraFields: ['address','email'],
 });
 
 export const EmployeeTabular = new Tabular.Table(tabularData);
