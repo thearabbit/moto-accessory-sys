@@ -92,6 +92,23 @@ MotoRoutes.route('/item', {
     }
 });
 
+// Employee
+import '../imports/pages/employee.js';
+MotoRoutes.route('/employee', {
+    name: 'moto.employee',
+    title: __('moto.employee.title'),
+    action: function (params, queryParams) {
+        Layout.main('Moto_employee');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moto.employee.title'),
+        // icon: 'product-hunt',
+        parent: 'moto.home'
+    }
+});
+
 // Customer
 import '../imports/pages/customer.js';
 MotoRoutes.route('/customer', {

@@ -1,5 +1,5 @@
 <!--Index-->
-<template name="Moto_customer">
+<template name="Moto_employee">
     <div class="box-header with-border">
         <h3 class="box-title">
             {{> addNewButton}}
@@ -15,7 +15,7 @@
 </template>
 
 <!--Action-->
-<template name="Moto_customerAction">
+<template name="Moto_employeeAction">
     {{#columnAction}}
         <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
         <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
@@ -24,29 +24,28 @@
 </template>
 
 <!--Contact Tabular-->
-<template name="Moto_customerContact">
+<template name="Moto_employeeContact">
     {{> jsonView json=contact options=jsonViewOpts}}
 </template>
 
 <!--Form-->
-<template name="Moto_customerForm">
+<template name="Moto_employeeForm">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm collection=collection id="Moto_customerForm" doc=data.doc type=data.formType}}
+            {{#autoForm collection=collection id="Moto_employeeForm" doc=data.doc type=data.formType}}
                 <div class="row">
                     <div class="col-md-5">
                         {{> afQuickField name="name"}}
                         {{> afQuickField name="gender"}}
-                        {{> afQuickField name="age"}}
-                        {{> afQuickField name="type"}}
-                        {{> afQuickField name="locationId"}}
+                        {{> afQuickField name="position"}}
+                        {{> afQuickField name="startDate"}}
                     </div>
                     <div class="col-md-7">
                         {{> afQuickField name="address" rows=3}}
                         {{> afQuickField name="email"}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
 
-                        {{> afArrayField name="contact" id="contact" template="Moto_customArrayFieldForContact" subtemplate="Moto_customObjectFieldForContact"}}
+                        {{> afArrayField name="contact" id="contact" template="Moto_customArrayFieldForEmployeeContact" subtemplate="Moto_customObjectFieldForContact"}}
                     </div>
                 </div>
 
@@ -59,7 +58,7 @@
 </template>
 
 <!--Show-->
-<template name="Moto_customerShow">
+<template name="Moto_employeeShow">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
             {{#with data}}
@@ -70,10 +69,10 @@
                     <dd>{{name}}</dd>
                     <dt>Gender</dt>
                     <dd>{{gender}}</dd>
-                    <dt>Age</dt>
-                    <dd>{{age}}</dd>
-                    <dt>Type</dt>
-                    <dd>{{type}}</dd>
+                    <dt>Start Date</dt>
+                    <dd>{{moFormat startDate "DD/MM/YYYY"}}</dd>
+                    <dt>Position</dt>
+                    <dd>{{position}}</dd>
                     <dt>Address</dt>
                     <dd>{{address}}</dd>
                     <dt>Email</dt>
@@ -89,7 +88,7 @@
 </template>
 
 <!------------Custom contact array field-------------------->
-<template name="afArrayField_Moto_customArrayFieldForContact">
+<template name="afArrayField_Moto_customArrayFieldForEmployeeContact">
     <div class="panel panel-default">
         <div class="panel-heading">{{afFieldLabelText name=this.atts.name}}</div>
         <div class="panel-body">
@@ -132,7 +131,7 @@
     </div>
 </template>
 
-<template name="Moto_customObjectFieldForContact">
+<template name="Moto_customObjectFieldForEmployeeContact">
     <div class="col-sm-5">
         {{> afQuickField name=current.type template="bootstrap3" label=false class="input-sm"}}
     </div>

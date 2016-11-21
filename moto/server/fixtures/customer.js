@@ -11,7 +11,7 @@ Meteor.startup(function () {
             const data = {
                 name: faker.name.findName(),
                 gender: faker.random.arrayElement(['M', 'F']),
-                dob: faker.date.past(),
+                // dob: faker.date.past(),
                 locationId: '00000004',
                 address: faker.address.city(),
                 email: faker.internet.email(),
