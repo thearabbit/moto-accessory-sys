@@ -32,7 +32,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         //         return moment(val).format('DD/MM/YYYY');
         //     }
         // },
-        {data: "email", title: "Email"},
+        {data: "type", title: "Type"},
         {data: 'contact', title: 'Contact', tmpl: Meteor.isClient && Template.Moto_customerContact},
     ],
 });

@@ -22,8 +22,18 @@ Meteor.startup(function () {
                 name: 'Gender',
                 private: true,
                 options: [
-                    {label: 'Mal', value: 'M', order: 1},
+                    {label: 'Male', value: 'M', order: 1},
                     {label: 'Female', value: 'F', order: 2},
+                ]
+            },
+            // Customer Type
+            {
+                name: 'Customer Type',
+                private: false,
+                options: [
+                    {label: 'Retail', value: 'R', order: 1},
+                    {label: 'Whole', value: 'W', order: 2},
+                    {label: 'Vip', value: 'V', order: 3},
                 ]
             },
             // Contact Type
