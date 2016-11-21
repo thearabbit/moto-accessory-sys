@@ -85,7 +85,7 @@ contactTmpl.helpers({
 formTmpl.onCreated(function () {
     this.autorun(()=> {
         // Lookup value
-        this.subscribe('moto.lookupValue', ['Gender', 'Contact Type']);
+        this.subscribe('moto.lookupValue', ['Gender', 'Contact Type', 'Customer Type']);
 
         let currentData = Template.currentData();
         if (currentData) {

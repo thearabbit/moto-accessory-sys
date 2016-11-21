@@ -38,10 +38,11 @@
                         {{> afQuickField name="name"}}
                         {{> afQuickField name="gender"}}
                         {{> afQuickField name="dob"}}
+                        {{> afQuickField name="type"}}
                         {{> afQuickField name="locationId"}}
-                        {{> afQuickField name="address" rows=3}}
                     </div>
                     <div class="col-md-7">
+                        {{> afQuickField name="address" rows=3}}
                         {{> afQuickField name="email"}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
 
@@ -71,6 +72,8 @@
                     <dd>{{gender}}</dd>
                     <dt>Date of birth</dt>
                     <dd>{{moFormat dob "DD/MM/YYYY"}}</dd>
+                    <dt>Type</dt>
+                    <dd>{{type}}</dd>
                     <dt>Address</dt>
                     <dd>{{address}}</dd>
                     <dt>Email</dt>

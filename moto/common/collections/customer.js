@@ -40,6 +40,17 @@ Customer.generalSchema = new SimpleSchema({
             }
         }
     },
+    type: {
+        type: String,
+        label: 'Type',
+        defaultValue: 'Retail',
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                return getLookupValue('Customer Type');
+            }
+        }
+    },
     locationId: {
         type: String,
         label: 'Location',
