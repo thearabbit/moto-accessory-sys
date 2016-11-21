@@ -43,7 +43,7 @@ Customer.generalSchema = new SimpleSchema({
     type: {
         type: String,
         label: 'Type',
-        defaultValue: 'R',
+        defaultValue: 'Retail',
         autoform: {
             type: "select-radio-inline",
             options: function () {
