@@ -92,7 +92,7 @@ MotoRoutes.route('/item', {
     }
 });
 
-// Item
+// Employee
 import '../imports/pages/employee.js';
 MotoRoutes.route('/employee', {
     name: 'moto.employee',
