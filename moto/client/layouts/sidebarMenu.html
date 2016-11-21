@@ -10,7 +10,7 @@
         <li class="header"><i class="fa fa-database"></i> DATA</li>
         <li class="{{isActiveRoute name='moto.customer'}}">
             <a href="{{pathFor 'moto.customer'}}">
-                <i class="fa fa-circle-o"></i> <span>Customer</span>
+                <i class="fa fa-users"></i> <span>Customer</span>
             </a>
         </li>
         <li class="{{isActiveRoute name='moto.order'}}">
@@ -20,7 +20,7 @@
         </li>
         <li class="{{isActiveRoute name='core.exchange'}}">
             <a href="{{pathFor 'core.exchange'}}">
-                <i class="fa fa-cog"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
+                <i class="fa fa-exchange"></i> <span>{{_ "core.sidebarMenu.exchange"}}</span>
             </a>
         </li>
     {{/if}}
@@ -50,12 +50,17 @@
         <li class="header"><i class="fa fa-cogs"></i> SETTING</li>
         <li class="{{isActiveRoute name='moto.item'}}">
             <a href="{{pathFor 'moto.item'}}">
-                <i class="fa fa-cog"></i> <span>{{_ "moto.sidebarMenu.item"}}</span>
+                <i class="fa fa-archive"></i> <span>{{_ "moto.sidebarMenu.item"}}</span>
             </a>
         </li>
         <li class="{{isActiveRoute name='moto.employee'}}">
             <a href="{{pathFor 'moto.employee'}}">
-                <i class="fa fa-user"></i> <span>Employee</span>
+                <i class="fa fa-male"></i> <span>Employee</span>
+            </a>
+        </li>
+        <li class="{{isActiveRoute name='moto.supplier'}}">
+            <a href="{{pathFor 'moto.supplier'}}">
+                <i class="fa fa-truck"></i> <span>Supplier</span>
             </a>
         </li>
         <li class="{{isActiveRoute name='moto.location'}}">

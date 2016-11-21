@@ -1,0 +1,140 @@
+<!--Index-->
+<template name="Moto_supplier">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Tabular-->
+        {{> tabular table=tabularTable selector=selector class="table table-striped table-bordered table-condensed"}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="Moto_supplierAction">
+    {{#columnAction}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Contact Tabular-->
+<template name="Moto_supplierContact">
+    {{> jsonView json=contact options=jsonViewOpts}}
+</template>
+
+<!--Form-->
+<template name="Moto_supplierForm">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#autoForm collection=collection id="Moto_supplierForm" doc=data.doc type=data.formType}}
+                <div class="row">
+                    <div class="col-md-5">
+                        {{> afQuickField name="name"}}
+                        {{> afQuickField name="gender"}}
+                        {{> afQuickField name="companyName"}}
+                        {{> afQuickField name="locationId"}}
+                        {{> afQuickField name="email"}}
+                    </div>
+                    <div class="col-md-7">
+                        {{> afQuickField name="memo"}}
+                        {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
+                        {{> afArrayField name="contact" id="contact" template="Moto_customArrayFieldForSupplierContact" subtemplate="Moto_customObjectFieldForContact"}}
+                    </div>
+                </div>
+
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
+
+<!--Show-->
+<template name="Moto_supplierShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with data}}
+                <dl class="dl-horizontal">
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Name</dt>
+                    <dd>{{name}}</dd>
+                    <dt>Gender</dt>
+                    <dd>{{gender}}</dd>
+                    <dt>Company Name</dt>
+                    <dd>{{companyName}}</dd>
+                    <dt>Location</dt>
+                    <dd>{{locationId}}</dd>
+                    <dt>Email</dt>
+                    <dd>{{email}}</dd>
+                    <dt>Memo</dt>
+                    <dd>{{memo}}</dd>
+                    <dt>Contact</dt>
+                    <dd>{{> jsonView json=contact options=jsonViewOpts}}</dd>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
+
+<!------------Custom contact array field-------------------->
+<template name="afArrayField_Moto_customArrayFieldForSupplierContact">
+    <div class="panel panel-default">
+        <div class="panel-heading">{{afFieldLabelText name=this.atts.name}}</div>
+        <div class="panel-body">
+
+            {{#if afFieldIsInvalid name=this.atts.name}}
+                <div class="has-error">
+                    <span class="help-block">{{{afFieldMessage name=this.atts.name}}}</span>
+                </div>
+            {{/if}}
+
+            {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
+                <div class="row">
+                    {{> UI.dynamic template=../atts.subtemplate}}
+
+                    <div class="col-sm-1">
+                        {{#if afArrayFieldHasMoreThanMinimum name=../atts.name minCount=../atts.minCount
+                              maxCount=../atts.maxCount}}
+                            <button type="button" class="btn btn-sm btn-danger autoform-remove-item">
+                                <span class="glyphicon glyphicon-minus"></span>
+                            </button>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/afEachArrayItem}}
+
+            {{#if afArrayFieldHasLessThanMaximum name=this.atts.name minCount=this.atts.minCount
+                  maxCount=this.atts.maxCount}}
+                <div class="row">
+                    <div class="col-sm-1 col-sm-offset-11">
+                        <button type="button" class="btn btn-primary autoform-add-item btn-sm"
+                                data-autoform-field="{{this.atts.name}}" data-autoform-minCount="{{this.atts.minCount}}"
+                                data-autoform-maxCount="{{this.atts.maxCount}}">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </div>
+                </div>
+            {{/if}}
+
+        </div>
+    </div>
+</template>
+
+<template name="Moto_customObjectFieldForSupplierContact">
+    <div class="col-sm-5">
+        {{> afQuickField name=current.type template="bootstrap3" label=false class="input-sm"}}
+    </div>
+    <div class="col-sm-6">
+        {{> afQuickField name=current.number template="bootstrap3" label=false class="input-sm"}}
+    </div>
+</template>
