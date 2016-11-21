@@ -34,20 +34,21 @@
             {{#autoForm collection=collection id="Moto_orderForm" doc=data.doc type=data.formType
                         resetOnSuccess=false}}
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Order</div>
-                            <div class="panel-body">
-                                {{> afQuickField name="orderDate"}}
-                                {{> afQuickField name="customerId"}}
-                                {{> afQuickField name="des"}}
-
-                                {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
-                            </div>
-                        </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="orderDate"}}
+                        {{> afQuickField name="customerId"}}
+                        {{> afQuickField name="type"}}
+                        {{> afQuickField name="employeeId"}}
                     </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="exchangeId"}}
+                        {{> afQuickField name="des"}}
+                        {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
+                    </div>
+                </div>
 
-                    <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12">
                         <!--Item Temporary-->
                         {{> Moto_orderItems itemsCollection=itemsCollection}}
 

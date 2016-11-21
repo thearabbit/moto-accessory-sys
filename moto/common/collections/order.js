@@ -7,6 +7,7 @@ import {moment} from 'meteor/momentjs:moment';
 // Lib
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../imports/libs/selectOpts.js';
+import {getLookupValue} from '../../imports/libs/getLookupValue.js';
 
 export const Order = new Mongo.Collection("moto_order");
 
@@ -21,7 +22,33 @@ Order.itemsSchema = new SimpleSchema({
         label: 'Qty',
         min: 1
     },
+    currencyId: {
+        type: String,
+        label: 'Currency'
+    },
     price: {
+        type: Number,
+        label: 'Price',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    khrPrice: {
+        type: Number,
+        label: 'Price',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    orderPrice: {
         type: Number,
         label: 'Price',
         decimal: true,
@@ -40,6 +67,28 @@ Order.itemsSchema = new SimpleSchema({
             type: 'inputmask',
             inputmaskOptions: function () {
                 return inputmaskOptions.currency();
+            }
+        }
+    },
+    discount: {
+        type: Number,
+        label: 'Discount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.percentage();
+            }
+        }
+    },
+    totalAmount: {
+        type: Number,
+        label: 'Total amount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.percentage();
             }
         }
     },
@@ -83,6 +132,46 @@ Order.schema = new SimpleSchema({
             }
         }
     },
+    type: {
+        type: String,
+        label: 'Type',
+        defaultValue: 'Retail',
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                return getLookupValue('Customer Type');
+            }
+        }
+    },
+    employeeId: {
+        type: String,
+        label: 'Employee',
+        autoform: {
+            type: 'universe-select',
+            afFieldInput: {
+                uniPlaceholder: 'Select One',
+                optionsMethod: 'moto.selectOptsMethod.customer',
+                optionsMethodParams: function () {
+                    if (Meteor.isClient) {
+                        let currentBranch = Session.get('currentBranch');
+                        return {branchId: currentBranch};
+                    }
+                }
+            }
+        }
+    },
+    exchangeId: {
+        type: String,
+        label: 'Exchange',
+        autoform: {
+            type: 'universe-select',
+            afFieldInput: {
+                uniPlaceholder: 'Please search... (limit 10)',
+                optionsPlaceholder: 'Please search... (limit 10)',
+                optionsMethod: 'moto.selectOptsMethod.exchange'
+            }
+        }
+    },
     des: {
         type: String,
         label: 'Description',
@@ -107,9 +196,58 @@ Order.schema = new SimpleSchema({
     items: {
         type: [Order.itemsSchema],
     },
+    oldTotal: {
+        type: Number,
+        label: 'Old total',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    oldTotalRef: {
+        type: String,
+        label: 'Old total ref',
+        optional: true
+    },
+    subTotal: {
+        type: Number,
+        label: 'Subtotal',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    discountAmount: {
+        type: Number,
+        label: 'Discount amount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.percentage();
+            }
+        }
+    },
     total: {
         type: Number,
         label: 'Total',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    balance: {
+        type: Number,
+        label: 'Balance',
         decimal: true,
         autoform: {
             type: 'inputmask',

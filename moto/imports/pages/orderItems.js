@@ -155,16 +155,23 @@ indexTmpl.events({
 newTmpl.onCreated(function () {
     // State
     this.itemId = new ReactiveVar();
+    this.itemDoc = new ReactiveVar();
     this.qty = new ReactiveVar(0);
-    this.price = new ReactiveVar(0);
+    this.orderPrice = new ReactiveVar(0);
 });
 
 newTmpl.helpers({
     schema(){
         return OrderItemsSchema;
     },
-    price: function () {
-        return Template.instance().price.get();
+    // price: function () {
+    //     let itemDoc= Template.instance().itemDoc.get();
+    //     // Check type
+    //     if()
+    //     return
+    // },
+    itemDoc: function () {
+        return Template.instance().itemDoc.get();
     },
     amount: function () {
         const instance = Template.instance();
@@ -194,6 +201,7 @@ newTmpl.events({
                 itemId: itemId
             }).then((result) => {
                 instance.price.set(result.price);
+                instance.itemDoc.set(result);
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -204,20 +212,21 @@ newTmpl.events({
             });
         } else {
             instance.price.set(0);
+            instance.itemDoc.set(undefined);
         }
 
         // Clear
         instance.$('[name="qty"]').val(1);
         instance.qty.set(1);
     },
-    'keyup [name="qty"],[name="price"]': function (event, instance) {
+    'keyup [name="qty"],[name="orderPrice"]': function (event, instance) {
         let qty = instance.$('[name="qty"]').val();
-        let price = instance.$('[name="price"]').val();
+        let orderPrice = instance.$('[name="orderPrice"]').val();
         qty = _.isEmpty(qty) ? 0 : parseInt(qty);
-        price = _.isEmpty(price) ? 0 : parseFloat(price);
+        orderPrice = _.isEmpty(orderPrice) ? 0 : parseFloat(orderPrice);
 
         instance.qty.set(qty);
-        instance.price.set(price);
+        instance.orderPrice.set(orderPrice);
     },
     'click .js-add-item': function (event, instance) {
         let itemId = instance.$('[name="itemId"]').val();

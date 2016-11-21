@@ -93,6 +93,9 @@ formTmpl.onCreated(function () {
     self.orderDoc = new ReactiveVar();
 
     self.autorun(() => {
+        // Lookup value
+        this.subscribe('moto.lookupValue', ['Customer Type']);
+
         let currentData = Template.currentData();
         if (currentData) {
             self.isLoading.set(true);

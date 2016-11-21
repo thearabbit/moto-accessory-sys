@@ -35,12 +35,36 @@ export const OrderItemsSchema = new SimpleSchema({
             }
         }
     },
+    currencyId: {
+        type: String,
+        label: 'Currency'
+    },
     price: {
         type: Number,
         label: 'Price',
         decimal: true,
-        defaultValue: 0,
-        min: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    khrPrice: {
+        type: Number,
+        label: 'Price',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    orderPrice: {
+        type: Number,
+        label: 'Price',
+        decimal: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -52,12 +76,32 @@ export const OrderItemsSchema = new SimpleSchema({
         type: Number,
         label: 'Amount',
         decimal: true,
-        defaultValue: 0,
-        min: 0,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
                 return inputmaskOptions.currency();
+            }
+        }
+    },
+    discount: {
+        type: Number,
+        label: 'Discount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.percentage();
+            }
+        }
+    },
+    totalAmount: {
+        type: Number,
+        label: 'Total amount',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.percentage();
             }
         }
     },
