@@ -31,9 +31,19 @@ Meteor.startup(function () {
                 name: 'Customer Type',
                 private: false,
                 options: [
-                    {label: 'Retail', value: 'R', order: 1},
-                    {label: 'Whole', value: 'W', order: 2},
-                    {label: 'Vip', value: 'V', order: 3},
+                    {label: 'Retail', value: 'Retail', order: 1},
+                    {label: 'Whole', value: 'Whole', order: 2},
+                    {label: 'Vip', value: 'Vip', order: 3},
+                ]
+            },
+            // Employee Position
+            {
+                name: 'Employee Position',
+                private: false,
+                options: [
+                    {label: 'Manager', value: 'Manager', order: 1},
+                    {label: 'Accountant', value: 'Accountant', order: 2},
+                    {label: 'Cashier', value: 'Cashier', order: 3},
                 ]
             },
             // Contact Type

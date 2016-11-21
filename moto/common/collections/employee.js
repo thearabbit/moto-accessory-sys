@@ -8,9 +8,9 @@ import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../imports/libs/selectOpts.js';
 import {getLookupValue} from '../../imports/libs/getLookupValue.js';
 
-export const Customer = new Mongo.Collection("moto_customer");
+export const Employee = new Mongo.Collection("moto_employee");
 
-Customer.generalSchema = new SimpleSchema({
+Employee.generalSchema = new SimpleSchema({
     name: {
         type: String,
         label: 'Name'
@@ -26,39 +26,30 @@ Customer.generalSchema = new SimpleSchema({
             }
         }
     },
-    age: {
-        type: Number,
-        label: "Age",
-        min: 1,
-        max: 100,
-        optional: true
-    },
-    type: {
+    position: {
         type: String,
-        label: 'Type',
-        defaultValue: 'Retail',
+        label: 'Position',
+        defaultValue: 'Cashier',
         autoform: {
             type: "select-radio-inline",
             options: function () {
-                return getLookupValue('Customer Type');
+                return getLookupValue('Employee Position');
             }
         }
     },
-    locationId: {
-        type: String,
-        label: 'Location',
+    startDate: {
+        type: Date,
+        label: 'Start Date',
+        defaultValue: moment().toDate(),
         autoform: {
-            type: 'universe-select',
             afFieldInput: {
-                uniPlaceholder: 'Select One',
-                optionsMethod: 'moto.selectOptsMethod.location',
-                optionsMethodParams: function () {
-                    if (Meteor.isClient) {
-                        return {type: 'V'};
-                    }
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY',
+                    showTodayButton: true
                 }
             }
-        },
+        }
     },
     address: {
         type: String,
@@ -75,7 +66,7 @@ Customer.generalSchema = new SimpleSchema({
     }
 });
 
-Customer.contactSchema = new SimpleSchema({
+Employee.contactSchema = new SimpleSchema({
     contact: {
         type: [Object],
         label: 'Contact',
@@ -104,7 +95,7 @@ Customer.contactSchema = new SimpleSchema({
     },
 });
 
-Customer.attachSchema([
-    Customer.generalSchema,
-    Customer.contactSchema
+Employee.attachSchema([
+    Employee.generalSchema,
+    Employee.contactSchema
 ]);

@@ -53,6 +53,11 @@
                 <i class="fa fa-cog"></i> <span>{{_ "moto.sidebarMenu.item"}}</span>
             </a>
         </li>
+        <li class="{{isActiveRoute name='moto.employee'}}">
+            <a href="{{pathFor 'moto.employee'}}">
+                <i class="fa fa-user"></i> <span>Employee</span>
+            </a>
+        </li>
         <li class="{{isActiveRoute name='moto.location'}}">
             <a href="{{pathFor 'moto.location'}}">
                 <i class="fa fa-sitemap"></i> <span>Location</span>

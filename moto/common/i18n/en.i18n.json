@@ -4,12 +4,16 @@
       "home": "Home",
       "item": "Item",
       "customer": "Customer",
+      "employee": "Employee",
       "order": "Order",
       "invoice": "Invoice"
     },
     "home": {
       "title": "Home",
       "info": "Welcome to POS!"
+    },
+    "employee": {
+      "title": "Employee"
     },
     "item": {
       "title": "Item",
