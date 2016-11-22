@@ -141,12 +141,10 @@ Item.schema = new SimpleSchema({
         type: String,
         optional: true,
         autoform: {
-            type: "select",
-            options: function () {
-                return [
-                    {label: 'Rabbit', value: 'Rabbit'},
-                    {label: 'Apple', value: 'Apple'}
-                ];
+            type: 'universe-select',
+            afFieldInput: {
+                uniPlaceholder: 'Select One',
+                optionsMethod: 'moto.selectOptsMethod.supplier'
             }
         },
         custom: function () {
