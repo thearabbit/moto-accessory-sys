@@ -36,6 +36,24 @@ Meteor.startup(function () {
                     {label: 'Vip', value: 'Vip', order: 3},
                 ]
             },
+            // Order Type
+            {
+                name: 'Order Type',
+                private: false,
+                options: [
+                    {label: 'Retail', value: 'Retail', order: 1},
+                    {label: 'Whole', value: 'Whole', order: 2}
+                ]
+            },
+            // Discount Type
+            {
+                name: 'Discount Type',
+                private: false,
+                options: [
+                    {label: 'Percentage', value: 'Percentage', order: 1},
+                    {label: 'Amount', value: 'Amount', order: 2}
+                ]
+            },
             // Employee Position
             {
                 name: 'Employee Position',

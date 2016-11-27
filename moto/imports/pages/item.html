@@ -59,8 +59,11 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     {{> afQuickField name="currencyId"}}
-                                    {{> afQuickField name="price"}}
-                                    {{> afQuickField name="khrPrice"}}
+                                    {{> afQuickField name="priceByQty"}}
+                                    {{> afQuickField name="khrPriceByQty"}}
+                                    {{> afQuickField name="baseQty"}}
+                                    {{> afQuickField type="hidden" name="price"}}
+                                    {{> afQuickField type="hidden" name="khrPrice"}}
                                 </div>
                                 <div class="col-md-6">
                                     {{> afQuickField name="supplierId"}}

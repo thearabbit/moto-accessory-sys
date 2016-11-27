@@ -210,7 +210,7 @@ simple:markdown-templating
 theara:collection-cache
 theara:id-generator
 theara:relation-exist
-#theara:moneyjs
+theara:moneyjs
 theara:fa-helpers
 theara:events
 theara:round-khr

@@ -27,6 +27,7 @@ import {lookupOrder} from '../../common/methods/lookupOrder';
 
 // Collection
 import {Order} from '../../common/collections/order.js';
+import {Exchange} from '../../../core/common/collections/exchange.js';
 
 // Tabular
 import {OrderTabular} from '../../common/tabulars/order.js';
@@ -43,7 +44,6 @@ let indexTmpl = Template.Moto_order,
 
 // Local collection
 let itemsCollection = new Mongo.Collection(null);
-
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
@@ -66,6 +66,7 @@ indexTmpl.events({
     },
     'click .js-update' (event, instance) {
         alertify.order(fa('pencil', 'Order'), renderTemplate(formTmpl, {orderId: this._id})).maximize();
+        Session.set("update", true);
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
@@ -75,7 +76,7 @@ indexTmpl.events({
         );
     },
     'click .js-display' (event, instance) {
-        alertify.orderShow(fa('eye', 'Order'), renderTemplate(showTmpl, {orderId: this._id}));
+        alertify.orderShow(fa('eye', 'Order'), renderTemplate(showTmpl, {orderId: this._id})).maximize();
     },
     'click .js-invoice' (event, instance) {
         let params = {};
@@ -91,10 +92,12 @@ formTmpl.onCreated(function () {
     let self = this;
     self.isLoading = new ReactiveVar(false);
     self.orderDoc = new ReactiveVar();
+    Session.set('customerType', 'Retail');
+    Session.set('discountType', 'Percentage');
 
     self.autorun(() => {
         // Lookup value
-        this.subscribe('moto.lookupValue', ['Customer Type']);
+        this.subscribe('moto.lookupValue', ['Order Type', 'Discount Type']);
 
         let currentData = Template.currentData();
         if (currentData) {
@@ -114,6 +117,8 @@ formTmpl.onCreated(function () {
                 console.log(err);
             });
         }
+
+        this.subscribe('core.exchange');
     });
 });
 
@@ -148,12 +153,48 @@ formTmpl.helpers({
         }
 
         return {};
+    },
+    showExchange(){
+        let type = Session.get('customerType');
+        return type == 'Whole' ? true : false;
+    },
+    showItems(){
+        let result, exchange = Session.get('exchangeDoc'), type = Session.get('customerType');
+        if (type == "Retail") {
+            result = true;
+        } else if (type == "Whole" && !_.isNull(exchange)) {
+            result = true;
+        } else {
+            result = false;
+        }
+        return result;
+    }
+});
+
+formTmpl.events({
+    'click [name="type"]': function (event, instance) {
+        let type = event.currentTarget.value;
+        Session.set('customerType', type);
+        Session.set('exchangeDoc', null);
+    },
+    'click [name="discountType"]': function (event, instance) {
+        let discountType = event.currentTarget.value;
+        Session.set('discountType', discountType);
+    },
+    'change [name="exchangeId"]': function (event, instance) {
+        let exchangeId = event.currentTarget.value;
+        let exchange = Exchange.findOne({_id: exchangeId});
+        Session.set('exchangeDoc', exchange);
     }
 });
 
 formTmpl.onDestroyed(function () {
     // Remove items collection
     itemsCollection.remove({});
+    Session.set('customerType', null);
+    Session.set('exchangeDoc', null);
+    Session.set('discountType', null);
+    Session.set('update', false);
 });
 
 // Show
@@ -186,6 +227,38 @@ showTmpl.helpers({
 
         return data;
     },
+    checkDiscountType() {
+        let data = Template.instance().orderDoc.get();
+        let result = {
+            class: 'label bg-red',
+            icon: fa("percent", "Percentage")
+        };
+
+        if (data && data.discountType == "Amount") {
+            result = {
+                class: 'label bg-green',
+                icon: fa("money", "Amount")
+            };
+        }
+
+        return result;
+    },
+    checkType() {
+        let data = Template.instance().orderDoc.get();
+        let result = {
+            class: 'label bg-teal-active',
+            icon: fa("star", "Whole")
+        };
+
+        if (data && data.type == "Retail") {
+            result = {
+                class: 'label bg-orange',
+                icon: fa("star-o", "Retail")
+            };
+        }
+
+        return result;
+    },
     jsonViewOpts(){
         return {collapsed: true};
     }
@@ -216,6 +289,8 @@ let hooksObject = {
         $('[name="qty"]').val(null);
         $('[name="price"]').val(null);
         $('[name="amount"]').val(null);
+        $('[name="discountAmount"]').val(null);
+        $('[name="total"]').val(null);
 
         displaySuccess();
     },

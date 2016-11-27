@@ -17,22 +17,35 @@ import {Order} from '../collections/order.js';
 Meteor.isClient && require('../../imports/pages/order.html');
 
 let tabularData = _.assignIn(_.clone(tabularOpts), {
-    name : 'moto.order',
-collection : Order,
-columns : [
-    {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Moto_orderAction},
-    {data: "_id", title: "ID"},
-    {
-        data: "orderDate",
-        title: "Date",
-        render: function (val, type, doc) {
-            return moment(val).format('DD/MM/YYYY');
-        }
-    },
-    {data: "total", title: "Total"},
-    {data: "des", title: "Description"},
-    {data: "customerId", title: "Customer"},
-],
+    name: 'moto.order',
+    collection: Order,
+    columns: [
+        {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Moto_orderAction},
+        {data: "_id", title: "ID"},
+        {
+            data: "orderDate",
+            title: "Date",
+            render: function (val, type, doc) {
+                return moment(val).format('DD/MM/YYYY');
+            }
+        },
+        {data: "customerId", title: "Customer"},
+        {data: "subTotal", title: "SubTotal"},
+        {data: "discountAmount", title: "Discount Amount"},
+        {data: "total", title: "Total"},
+        {data: "des", title: "Description"},
+        {
+            data: "type",
+            title: "Type",
+            render(val, type, doc){
+                if (val == "Retail") {
+                    return `<span class="badge bg-orange-active"><i class="fa fa-star-o"></i> ${val} </span>`;
+                }
+                return `<span class="badge bg-teal-active"><i class="fa fa-star"></i> ${val} </span>`;
+            }
+        },
+    ],
+    extraFields:['employeeId','discountType','items']
 });
 
 export const OrderTabular = new Tabular.Table(tabularData);
