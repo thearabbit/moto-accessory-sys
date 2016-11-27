@@ -7,6 +7,7 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Exchange} from '../../../core/common/collections/exchange';
 import {Customer} from '../collections/customer';
+import {Employee} from '../collections/employee';
 import {Item} from '../collections/item';
 import {Location} from '../collections/location';
 import {Order} from '../collections/order';
@@ -151,10 +152,14 @@ SelectOptsMethod.customer = new ValidatedMethod({
                         {_id: {$regex: searchText, $options: 'i'}},
                         {name: {$regex: searchText, $options: 'i'}}
                     ],
-                    branchId: params.branchId
+                    branchId: params.branchId,
+
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
+            }
+            else if (params.type) {
+                selector = {type: params.type};
             }
 
             let data = Customer.find(selector, {limit: 10});
@@ -167,6 +172,42 @@ SelectOptsMethod.customer = new ValidatedMethod({
         }
     }
 });
+
+SelectOptsMethod.employee = new ValidatedMethod({
+    name: 'moto.selectOptsMethod.employee',
+    validate: null,
+    run(options) {
+        if (!this.isSimulation) {
+            this.unblock();
+
+            let list = [], selector = {};
+            let searchText = options.searchText;
+            let values = options.values;
+            let params = options.params || {};
+
+            if (searchText && params.branchId) {
+                selector = {
+                    $or: [
+                        {_id: {$regex: searchText, $options: 'i'}},
+                        {name: {$regex: searchText, $options: 'i'}}
+                    ],
+                    branchId: params.branchId
+                };
+            } else if (values.length) {
+                selector = {_id: {$in: values}};
+            }
+
+            let data = Employee.find(selector, {limit: 10});
+            data.forEach(function (value) {
+                let label = value._id + ' : ' + value.name;
+                list.push({label: label, value: value._id});
+            });
+
+            return list;
+        }
+    }
+});
+
 
 SelectOptsMethod.orderItem = new ValidatedMethod({
     name: 'moto.selectOptsMethod.orderItem',

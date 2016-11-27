@@ -11,6 +11,7 @@ import {$} from 'meteor/jquery';
 import {TAPi18n} from 'meteor/tap:i18n';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 import {round2} from 'meteor/theara:round2';
+import fx from "money";
 
 // Lib
 import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
@@ -51,6 +52,7 @@ indexTmpl.onCreated(function () {
     // Data context
     let data = Template.currentData();
     itemsCollection = data.itemsCollection;
+    this.discountAmount = new ReactiveVar(0);
 });
 
 indexTmpl.helpers({
@@ -68,31 +70,47 @@ indexTmpl.helpers({
                 {
                     key: 'qty',
                     label: 'Qty',
+                    // fn(value, obj, key){
+                    //     return Spacebars.SafeString(`<input type="text" value="${value}" class="item-qty">`);
+                    // }
+                },
+                {
+                    key: 'orderPrice',
+                    label: 'Order Price',
                     fn(value, obj, key){
-                        return Spacebars.SafeString(`<input type="text" value="${value}" class="item-qty">`);
+                        return `៛${value}`;
                     }
                 },
                 {
-                    key: 'price',
-                    label: 'Price',
-                    fn(value, obj, key){
-                        // return numeral(value).format('0,0.00');
-                        return Spacebars.SafeString(`<input type="text" value="${value}" class="item-price">`);
-                    }
+                    key: 'discount',
+                    label: 'Discount',
+                    // fn(value, obj, key){
+                    //     let type;
+                    //     if (obj.discountType == "%") {
+                    //         type = `${value} ${obj.discountType}`;
+                    //     } else {
+                    //         type = `${obj.discountType} ${value}`;
+                    //     }
+                    //     return value;
+                    // }
                 },
                 {
                     key: 'amount',
                     label: 'Amount',
                     fn (value, object, key) {
-                        return numeral(value).format('0,0.00');
+                        return `៛${value}`;
+                    }
+                },
+                {
+                    key: 'totalAmount',
+                    label: 'Total Amount',
+                    fn (value, object, key) {
+                        return `៛${value}`;
                     }
                 },
                 {
                     key: 'memo',
                     label: 'Memo',
-                    fn(value, obj, key){
-                        return Spacebars.SafeString(`<input type="text" value="${value}" class="item-memo">`);
-                    }
                 },
                 {
                     key: '_id',
@@ -110,14 +128,25 @@ indexTmpl.helpers({
 
         return reactiveTableData;
     },
-    total: function () {
+    subTotal: function () {
         let total = 0;
         let getItems = itemsCollection.find();
         getItems.forEach((obj) => {
-            total += round2(obj.amount, 2);
+            total += round2(obj.totalAmount, 2);
         });
 
         return total;
+    },
+    total: function () {
+        const instance = Template.instance();
+        let total = 0;
+        let getItems = itemsCollection.find();
+        let discountAmount = instance.discountAmount.get();
+        getItems.forEach((obj) => {
+            total += obj.totalAmount;
+        });
+
+        return round2(total - discountAmount, 2);
     }
 });
 
@@ -149,6 +178,10 @@ indexTmpl.events({
             {$set: {qty: qty, price: price, amount: amount, memo: memo}}
         );
     },
+    'keyup [name="discountAmount"]': function (event, instance) {
+        let discountAmount = event.currentTarget.value;
+        instance.discountAmount.set(discountAmount);
+    }
 });
 
 // New
@@ -158,26 +191,93 @@ newTmpl.onCreated(function () {
     this.itemDoc = new ReactiveVar();
     this.qty = new ReactiveVar(0);
     this.orderPrice = new ReactiveVar(0);
+    this.price = new ReactiveVar(0);
+    this.khrPrice = new ReactiveVar(0);
+    this.amount = new ReactiveVar(0);
+    this.currencyId = new ReactiveVar();
+    this.discountType = new ReactiveVar();
+    this.discount = new ReactiveVar(0);
+    this.totalAmount = new ReactiveVar(0);
+});
+
+newTmpl.onRendered(function () {
+    $('[name="currencyId"]').hide();
+    $('[name="price"]').hide();
+    $('[name="khrPrice"]').hide();
 });
 
 newTmpl.helpers({
     schema(){
         return OrderItemsSchema;
     },
-    // price: function () {
-    //     let itemDoc= Template.instance().itemDoc.get();
-    //     // Check type
-    //     if()
-    //     return
-    // },
+    orderPrice: function () {
+        const instance = Template.instance();
+        let result, exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType');
+
+        if (customerType == "Retail") {
+            result = instance.khrPrice.get();
+        } else {
+            fx.base = "USD";
+            fx.rates = {
+                "KHR": exchangeDoc.rates.KHR,
+                "USD": exchangeDoc.rates.USD,
+                "THB": exchangeDoc.rates.THB
+            }
+
+            if (instance.currencyId.get() == "USD") {
+                result = round2(fx.convert(instance.price.get(), {from: "USD", to: "KHR"}), -2);
+
+            } else if (instance.currencyId.get() == "THB") {
+                result = round2(fx.convert(instance.price.get(), {from: "THB", to: "KHR"}), -2);
+            } else {
+                result = instance.khrPrice.get();
+            }
+        }
+
+        return result;
+    },
     itemDoc: function () {
         return Template.instance().itemDoc.get();
     },
     amount: function () {
         const instance = Template.instance();
-        let amount = instance.qty.get() * instance.price.get();
+        let amount, exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
 
-        return amount;
+        if (customerType == "Retail") {
+            amount = instance.qty.get() * instance.khrPrice.get();
+        } else {
+            fx.base = "USD";
+            fx.rates = {
+                "KHR": exchangeDoc.rates.KHR,
+                "USD": exchangeDoc.rates.USD,
+                "THB": exchangeDoc.rates.THB
+            }
+
+            let tempAmount = instance.qty.get() * instance.price.get();
+
+            if (instance.currencyId.get() == "USD") {
+                amount = round2(fx.convert(tempAmount, {from: "USD", to: "KHR"}), -2);
+
+            } else if (instance.currencyId.get() == "THB") {
+                amount = round2(fx.convert(tempAmount, {from: "THB", to: "KHR"}), -2);
+            } else if (instance.currencyId.get() == "KHR") {
+                amount = instance.qty.get() * instance.khrPrice.get();
+            }
+        }
+
+        instance.amount.set(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
+        return orderPrice > 0 ? instance.qty.get() * orderPrice : amount;
+    },
+    totalAmount: function () {
+        const instance = Template.instance();
+        let totalAmount, amount = instance.amount.get(), discount = instance.discount.get(), discountType = Session.get('discountType');
+
+        if (discountType == "Percentage") {
+            totalAmount = round2(amount - (amount * discount / 100), -2);
+        } else {
+            totalAmount = round2((amount - discount), -2);
+        }
+        return totalAmount;
     },
     disabledAddItemBtn: function () {
         const instance = Template.instance();
@@ -201,7 +301,10 @@ newTmpl.events({
                 itemId: itemId
             }).then((result) => {
                 instance.price.set(result.price);
+                instance.khrPrice.set(result.khrPrice);
+                instance.currencyId.set(result.currencyId);
                 instance.itemDoc.set(result);
+                instance.orderPrice.set(0);
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -212,6 +315,7 @@ newTmpl.events({
             });
         } else {
             instance.price.set(0);
+            instance.khrPrice.set(0);
             instance.itemDoc.set(undefined);
         }
 
@@ -219,14 +323,17 @@ newTmpl.events({
         instance.$('[name="qty"]').val(1);
         instance.qty.set(1);
     },
-    'keyup [name="qty"],[name="orderPrice"]': function (event, instance) {
+    'keyup [name="qty"],[name="orderPrice"],[name="discount"]': function (event, instance) {
         let qty = instance.$('[name="qty"]').val();
         let orderPrice = instance.$('[name="orderPrice"]').val();
+        let discount = instance.$('[name="discount"]').val();
         qty = _.isEmpty(qty) ? 0 : parseInt(qty);
         orderPrice = _.isEmpty(orderPrice) ? 0 : parseFloat(orderPrice);
+        discount = _.isEmpty(discount) ? 0 : parseFloat(discount);
 
         instance.qty.set(qty);
         instance.orderPrice.set(orderPrice);
+        instance.discount.set(discount);
     },
     'click .js-add-item': function (event, instance) {
         let itemId = instance.$('[name="itemId"]').val();
@@ -235,27 +342,55 @@ newTmpl.events({
 
         let qty = parseInt(instance.$('[name="qty"]').val());
         let price = round2(parseFloat(instance.$('[name="price"]').val()), 2);
+        let khrPrice = parseFloat(instance.$('[name="khrPrice"]').val());
+        let currency = instance.$('[name="currencyId"]').val();
+        let orderPrice = round2(parseFloat(instance.$('[name="orderPrice"]').val()), 2);
+        let discount = parseFloat(instance.$('[name="discount"]').val() || 0);
+        let amount = round2(parseFloat(instance.$('[name="amount"]').val()), 2);
+        let totalAmount = round2(parseFloat(instance.$('[name="totalAmount"]').val()), 2);
         let memo = instance.$('[name="memo"]').val();
-        let amount = round2(qty * price, 2);
-
+        let discountType = Session.get('discountType') == "Percentage" ? "%" : "៛";
         // Check exist
         let exist = itemsCollection.findOne({itemId: itemId});
         if (exist) {
             qty += parseInt(exist.qty);
-            amount = round2(qty * price, 2);
+            amount = round2(qty * orderPrice, 2);
+            if (discountType == "%") {
+                totalAmount = round2(amount - (amount * discount / 100), -2);
+            } else {
+                totalAmount = round2((amount - discount), -2);
+            }
 
             itemsCollection.update(
                 {_id: itemId},
-                {$set: {qty: qty, price: price, amount: amount, memo: memo}}
+                {
+                    $set: {
+                        qty: qty,
+                        price: price,
+                        orderPrice: orderPrice,
+                        discount: discount,
+                        discountType: discountType,
+                        amount: amount,
+                        totalAmount: totalAmount,
+                        memo: memo
+                    }
+                }
             );
+            console.log(itemsCollection.find().fetch());
         } else {
             itemsCollection.insert({
                 _id: itemId,
                 itemId: itemId,
                 itemName: itemName,
                 qty: qty,
+                currencyId: currency,
                 price: price,
+                khrPrice: khrPrice,
+                orderPrice: orderPrice,
+                discount: discount,
+                discountType: discountType,
                 amount: amount,
+                totalAmount: totalAmount,
                 memo: memo
             });
         }
@@ -264,14 +399,31 @@ newTmpl.events({
 
 // Edit
 editTmpl.onCreated(function () {
+    this.itemId = new ReactiveVar();
+    this.itemDoc = new ReactiveVar();
     this.qty = new ReactiveVar(0);
+    this.orderPrice = new ReactiveVar(0);
     this.price = new ReactiveVar(0);
+    this.khrPrice = new ReactiveVar(0);
+    this.amount = new ReactiveVar(0);
+    this.currencyId = new ReactiveVar();
+    this.discount = new ReactiveVar(0);
+    this.totalAmount = new ReactiveVar(0);
 
     this.autorun(() => {
         let data = Template.currentData();
         this.qty.set(data.qty);
         this.price.set(data.price);
+        this.currencyId.set(data.currencyId);
+        this.khrPrice.set(data.khrPrice);
+        this.discount.set(data.discount);
     });
+});
+
+editTmpl.onRendered(function () {
+    $('[name="currencyId"]').hide();
+    $('[name="price"]').hide();
+    $('[name="khrPrice"]').hide();
 });
 
 editTmpl.helpers({
@@ -282,13 +434,73 @@ editTmpl.helpers({
         let data = Template.currentData();
         return data;
     },
-    price: function () {
-        return Template.instance().price.get();
+    orderPrice: function () {
+        const instance = Template.instance();
+        let result, exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType');
+
+        if (customerType == "Retail") {
+            result = instance.khrPrice.get();
+        } else {
+            fx.base = "USD";
+            fx.rates = {
+                "KHR": exchangeDoc.rates.KHR,
+                "USD": exchangeDoc.rates.USD,
+                "THB": exchangeDoc.rates.THB
+            }
+
+            if (instance.currencyId.get() == "USD") {
+                result = round2(fx.convert(instance.price.get(), {from: "USD", to: "KHR"}), -2);
+
+            } else if (instance.currencyId.get() == "THB") {
+                result = round2(fx.convert(instance.price.get(), {from: "THB", to: "KHR"}), -2);
+            } else {
+                result = instance.khrPrice.get();
+            }
+        }
+
+        return result;
+    },
+    itemDoc: function () {
+        return Template.instance().itemDoc.get();
     },
     amount: function () {
         const instance = Template.instance();
-        let amount = instance.qty.get() * instance.price.get();
-        return amount;
+        let amount, data = Template.currentData(), exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
+
+        if (customerType == "Retail") {
+            amount = instance.qty.get() * instance.khrPrice.get();
+        } else {
+            fx.base = "USD";
+            fx.rates = {
+                "KHR": exchangeDoc.rates.KHR,
+                "USD": exchangeDoc.rates.USD,
+                "THB": exchangeDoc.rates.THB
+            };
+
+            let tempAmount = instance.qty.get() * instance.price.get();
+
+            if (instance.currencyId.get() == "USD") {
+                amount = round2(fx.convert(tempAmount, {from: "USD", to: "KHR"}), -2);
+            } else if (instance.currencyId.get() == "THB") {
+                amount = round2(fx.convert(tempAmount, {from: "THB", to: "KHR"}), -2);
+            } else if (instance.currencyId.get() == "KHR") {
+                amount = instance.qty.get() * instance.khrPrice.get() || data.khrPrice;
+            }
+        }
+
+        instance.amount.set(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
+        return orderPrice > 0 ? instance.qty.get() * orderPrice : amount;
+    },
+    totalAmount: function () {
+        const instance = Template.instance();
+        let totalAmount, amount = instance.amount.get(), discount = instance.discount.get(), discountType = Session.get('discountType');
+
+        if (discountType == "Percentage") {
+            totalAmount = round2(amount - (amount * discount / 100), -2);
+        } else {
+            totalAmount = round2((amount - discount), -2);
+        }
+        return totalAmount;
     }
 });
 
@@ -303,7 +515,10 @@ editTmpl.events({
                 itemId: itemId
             }).then((result) => {
                 instance.price.set(result.price);
-
+                instance.khrPrice.set(result.khrPrice);
+                instance.currencyId.set(result.currencyId);
+                instance.itemDoc.set(result);
+                instance.orderPrice.set(0);
                 Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 100);
@@ -313,17 +528,22 @@ editTmpl.events({
             });
         } else {
             instance.price.set(0);
+            instance.khrPrice.set(0);
+            instance.currencyId.set(undefined);
         }
     },
-    'keyup [name="qty"],[name="price"]': function (event, instance) {
+    'keyup [name="qty"],[name="orderPrice"],[name="discount"]': function (event, instance) {
         let qty = instance.$('[name="qty"]').val();
-        let price = instance.$('[name="price"]').val();
+        let orderPrice = instance.$('[name="orderPrice"]').val();
+        let discount = instance.$('[name="discount"]').val();
         qty = _.isEmpty(qty) ? 0 : parseInt(qty);
-        price = _.isEmpty(price) ? 0 : parseFloat(price);
+        orderPrice = _.isEmpty(orderPrice) ? 0 : parseFloat(orderPrice);
+        discount = _.isEmpty(discount) ? 0 : parseFloat(discount);
 
         instance.qty.set(qty);
-        instance.price.set(price);
-    }
+        instance.orderPrice.set(orderPrice);
+        instance.discount.set(discount);
+    },
 });
 
 let hooksObject = {
@@ -342,25 +562,51 @@ let hooksObject = {
             // Check exist item
             let exist = itemsCollection.findOne({_id: insertDoc.itemId});
             if (exist) {
+                console.log('2');
                 let newQty = exist.qty + insertDoc.qty;
-                let newPrice = insertDoc.price;
-                let newAmount = round2(newQty * newPrice, 2);
+                let newAmount = round2(newQty * insertDoc.orderPrice, 2);
+                let discountType = Session.get('discountType') == "Percentage" ? "%" : "៛";
+                let newTotalAmount, newDiscount = insertDoc.discount;
+                if (discountType == "%") {
+                    newTotalAmount = round2(newAmount - (newAmount * newDiscount / 100), -2);
+                } else {
+                    newTotalAmount = round2((newAmount - newDiscount), -2);
+                }
 
                 itemsCollection.update(
                     {_id: insertDoc.itemId},
-                    {$set: {qty: newQty, price: newPrice, amount: newAmount, memo: insertDoc.memo}}
+                    {
+                        $set: {
+                            qty: newQty,
+                            currencyId: insertDoc.currencyId,
+                            price: insertDoc.price,
+                            khrPrice: insertDoc.khrPrice,
+                            orderPrice: insertDoc.orderPrice,
+                            discount: newDiscount,
+                            amount: newAmount,
+                            totalAmount: newTotalAmount,
+                            memo: insertDoc.memo
+                        }
+                    }
                 );
             } else {
-                let itemName = _.trim(_.split($('[name="itemId"] option:selected').text(), " [")[0]);
-                itemName = _.trim(_.split(itemName, " : ")[1]);
+                console.log('3');
+                let itemName = Session.get('update') == true ? _.split($('[name="itemId"] option:selected').text(), " : ")[1] : _.split($('[name="itemId"] option:selected').text(), " : ")[2];
+                let discountType = Session.get('discountType') == "Percentage" ? "%" : "៛";
 
                 itemsCollection.insert({
                     _id: insertDoc.itemId,
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     qty: insertDoc.qty,
+                    currencyId: insertDoc.currencyId,
                     price: insertDoc.price,
+                    khrPrice: insertDoc.khrPrice,
+                    orderPrice: insertDoc.orderPrice,
+                    discount: insertDoc.discount,
+                    discountType: discountType,
                     amount: insertDoc.amount,
+                    totalAmount: insertDoc.totalAmount,
                     memo: insertDoc.memo
                 });
             }

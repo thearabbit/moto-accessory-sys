@@ -39,7 +39,7 @@ Order.itemsSchema = new SimpleSchema({
     },
     khrPrice: {
         type: Number,
-        label: 'Price',
+        label: 'Khr Price',
         decimal: true,
         autoform: {
             type: 'inputmask',
@@ -125,8 +125,9 @@ Order.schema = new SimpleSchema({
                 optionsMethod: 'moto.selectOptsMethod.customer',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
-                        let currentBranch = Session.get('currentBranch');
-                        return {branchId: currentBranch};
+                        let currentBranch = Session.get('currentBranch'), customerType = Session.get('customerType');
+                        // console.log(customerType);
+                        return {branchId: currentBranch, type: customerType};
                     }
                 }
             }
@@ -139,7 +140,18 @@ Order.schema = new SimpleSchema({
         autoform: {
             type: "select-radio-inline",
             options: function () {
-                return getLookupValue('Customer Type');
+                return getLookupValue('Order Type');
+            }
+        }
+    },
+    discountType: {
+        type: String,
+        label: 'Discount Type',
+        defaultValue: 'Percentage',
+        autoform: {
+            type: "select-radio-inline",
+            options: function () {
+                return getLookupValue('Discount Type');
             }
         }
     },
@@ -150,7 +162,7 @@ Order.schema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Select One',
-                optionsMethod: 'moto.selectOptsMethod.customer',
+                optionsMethod: 'moto.selectOptsMethod.employee',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
                         let currentBranch = Session.get('currentBranch');
@@ -163,12 +175,18 @@ Order.schema = new SimpleSchema({
     exchangeId: {
         type: String,
         label: 'Exchange',
+        optional: true,
         autoform: {
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Please search... (limit 10)',
                 optionsPlaceholder: 'Please search... (limit 10)',
                 optionsMethod: 'moto.selectOptsMethod.exchange'
+            }
+        },
+        custom: function () {
+            if (this.field('type').value == 'Whole' && !this.value) {
+                return 'required';
             }
         }
     },
@@ -205,7 +223,8 @@ Order.schema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.currency();
             }
-        }
+        },
+        optional: true
     },
     oldTotalRef: {
         type: String,
@@ -221,18 +240,21 @@ Order.schema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.currency();
             }
-        }
+        },
+        optional: true
     },
     discountAmount: {
         type: Number,
         label: 'Discount amount',
         decimal: true,
+        defaultValue: 0,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.percentage();
+                return inputmaskOptions.currency({prefix: "៛"});
             }
-        }
+        },
+        optional: true
     },
     total: {
         type: Number,
@@ -241,7 +263,7 @@ Order.schema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency();
+                return inputmaskOptions.currency({prefix: "៛"});
             }
         }
     },
@@ -254,7 +276,8 @@ Order.schema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.currency();
             }
-        }
+        },
+        optional: true
     },
     branchId: {
         type: String

@@ -70,11 +70,15 @@ Item.schema = new SimpleSchema({
             }
         }
     },
-    price: {
+    baseQty: {
+        type: Number,
+        label: "Base Qty"
+    },
+    priceByQty: {
         type: Number,
         decimal: true,
+        label: "Price By Qty",
         min: 0,
-        optional: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -99,11 +103,11 @@ Item.schema = new SimpleSchema({
             }
         }
     },
-    khrPrice: {
+    khrPriceByQty: {
         type: Number,
         decimal: true,
         min: 0,
-        optional: true,
+        label: "Khr Price By Qty",
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -115,6 +119,18 @@ Item.schema = new SimpleSchema({
                 return 'required';
             }
         }
+    },
+    price: {
+        type: Number,
+        decimal: true,
+        min: 0,
+        optional: true
+    },
+    khrPrice: {
+        type: Number,
+        decimal: true,
+        min: 0,
+        optional: true
     },
     // des: {
     //     type: String,

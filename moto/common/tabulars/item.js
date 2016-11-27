@@ -45,8 +45,9 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         },
         {
             data: "name",
-            title: "Name",
+            title: "Name"
         },
+        {data: "baseQty", title: "Base Qty"},
         {
             data: "price",
             title: "Price",
