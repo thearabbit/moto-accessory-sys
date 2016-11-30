@@ -159,3 +159,20 @@ MotoRoutes.route('/order', {
         parent: 'moto.home'
     }
 });
+
+// Order Vip
+import '../imports/pages/orderVip.js';
+MotoRoutes.route('/orderVip', {
+    name: 'moto.orderVip',
+    title: 'Order VIP',
+    action: function (params, queryParams) {
+        Layout.main('Moto_orderVip');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Order VIP',
+        // icon: 'cart-plus',
+        parent: 'moto.home'
+    }
+});
