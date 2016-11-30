@@ -50,13 +50,13 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.item(fa('plus', TAPi18n.__('moto.item.title')), renderTemplate(formTmpl));
+        alertify.item(fa('plus', TAPi18n.__('moto.item.title')), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
         alertify.item(fa('pencil', TAPi18n.__('moto.item.title')), renderTemplate(formTmpl, {
             itemId: this._id,
             type: this.type
-        }));
+        })).maximize();
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
@@ -77,8 +77,8 @@ formTmpl.onCreated(function () {
     this.autorun(() => {
         // Lookup value
         this.subscribe('moto.lookupValue', ['Item Type']);
-
         let currentData = Template.currentData();
+
         if (currentData) {
             this.type.set(currentData.type);
             this.subscribe('moto.itemById', currentData.itemId);
@@ -120,6 +120,7 @@ formTmpl.events({
 showTmpl.onCreated(function () {
     this.autorun(() => {
         let currentData = Template.currentData();
+
         this.subscribe('moto.itemById', currentData.itemId);
     });
 });
@@ -131,8 +132,9 @@ showTmpl.helpers({
     },
     data () {
         let currentData = Template.currentData();
-        let data = Item.findOne(currentData._id);
+        let data = Item.findOne(currentData.itemId);
         data.photoUrl = null;
+
         if (data.photo) {
             let img = Files.findOne(data.photo);
             if (img) {

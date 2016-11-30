@@ -1,0 +1,139 @@
+<!--Item Temporary-->
+<template name="Moto_orderVipItems">
+    <!--Item form-->
+    {{> Moto_orderVipItemsNew}}
+    <!--<hr>-->
+
+    <!--Items list-->
+    {{> reactiveTable settings=tableSettings}}
+
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="pull-right">Sub Total (KHR):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="subTotal" value=subTotal label=false readonly="true"}}
+        </div>
+        <div class="col-sm-2">
+            <div class="pull-right">Discount Amount (KHR):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="discountAmount" label=false}}
+        </div>
+        <div class="col-sm-2">
+            <div class="pull-right">Total (KHR):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="total" value=total label=false readonly="true"}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="pull-right">Sub Total (USD):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="subTotalUsd" value=subTotalUsd label=false readonly="true"}}
+        </div>
+        <div class="col-sm-2">
+            <div class="pull-right">Discount Amount (USD):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="discountAmountUsd" label=false}}
+        </div>
+        <div class="col-sm-2">
+            <div class="pull-right">Total (USD):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="totalUsd" value=totalUsd label=false readonly="true"}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="pull-right">Sub Total (THB):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="subTotalThb" value=subTotalThb label=false readonly="true"}}
+        </div>
+        <div class="col-sm-2">
+            <div class="pull-right">Discount Amount (THB):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="discountAmountThb" label=false}}
+        </div>
+        <div class="col-sm-2">
+            <div class="pull-right">Total (THB):</div>
+        </div>
+        <div class="col-sm-2">
+            {{> afQuickField name="totalThb" value=totalThb label=false readonly="true"}}
+        </div>
+    </div>
+</template>
+
+<!--Action-->
+<template name="Moto_orderVipItemsAction">
+    <ul class="list-inline">
+        <li><a href="#" class="js-update-item"><i class="fa fa-pencil"></i></a></li>
+        <li><a href="#" class="js-destroy-item"><i class="fa fa-remove"></i></a></li>
+    </ul>
+</template>
+
+<!--New Item-->
+<template name="Moto_orderVipItemsNew">
+    {{#autoForm schema=schema id="Moto_orderVipItemsNew"}}
+        <div class="row">
+            <div class="col-sm-3">
+                {{> afQuickField name="itemId" label=false placeholder="Item"}}
+            </div>
+            <div class="col-sm-1">
+                {{> afQuickField name="qty" label=false placeholder="Qty"}}
+            </div>
+            <div class="col-sm-2">
+                {{> afQuickField name="orderPrice" value=orderPrice label=false placeholder="Order Price"}}
+                {{> afQuickField name="currencyId" value=itemDoc.currencyId label=false placeholder="Currency" readonly=true}}
+                {{> afQuickField name="price" value=itemDoc.price label=false placeholder="Price" readonly=true}}
+                {{> afQuickField name="khrPrice" value=itemDoc.khrPrice label=false placeholder="KHR Price" readonly=true}}
+            </div>
+            <div class="col-sm-1">
+                {{> afQuickField name="discount" value=discount label=false placeholder="Discount"}}
+            </div>
+            <div class="col-sm-1">
+                {{> afQuickField name="amount" value=amount label=false placeholder="Amount" readonly=true}}
+            </div>
+            <div class="col-sm-1">
+                {{> afQuickField name="totalAmount" value=totalAmount label=false placeholder="Total Amount" readonly=true}}
+            </div>
+            <div class="col-sm-2">
+                {{> afQuickField name="memo" label=false placeholder="Memo"}}
+            </div>
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-primary js-add-item" {{disabledAddItemBtn}}>+</button>
+            </div>
+        </div>
+    {{/autoForm}}
+</template>
+
+<!--Edit Item-->
+<template name="Moto_orderVipItemsEdit">
+    <div class="box-body">
+        {{#autoForm schema=schema id="Moto_orderVipItemsEdit" doc=data}}
+            <div class="row">
+                <div class="col-md-12">
+                    {{> afQuickField name="itemId" class="itemIdEdit" placeholder="Item"}}
+                    {{> afQuickField name="qty" placeholder="Qty"}}
+                    {{> afQuickField name="currencyId" label=false value=itemDoc.currencyId  readonly=true}}
+                    {{> afQuickField name="price" label=false value=itemDoc.price readonly=true}}
+                    {{> afQuickField name="khrPrice" label=false value=itemDoc.khrPrice readonly=true}}
+                    {{> afQuickField name="orderPrice" value=orderPrice readonly="true"}}
+                    {{> afQuickField name="discount" placeholder="Discount"}}
+                    {{> afQuickField name="amount" value=amount readonly=true}}
+                    {{> afQuickField name="totalAmount" value=totalAmount readonly="true"}}
+                    {{> afQuickField name="memo" placeholder="Memo"}}
+                </div>
+            </div>
+
+            {{> formFooterWithButton}}
+        {{/autoForm}}
+    </div>
+</template>

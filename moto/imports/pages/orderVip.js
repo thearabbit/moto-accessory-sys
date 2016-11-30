@@ -23,24 +23,24 @@ import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
 // Method
-import {lookupOrder} from '../../common/methods/lookupOrder';
+import {lookupOrderVip} from '../../common/methods/lookupOrderVip';
 
 // Collection
-import {Order} from '../../common/collections/order.js';
+import {OrderVip} from '../../common/collections/orderVip.js';
 import {Exchange} from '../../../core/common/collections/exchange.js';
 
 // Tabular
-import {OrderTabular} from '../../common/tabulars/order.js';
+import {OrderVipTabular} from '../../common/tabulars/orderVip.js';
 
 // Page
-import './order.html';
-import './orderItems.js';
+import './orderVip.html';
+import './orderVipItems.js';
 
 // Declare template
-let indexTmpl = Template.Moto_order,
-    actionTmpl = Template.Moto_orderAction,
-    formTmpl = Template.Moto_orderForm,
-    showTmpl = Template.Moto_orderShow;
+let indexTmpl = Template.Moto_orderVip,
+    actionTmpl = Template.Moto_orderVipAction,
+    formTmpl = Template.Moto_orderVipForm,
+    showTmpl = Template.Moto_orderVipShow;
 
 // Local collection
 let itemsCollection = new Mongo.Collection(null);
@@ -53,7 +53,7 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     tabularTable(){
-        return OrderTabular;
+        return OrderVipTabular;
     },
     selector() {
         return {branchId: Session.get('currentBranch')};
@@ -62,25 +62,25 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.order(fa('plus', 'Order'), renderTemplate(formTmpl)).maximize();
+        alertify.order(fa('plus', 'Order Vip'), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
-        alertify.order(fa('pencil', 'Order'), renderTemplate(formTmpl, {orderId: this._id})).maximize();
+        alertify.order(fa('pencil', 'Order Vip'), renderTemplate(formTmpl, {orderVipId: this._id})).maximize();
         Session.set("update", true);
     },
     'click .js-destroy' (event, instance) {
         destroyAction(
-            Order,
+            OrderVip,
             {_id: this._id},
-            {title: 'Order', itemTitle: this._id}
+            {title: 'Order Vip', itemTitle: this._id}
         );
     },
     'click .js-display' (event, instance) {
-        alertify.orderShow(fa('eye', 'Order'), renderTemplate(showTmpl, {orderId: this._id})).maximize();
+        alertify.orderShow(fa('eye', 'Order Vip'), renderTemplate(showTmpl, {orderVipId: this._id})).maximize();
     },
     'click .js-invoice' (event, instance) {
         let params = {};
-        let queryParams = {orderId: this._id};
+        let queryParams = {orderVipId: this._id};
         let path = FlowRouter.path("moto.invoiceReportGe", params, queryParams);
 
         window.open(path, '_blank');
@@ -91,8 +91,8 @@ indexTmpl.events({
 formTmpl.onCreated(function () {
     let self = this;
     self.isLoading = new ReactiveVar(false);
-    self.orderDoc = new ReactiveVar();
-    Session.set('customerType', 'Retail');
+    self.orderVipDoc = new ReactiveVar();
+    Session.set('customerType', 'Vip');
     Session.set('discountType', 'Percentage');
 
     self.autorun(() => {
@@ -103,15 +103,15 @@ formTmpl.onCreated(function () {
         if (currentData) {
             self.isLoading.set(true);
 
-            lookupOrder.callPromise({
-                orderId: currentData.orderId
+            lookupOrderVip.callPromise({
+                orderVipId: currentData.orderVipId
             }).then((result) => {
                 // Add items to local collection
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
                 });
 
-                self.orderDoc.set(result);
+                self.orderVipDoc.set(result);
                 self.isLoading.set(false);
             }).catch((err) => {
                 console.log(err);
@@ -124,7 +124,7 @@ formTmpl.onCreated(function () {
 
 formTmpl.helpers({
     collection(){
-        return Order;
+        return OrderVip;
     },
     isLoading(){
         return Template.instance().isLoading.get();
@@ -138,9 +138,12 @@ formTmpl.helpers({
         let currentData = Template.currentData();
         if (currentData) {
             data.formType = 'update';
-            data.doc = Template.instance().orderDoc.get();
+
+            data.doc = Template.instance().orderVipDoc.get();
 
             Session.set('discountAmountUpdate', data.doc.discountAmount);
+            Session.set('discountAmountUsdUpdate', data.doc.discountAmountUsd);
+            Session.set('discountAmountThbUpdate', data.doc.discountAmountThb);
         }
 
         return data;
@@ -155,21 +158,6 @@ formTmpl.helpers({
         }
 
         return {};
-    },
-    showExchange(){
-        let type = Session.get('customerType');
-        return type == 'Whole' ? true : false;
-    },
-    showItems(){
-        let result, exchange = Session.get('exchangeDoc'), type = Session.get('customerType');
-        if (type == "Retail") {
-            result = true;
-        } else if (type == "Whole" && !_.isNull(exchange)) {
-            result = true;
-        } else {
-            result = false;
-        }
-        return result;
     }
 });
 
@@ -198,20 +186,22 @@ formTmpl.onDestroyed(function () {
     Session.set('discountType', null);
     Session.set('update', false);
     Session.set('discountAmountUpdate', null);
+    Session.set('discountAmountUsdUpdate', null);
+    Session.set('discountAmountThbUpdate', null);
 });
 
 // Show
 showTmpl.onCreated(function () {
-    this.orderDoc = new ReactiveVar();
+    this.orderVipDoc = new ReactiveVar();
 
     this.autorun(() => {
         $.blockUI();
 
         let currentData = Template.currentData();
-        lookupOrder.callPromise({
-            orderId: currentData.orderId
+        lookupOrderVip.callPromise({
+            orderVipId: currentData.orderVipId
         }).then((result) => {
-            this.orderDoc.set(result);
+            this.orderVipDoc.set(result);
 
             $.unblockUI();
         }).catch((err) => {
@@ -222,7 +212,7 @@ showTmpl.onCreated(function () {
 
 showTmpl.helpers({
     data () {
-        let data = Template.instance().orderDoc.get();
+        let data = Template.instance().orderVipDoc.get();
 
         if (data && data.des) {
             data.des = Spacebars.SafeString(data.des);
@@ -231,7 +221,7 @@ showTmpl.helpers({
         return data;
     },
     checkDiscountType() {
-        let data = Template.instance().orderDoc.get();
+        let data = Template.instance().orderVipDoc.get();
         let result = {
             class: 'label bg-red',
             icon: fa("percent", "Percentage")
@@ -245,25 +235,6 @@ showTmpl.helpers({
         }
 
         return result;
-    },
-    checkType() {
-        let data = Template.instance().orderDoc.get();
-        let result = {
-            class: 'label bg-teal-active',
-            icon: fa("star", "Whole")
-        };
-
-        if (data && data.type == "Retail") {
-            result = {
-                class: 'label bg-orange',
-                icon: fa("star-o", "Retail")
-            };
-        }
-
-        return result;
-    },
-    jsonViewOpts(){
-        return {collapsed: true};
     }
 });
 
@@ -294,6 +265,10 @@ let hooksObject = {
         $('[name="amount"]').val(null);
         $('[name="discountAmount"]').val(null);
         $('[name="total"]').val(null);
+        $('[name="discountAmountUsd"]').val(null);
+        $('[name="totalUsd"]').val(null);
+        $('[name="discountAmountThb"]').val(null);
+        $('[name="totalThb"]').val(null);
 
         displaySuccess();
     },
@@ -302,4 +277,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks(['Moto_orderForm'], hooksObject);
+AutoForm.addHooks(['Moto_orderVipForm'], hooksObject);
