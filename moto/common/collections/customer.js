@@ -18,13 +18,13 @@ Customer.generalSchema = new SimpleSchema({
     gender: {
         type: String,
         label: 'Gender',
-        defaultValue: 'M',
         autoform: {
             type: "select-radio-inline",
             options: function () {
                 return getLookupValue('Gender');
             }
-        }
+        },
+        optional: true
     },
     age: {
         type: Number,
@@ -59,10 +59,15 @@ Customer.generalSchema = new SimpleSchema({
                 }
             }
         },
+        optional: true
     },
     address: {
         type: String,
         label: 'Address'
+    },
+    contact: {
+        type: String,
+        label: "Contact"
     },
     email: {
         type: String,
@@ -75,36 +80,7 @@ Customer.generalSchema = new SimpleSchema({
     }
 });
 
-Customer.contactSchema = new SimpleSchema({
-    contact: {
-        type: [Object],
-        label: 'Contact',
-        minCount: 1,
-        maxCount: 3
-    },
-    'contact.$.type': {
-        type: String,
-        label: 'Type',
-        autoform: {
-            type: "select",
-            options: function () {
-                return getLookupValue('Contact Type');
-            }
-        }
-    },
-    'contact.$.number': {
-        type: String,
-        label: 'Number',
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                return inputmaskOptions.phone();
-            }
-        }
-    },
-});
 
 Customer.attachSchema([
-    Customer.generalSchema,
-    Customer.contactSchema
+    Customer.generalSchema
 ]);
