@@ -24,7 +24,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Moto_customerAction},
         {data: "_id", title: "ID"},
         {data: "name", title: "Name"},
-        {data: "gender", title: "Gender"},
+        // {data: "gender", title: "Gender"},
         // {
         //     data: "dob",
         //     title: "Date of Birth",
@@ -32,8 +32,24 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         //         return moment(val).format('DD/MM/YYYY');
         //     }
         // },
-        {data: "type", title: "Type"},
-        {data: 'contact', title: 'Contact', tmpl: Meteor.isClient && Template.Moto_customerContact},
+        {
+            data: "type",
+            title: "Type",
+            render: function (val, type, doc) {
+                let result;
+
+                if (val == "Retail") {
+                    result = `<span class="badge bg-orange-active"><i class="fa fa-star-o"></i> ${val} </span>`;
+                } else if (val == "Whole") {
+                    result = `<span class="badge bg-teal-active"><i class="fa fa-star"></i> ${val} </span>`;
+                } else {
+                    result = `<span class="badge bg-navy-active"><i class="fa fa-trophy"></i> ${val} </span>`;
+                }
+
+                return result;
+            }
+        },
+        {data: 'contact', title: 'Contact'},
     ],
 });
 
