@@ -42,7 +42,7 @@ let indexTmpl = Template.Moto_supplier,
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('supplier', {size: 'lg'});
+    createNewAlertify('supplier', {size: 'sm'});
     createNewAlertify('supplierShow',);
 });
 

@@ -24,11 +24,11 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Moto_supplierAction},
         {data: "_id", title: "ID"},
         {data: "name", title: "Name"},
-        {data: "gender", title: "Gender"},
+        // {data: "gender", title: "Gender"},
         {data: "companyName", title: "Company Name"},
-        {data: 'contact', title: 'Contact', tmpl: Meteor.isClient && Template.Moto_supplierContact},
+        // {data: 'contact', title: 'Contact', tmpl: Meteor.isClient && Template.Moto_supplierContact},
     ],
-    extraFields: ['locationId','memo','email'],
+    extraFields: [],
 });
 
 export const SupplierTabular = new Tabular.Table(tabularData);
