@@ -18,6 +18,9 @@
     "supplier": {
       "title": "Supplier"
     },
+    "unit": {
+      "title": "Unit"
+    },
     "item": {
       "title": "Item",
       "schema": {

@@ -4,6 +4,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 // Collection
 import {Branch} from '../../../core/common/collections/branch';
 import {Currency} from '../../../core/common/collections/currency';
+import {Unit} from '../../../moto/common/collections/unit';
 
 export const SelectOpts = {
     branch: function (selectOne) {
@@ -41,5 +42,18 @@ export const SelectOpts = {
         list.push({label: "Female", value: "F"});
 
         return list;
-    }
+    },
+    unit: function (selectOne) {
+        let list = [];
+        if (selectOne) {
+            list.push({label: '(Select One)', value: ''});
+        }
+
+        Unit.find()
+            .forEach(function (obj) {
+                list.push({label: obj._id + ' (' + obj.name + ')', value: obj._id})
+            });
+
+        return list;
+    },
 };

@@ -24,6 +24,10 @@ Item.schema = new SimpleSchema({
             // }
         }
     },
+    name: {
+        type: String,
+        max: 200,
+    },
     parent: {
         type: String,
         optional: true,
@@ -45,19 +49,20 @@ Item.schema = new SimpleSchema({
         label: 'Code',
         optional: true
     },
-    name: {
-        type: String,
-        unique: true,
-        max: 200
-    },
     unit: {
         type: String,
-        label: "Unit"
+        label: "Unit",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return SelectOpts.unit('selectOne', true);
+            }
+        },
+        optional: true
     },
     currencyId: {
         type: String,
         defaultValue: 'USD',
-        optional: true,
         autoform: {
             type: "select-radio-inline",
             options: function () {
