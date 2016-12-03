@@ -6,6 +6,7 @@ import {Item} from '../../common/collections/item.js';
 
 Item.before.insert(function (userId, doc) {
     doc._id = idGenerator.gen(Item, 9);
+    doc.code = idGenerator.gen(Item, 4);
 
     // Get ancestors
     if (doc.parent) {
@@ -24,11 +25,6 @@ Item.before.insert(function (userId, doc) {
     if (doc.type == 'C') {
         delete doc.currencyId;
     }
-
-    // Price
-    doc.price = doc.priceByQty / doc.baseQty;
-    // Khr Price
-    doc.khrPrice = doc.khrPriceByQty / doc.baseQty;
 });
 
 Item.before.update(function (userId, doc, fieldNames, modifier, options) {
@@ -51,10 +47,5 @@ Item.before.update(function (userId, doc, fieldNames, modifier, options) {
     if (modifier.$set.type == 'C') {
         delete modifier.$set.currencyId;
     }
-
-    // Price
-    modifier.$set.price = modifier.$set.priceByQty / modifier.$set.baseQty;
-    // Khr Price
-    modifier.$set.khrPrice = modifier.$set.khrPriceByQty / modifier.$set.baseQty;
 });
 

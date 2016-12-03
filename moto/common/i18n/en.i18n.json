@@ -43,7 +43,7 @@
           "label": "Price"
         },
         "khrPrice": {
-          "label": "KHR price"
+          "label": "Khr Price"
         },
         "supplierId": {
           "label": "Supplier"
