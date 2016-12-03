@@ -21,6 +21,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Collection
 import {Item} from '../../common/collections/item.js';
+import {Unit} from '../../common/collections/unit.js';
 
 // Tabular
 import {ItemTabular} from '../../common/tabulars/item.js';
@@ -77,6 +78,7 @@ formTmpl.onCreated(function () {
     this.autorun(() => {
         // Lookup value
         this.subscribe('moto.lookupValue', ['Item Type']);
+        this.subscribe('moto.unit');
         let currentData = Template.currentData();
 
         if (currentData) {
@@ -120,7 +122,7 @@ formTmpl.events({
 showTmpl.onCreated(function () {
     this.autorun(() => {
         let currentData = Template.currentData();
-
+        this.subscribe('moto.unit');
         this.subscribe('moto.itemById', currentData.itemId);
     });
 });
@@ -141,6 +143,8 @@ showTmpl.helpers({
                 data.photoUrl = img.url();
             }
         }
+
+        data.unitName = Unit.findOne({_id: data.unitId}).name;
 
         return data;
     }

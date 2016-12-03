@@ -48,6 +48,9 @@
         "khrPrice": {
           "label": "Khr Price"
         },
+        "unit": {
+          "label": "Unit"
+        },
         "supplierId": {
           "label": "Supplier"
         },

@@ -49,7 +49,7 @@ Item.schema = new SimpleSchema({
         label: 'Code',
         optional: true
     },
-    unit: {
+    unitId: {
         type: String,
         label: "Unit",
         autoform: {
@@ -57,8 +57,7 @@ Item.schema = new SimpleSchema({
             options: function () {
                 return SelectOpts.unit('selectOne', true);
             }
-        },
-        optional: true
+        }
     },
     currencyId: {
         type: String,
