@@ -30,49 +30,40 @@
             {{#autoForm collection=collection id="Moto_itemForm" doc=data.doc type=data.formType
                         resetOnSuccess=false}}
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-4">
                                 {{> afQuickField name="type"}}
                             </div>
-                            <div class="col-md-8">
-                                {{> afQuickField name="parent"}}
+                            <div class="col-md-4">
+                                {{> afQuickField name="currencyId"}}
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-3">
-                                {{> afQuickField name="code"}}
-                            </div>
-                            <div class="col-md-9">
+                            <div class="col-md-4">
                                 {{> afQuickField name="name"}}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{#if showTypeObj}}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Item Info</div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    {{> afQuickField name="currencyId"}}
-                                    {{> afQuickField name="priceByQty"}}
-                                    {{> afQuickField name="khrPriceByQty"}}
-                                    {{> afQuickField name="baseQty"}}
-                                    {{> afQuickField type="hidden" name="price"}}
-                                    {{> afQuickField type="hidden" name="khrPrice"}}
-                                </div>
-                                <div class="col-md-6">
-                                    {{> afQuickField name="supplierId"}}
-                                    {{> afQuickField name="photo"}}
-                                </div>
+                    <!--{{#if showTypeObj}}-->
+                <div class="panel panel-default">
+                    <div class="panel-heading">Item Info</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{> afQuickField name="price"}}
+                                {{> afQuickField name="khrPrice"}}
+                                {{> afQuickField name="unit"}}
+                            </div>
+                            <div class="col-md-6">
+                                {{> afQuickField name="supplierId"}}
+                                {{> afQuickField name="purchase"}}
+                                {{> afQuickField name="photo"}}
                             </div>
                         </div>
                     </div>
-                {{/if}}
+                </div>
+                    <!--{{/if}}-->
 
                 {{> formFooterWithButton}}
             {{/autoForm}}
@@ -90,14 +81,16 @@
                 <dl class="dl-horizontal">
                     <dt>{{i18nLabel "_id"}}</dt>
                     <dd>{{_id}}</dd>
+                    <dt>{{i18nLabel "code"}}</dt>
+                    <dd>{{code}}</dd>
                     <dt>{{i18nLabel "name"}}</dt>
                     <dd>{{name}}</dd>
                     <dt>{{i18nLabel "price"}}</dt>
                     <dd>{{price}}</dd>
+                    <dt>{{i18nLabel "khrPrice"}}</dt>
+                    <dd>{{khrPrice}}</dd>
                     <dt>{{i18nLabel "type"}}</dt>
                     <dd>{{type}}</dd>
-                    <dt>{{i18nLabel "parent"}}</dt>
-                    <dd>{{parent}}</dd>
                     <dt>{{i18nLabel "photo"}}</dt>
                     <dd>{{lightbox url=photoUrl title=name}}</dd>
                 </dl>

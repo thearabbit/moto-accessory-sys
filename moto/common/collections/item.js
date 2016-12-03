@@ -13,12 +13,15 @@ Item.schema = new SimpleSchema({
     type: {
         type: String,
         label: 'Type',
-        defaultValue: 'C',
+        defaultValue: 'I',
         autoform: {
             type: "select-radio-inline",
             options: function () {
-                return getLookupValue('Item Type');
+                return [{label: "Item", value: "I"}];
             }
+            // options: function () {
+            //     return getLookupValue('Item Type');
+            // }
         }
     },
     parent: {
@@ -40,19 +43,16 @@ Item.schema = new SimpleSchema({
     code: {
         type: String,
         label: 'Code',
-        min: 1,
-        // max: 8,
-        // autoform: {
-        //     type: 'inputmask',
-        //     inputmaskOptions: {
-        //         mask: "99"
-        //     }
-        // },
+        optional: true
     },
     name: {
         type: String,
         unique: true,
         max: 200
+    },
+    unit: {
+        type: String,
+        label: "Unit"
     },
     currencyId: {
         type: String,
@@ -70,14 +70,10 @@ Item.schema = new SimpleSchema({
             }
         }
     },
-    baseQty: {
-        type: Number,
-        label: "Base Qty"
-    },
-    priceByQty: {
+    price: {
         type: Number,
         decimal: true,
-        label: "Price By Qty",
+        label: "Price",
         min: 0,
         autoform: {
             type: 'inputmask',
@@ -103,11 +99,11 @@ Item.schema = new SimpleSchema({
             }
         }
     },
-    khrPriceByQty: {
+    khrPrice: {
         type: Number,
         decimal: true,
         min: 0,
-        label: "Khr Price By Qty",
+        label: "Khr Price",
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -120,39 +116,35 @@ Item.schema = new SimpleSchema({
             }
         }
     },
-    price: {
+    purchase: {
         type: Number,
         decimal: true,
+        label: "Purchase Price",
         min: 0,
-        optional: true
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                if (Meteor.isClient) {
+                    let prefix = AutoForm.getFieldValue('currencyId') || '$';
+
+                    if (prefix == 'KHR') {
+                        prefix = '៛'
+                    } else if (prefix == 'USD') {
+                        prefix = '$';
+                    } else if (prefix == 'THB') {
+                        prefix = 'B';
+                    }
+
+                    return inputmaskOptions.currency({prefix: prefix});
+                }
+            }
+        },
+        custom: function () {
+            if (this.field('type').value == 'I' && !this.value) {
+                return 'required';
+            }
+        }
     },
-    khrPrice: {
-        type: Number,
-        decimal: true,
-        min: 0,
-        optional: true
-    },
-    // des: {
-    //     type: String,
-    //     label: 'Description',
-    //     optional: true,
-    //     autoform: {
-    //         afFieldInput: {
-    //             type: 'summernote',
-    //             class: 'editor', // optional
-    //             settings: {
-    //                 height: 150,                 // set editor height
-    //                 minHeight: null,             // set minimum height of editor
-    //                 maxHeight: null,             // set maximum height of editor
-    //                 toolbar: [
-    //                     ['font', ['bold', 'italic', 'underline', 'clear']], //['font', ['bold', 'italic', 'underline', 'clear']],
-    //                     ['para', ['ul', 'ol']] //['para', ['ul', 'ol', 'paragraph']],
-    //                     //['insert', ['link', 'picture']], //['insert', ['link', 'picture', 'hr']],
-    //                 ]
-    //             } // summernote options goes here
-    //         }
-    //     }
-    // },
     supplierId: {
         type: String,
         optional: true,
