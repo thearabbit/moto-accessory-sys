@@ -47,7 +47,6 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             data: "name",
             title: "Name"
         },
-        {data: "baseQty", title: "Base Qty"},
         {
             data: "price",
             title: "Price",
@@ -76,7 +75,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         },
     ],
-    extraFields: ['currencyId', 'khrPrice', 'ancestors'],
+    extraFields: ['currencyId', 'khrPrice', 'ancestors','unit'],
 });
 
 export const ItemTabular = new Tabular.Table(tabularData);

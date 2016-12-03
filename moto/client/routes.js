@@ -176,3 +176,20 @@ MotoRoutes.route('/orderVip', {
         parent: 'moto.home'
     }
 });
+
+// Unit
+import '../imports/pages/unit.js';
+MotoRoutes.route('/unit', {
+    name: 'moto.unit',
+    title: __('moto.unit.title'),
+    action: function (params, queryParams) {
+        Layout.main('Moto_unit');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: __('moto.unit.title'),
+        // icon: 'product-hunt',
+        parent: 'moto.home'
+    }
+});
