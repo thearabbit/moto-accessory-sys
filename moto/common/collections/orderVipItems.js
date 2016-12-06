@@ -23,6 +23,11 @@ export const OrderVipItemsSchema = new SimpleSchema({
             }
         }
     },
+    memoItem: {
+        type: String,
+        label: 'Memo Item',
+        optional: true
+    },
     qty: {
         type: Number,
         label: 'Qty',
