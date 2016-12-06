@@ -13,9 +13,18 @@ export const Order = new Mongo.Collection("moto_order");
 
 // Items sub schema
 Order.itemsSchema = new SimpleSchema({
+    _id: {
+        type: String,
+        label: 'Id'
+    },
     itemId: {
         type: String,
         label: 'Item'
+    },
+    memoItem: {
+        type: String,
+        label: 'Memo Item',
+        optional: true
     },
     qty: {
         type: Number,
@@ -109,7 +118,7 @@ Order.schema = new SimpleSchema({
             afFieldInput: {
                 type: "bootstrap-datetimepicker",
                 dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
+                    format: 'DD/MM/YYYY hh:mm:ss',
                     showTodayButton: true
                 }
             }
@@ -199,7 +208,7 @@ Order.schema = new SimpleSchema({
                 type: 'summernote',
                 class: 'editor', // optional
                 settings: {
-                    height: 150,                 // set editor height
+                    height: 75,                 // set editor height
                     minHeight: null,             // set minimum height of editor
                     maxHeight: null,             // set maximum height of editor
                     toolbar: [
