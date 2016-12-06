@@ -97,9 +97,10 @@ export const lookupOrder = new ValidatedMethod({
                         discountType: {$last: "$discountType"},
                         items: {
                             $addToSet: {
-                                _id: "$items.itemId",
+                                _id: "$items._id",
                                 itemId: "$items.itemId",
                                 itemName: "$itemName",
+                                memoItem: "$items.memoItem",
                                 currencyId: "$items.currencyId",
                                 qty: "$items.qty",
                                 price: "$items.price",

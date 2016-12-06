@@ -15,17 +15,6 @@ Employee.generalSchema = new SimpleSchema({
         type: String,
         label: 'Name'
     },
-    gender: {
-        type: String,
-        label: 'Gender',
-        defaultValue: 'M',
-        autoform: {
-            type: "select-radio-inline",
-            options: function () {
-                return getLookupValue('Gender');
-            }
-        }
-    },
     position: {
         type: String,
         label: 'Position',
@@ -37,28 +26,13 @@ Employee.generalSchema = new SimpleSchema({
             }
         }
     },
-    startDate: {
-        type: Date,
-        label: 'Start Date',
-        defaultValue: moment().toDate(),
-        autoform: {
-            afFieldInput: {
-                type: "bootstrap-datetimepicker",
-                dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
-                    showTodayButton: true
-                }
-            }
-        }
+    contact: {
+        type: String,
+        label: "Contact"
     },
     address: {
         type: String,
-        label: 'Address'
-    },
-    email: {
-        type: String,
-        label: 'Email',
-        regEx: SimpleSchema.RegEx.Email,
+        label: 'Address',
         optional: true
     },
     branchId: {
@@ -66,36 +40,7 @@ Employee.generalSchema = new SimpleSchema({
     }
 });
 
-Employee.contactSchema = new SimpleSchema({
-    contact: {
-        type: [Object],
-        label: 'Contact',
-        minCount: 1,
-        maxCount: 3
-    },
-    'contact.$.type': {
-        type: String,
-        label: 'Type',
-        autoform: {
-            type: "select",
-            options: function () {
-                return getLookupValue('Contact Type');
-            }
-        }
-    },
-    'contact.$.number': {
-        type: String,
-        label: 'Number',
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                return inputmaskOptions.phone();
-            }
-        }
-    },
-});
 
 Employee.attachSchema([
-    Employee.generalSchema,
-    Employee.contactSchema
+    Employee.generalSchema
 ]);

@@ -67,12 +67,20 @@ indexTmpl.helpers({
             fields: [
                 {key: 'itemId', label: 'ID', hidden: false},
                 {key: 'itemName', label: 'Item'},
+                {key: 'memoItem', label: 'Memo Item'},
                 {
                     key: 'qty',
                     label: 'Qty',
                     // fn(value, obj, key){
                     //     return Spacebars.SafeString(`<input type="text" value="${value}" class="item-qty">`);
                     // }
+                },
+                {
+                    key: 'price',
+                    label: 'Price',
+                    fn(value, obj, key){
+                        return `${value}`;
+                    }
                 },
                 {
                     key: 'orderPrice',
@@ -141,13 +149,13 @@ indexTmpl.helpers({
         const instance = Template.instance();
         let total = 0;
         let getItems = itemsCollection.find();
-        let discountAmount;
+        let discountAmount = 0;
 
-        if(instance.discountAmount.get() == null){
+        if (_.isNull(instance.discountAmount.get()) || _.isUndefined(instance.discountAmount.get())) {
             discountAmount = 0;
-        }else if(instance.discountAmount.get()){
+        } else if (instance.discountAmount.get()) {
             discountAmount = instance.discountAmount.get();
-        }else{
+        } else if (Session.get('discountAmountUpdate')) {
             discountAmount = Session.get('discountAmountUpdate');
         }
 
@@ -211,7 +219,7 @@ newTmpl.onCreated(function () {
 
 newTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
-    $('[name="price"]').hide();
+    // $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
 });
 
@@ -312,6 +320,7 @@ newTmpl.events({
                 instance.price.set(result.price);
                 instance.khrPrice.set(result.khrPrice);
                 instance.currencyId.set(result.currencyId);
+                Session.set("image", result.photo);
                 instance.itemDoc.set(result);
                 instance.orderPrice.set(0);
 
@@ -331,6 +340,11 @@ newTmpl.events({
         // Clear
         instance.$('[name="qty"]').val(1);
         instance.qty.set(1);
+
+        //animate for member
+        $('#animation').removeClass().addClass('animated bounceIn').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+            $(this).removeClass('animated bounceIn');
+        });
     },
     'keyup [name="qty"],[name="orderPrice"],[name="discount"]': function (event, instance) {
         let qty = instance.$('[name="qty"]').val();
@@ -346,9 +360,10 @@ newTmpl.events({
     },
     'click .js-add-item': function (event, instance) {
         let itemId = instance.$('[name="itemId"]').val();
+        let memoItem = instance.$('[name="memoItem"]').val();
         let itemName = _.trim(_.split(instance.$('[name="itemId"] option:selected').text(), " [")[0]);
-        itemName = _.trim(_.split(itemName, " : ")[1]);
 
+        itemName = _.trim(_.split(itemName, " : ")[1]);
         let qty = parseInt(instance.$('[name="qty"]').val());
         let price = round2(parseFloat(instance.$('[name="price"]').val()), 2);
         let khrPrice = parseFloat(instance.$('[name="khrPrice"]').val());
@@ -360,37 +375,38 @@ newTmpl.events({
         let memo = instance.$('[name="memo"]').val();
         let discountType = Session.get('discountType') == "Percentage" ? "%" : "៛";
         // Check exist
-        let exist = itemsCollection.findOne({itemId: itemId});
-        if (exist) {
-            qty += parseInt(exist.qty);
-            amount = round2(qty * orderPrice, 2);
-            if (discountType == "%") {
-                totalAmount = round2(amount - (amount * discount / 100), -2);
-            } else {
-                totalAmount = round2((amount - discount), -2);
-            }
-
-            itemsCollection.update(
-                {_id: itemId},
-                {
-                    $set: {
-                        qty: qty,
-                        price: price,
-                        orderPrice: orderPrice,
-                        discount: discount,
-                        discountType: discountType,
-                        amount: amount,
-                        totalAmount: totalAmount,
-                        memo: memo
-                    }
-                }
-            );
-            console.log(itemsCollection.find().fetch());
-        } else {
+        // let exist = itemsCollection.findOne({itemId: itemId});
+        // if (exist) {
+        //     qty += parseInt(exist.qty);
+        //     amount = round2(qty * orderPrice, 2);
+        //     if (discountType == "%") {
+        //         totalAmount = round2(amount - (amount * discount / 100), -2);
+        //     } else {
+        //         totalAmount = round2((amount - discount), -2);
+        //     }
+        //
+        //     itemsCollection.update(
+        //         {_id: itemId},
+        //         {
+        //             $set: {
+        //                 memoItem: memoItem,
+        //                 qty: qty,
+        //                 price: price,
+        //                 orderPrice: orderPrice,
+        //                 discount: discount,
+        //                 discountType: discountType,
+        //                 amount: amount,
+        //                 totalAmount: totalAmount,
+        //                 memo: memo
+        //             }
+        //         }
+        //     );
+        // } else {
             itemsCollection.insert({
-                _id: itemId,
+                // _id: itemId,
                 itemId: itemId,
                 itemName: itemName,
+                memoItem: memoItem,
                 qty: qty,
                 currencyId: currency,
                 price: price,
@@ -402,7 +418,9 @@ newTmpl.events({
                 totalAmount: totalAmount,
                 memo: memo
             });
-        }
+
+        console.log(itemsCollection.find().fetch());
+        // }
     },
 });
 
@@ -431,7 +449,7 @@ editTmpl.onCreated(function () {
 
 editTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
-    $('[name="price"]').hide();
+    // $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
 });
 
@@ -527,6 +545,7 @@ editTmpl.events({
                 instance.khrPrice.set(result.khrPrice);
                 instance.currencyId.set(result.currencyId);
                 instance.itemDoc.set(result);
+                Session.set("image", result.photo);
                 instance.orderPrice.set(0);
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -540,6 +559,11 @@ editTmpl.events({
             instance.khrPrice.set(0);
             instance.currencyId.set(undefined);
         }
+
+        //animate for member
+        $('#animation').removeClass().addClass('animated bounceIn').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+            $(this).removeClass('animated bounceIn');
+        });
     },
     'keyup [name="qty"],[name="orderPrice"],[name="discount"]': function (event, instance) {
         let qty = instance.$('[name="qty"]').val();
@@ -562,14 +586,14 @@ let hooksObject = {
         // Check old item
         if (insertDoc.itemId == currentDoc.itemId) {
             itemsCollection.update(
-                {_id: currentDoc.itemId},
+                {_id: currentDoc._id},
                 updateDoc
             );
         } else {
-            itemsCollection.remove({_id: currentDoc.itemId});
+            itemsCollection.remove({_id: currentDoc._id});
 
             // Check exist item
-            let exist = itemsCollection.findOne({_id: insertDoc.itemId});
+            let exist = itemsCollection.findOne({_id: insertDoc._id});
             if (exist) {
                 let newQty = exist.qty + insertDoc.qty;
                 let newAmount = round2(newQty * insertDoc.orderPrice, 2);
@@ -582,7 +606,7 @@ let hooksObject = {
                 }
 
                 itemsCollection.update(
-                    {_id: insertDoc.itemId},
+                    {_id: insertDoc._id},
                     {
                         $set: {
                             qty: newQty,
@@ -602,7 +626,7 @@ let hooksObject = {
                 let discountType = Session.get('discountType') == "Percentage" ? "%" : "៛";
 
                 itemsCollection.insert({
-                    _id: insertDoc.itemId,
+                    _id: insertDoc._id,
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     qty: insertDoc.qty,

@@ -26,9 +26,8 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {data: "name", title: "Name"},
         // {data: "gender", title: "Gender"},
         {data: "companyName", title: "Company Name"},
-        // {data: 'contact', title: 'Contact', tmpl: Meteor.isClient && Template.Moto_supplierContact},
-    ],
-    extraFields: [],
+        {data: 'contact', title: 'Contact'},
+    ]
 });
 
 export const SupplierTabular = new Tabular.Table(tabularData);

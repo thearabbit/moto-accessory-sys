@@ -6,7 +6,7 @@ import {Item} from '../../common/collections/item.js';
 
 Item.before.insert(function (userId, doc) {
     doc._id = idGenerator.gen(Item, 9);
-    doc.code = idGenerator.gen(Item, 4);
+    doc.code = idGenerator.gen(Item, 5);
 
     // Get ancestors
     if (doc.parent) {

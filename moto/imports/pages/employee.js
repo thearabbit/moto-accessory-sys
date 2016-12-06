@@ -34,7 +34,6 @@ import './employee.html';
 
 // Declare template
 let indexTmpl = Template.Moto_employee,
-    contactTmpl = Template.Moto_employeeContact,
     formTmpl = Template.Moto_employeeForm,
     showTmpl = Template.Moto_employeeShow;
 
@@ -42,7 +41,7 @@ let indexTmpl = Template.Moto_employee,
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('employee', {size: 'lg'});
+    createNewAlertify('employee', {size: 'sm'});
     createNewAlertify('employeeShow',);
 });
 
@@ -74,18 +73,11 @@ indexTmpl.events({
     }
 });
 
-// Contact tabular
-contactTmpl.helpers({
-    jsonViewOpts () {
-        return {collapsed: true};
-    }
-});
-
 // Form
 formTmpl.onCreated(function () {
     this.autorun(()=> {
         // Lookup value
-        this.subscribe('moto.lookupValue', ['Gender', 'Contact Type', 'Employee Position']);
+        this.subscribe('moto.lookupValue', ['Employee Position']);
 
         let currentData = Template.currentData();
         if (currentData) {

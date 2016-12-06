@@ -24,16 +24,9 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
         {title: '<i class="fa fa-bars"></i>', tmpl: Meteor.isClient && Template.Moto_employeeAction},
         {data: "_id", title: "ID"},
         {data: "name", title: "Name"},
-        {data: "gender", title: "Gender"},
-        {
-            data: "startDate",
-            title: "Start Date",
-            render: function (val, type, doc) {
-                return moment(val).format('DD/MM/YYYY');
-            }
-        },
         {data: "position", title: "Position"},
-        {data: 'contact', title: 'Contact', tmpl: Meteor.isClient && Template.Moto_employeeContact},
+        {data: "address", title: "Address"},
+        {data: 'contact', title: 'Contact'},
     ],
     extraFields: ['address','email'],
 });

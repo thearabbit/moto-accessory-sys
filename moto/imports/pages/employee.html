@@ -34,18 +34,12 @@
         {{#if Template.subscriptionsReady}}
             {{#autoForm collection=collection id="Moto_employeeForm" doc=data.doc type=data.formType}}
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-12">
                         {{> afQuickField name="name"}}
-                        {{> afQuickField name="gender"}}
                         {{> afQuickField name="position"}}
-                        {{> afQuickField name="startDate"}}
-                    </div>
-                    <div class="col-md-7">
                         {{> afQuickField name="address" rows=3}}
-                        {{> afQuickField name="email"}}
+                        {{> afQuickField name="contact"}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
-
-                        {{> afArrayField name="contact" id="contact" template="Moto_customArrayFieldForEmployeeContact" subtemplate="Moto_customObjectFieldForContact"}}
                     </div>
                 </div>
 
@@ -67,75 +61,16 @@
                     <dd>{{_id}}</dd>
                     <dt>Name</dt>
                     <dd>{{name}}</dd>
-                    <dt>Gender</dt>
-                    <dd>{{gender}}</dd>
-                    <dt>Start Date</dt>
-                    <dd>{{moFormat startDate "DD/MM/YYYY"}}</dd>
                     <dt>Position</dt>
                     <dd>{{position}}</dd>
                     <dt>Address</dt>
                     <dd>{{address}}</dd>
-                    <dt>Email</dt>
-                    <dd>{{email}}</dd>
                     <dt>Contact</dt>
-                    <dd>{{> jsonView json=contact options=jsonViewOpts}}</dd>
+                    <dd>{{contact}}</dd>
                 </dl>
             {{/with}}
         {{else}}
             {{> loading}}
         {{/if}}
-    </div>
-</template>
-
-<!------------Custom contact array field-------------------->
-<template name="afArrayField_Moto_customArrayFieldForEmployeeContact">
-    <div class="panel panel-default">
-        <div class="panel-heading">{{afFieldLabelText name=this.atts.name}}</div>
-        <div class="panel-body">
-
-            {{#if afFieldIsInvalid name=this.atts.name}}
-                <div class="has-error">
-                    <span class="help-block">{{{afFieldMessage name=this.atts.name}}}</span>
-                </div>
-            {{/if}}
-
-            {{#afEachArrayItem name=this.atts.name minCount=this.atts.minCount maxCount=this.atts.maxCount}}
-                <div class="row">
-                    {{> UI.dynamic template=../atts.subtemplate}}
-
-                    <div class="col-sm-1">
-                        {{#if afArrayFieldHasMoreThanMinimum name=../atts.name minCount=../atts.minCount
-                              maxCount=../atts.maxCount}}
-                            <button type="button" class="btn btn-sm btn-danger autoform-remove-item">
-                                <span class="glyphicon glyphicon-minus"></span>
-                            </button>
-                        {{/if}}
-                    </div>
-                </div>
-            {{/afEachArrayItem}}
-
-            {{#if afArrayFieldHasLessThanMaximum name=this.atts.name minCount=this.atts.minCount
-                  maxCount=this.atts.maxCount}}
-                <div class="row">
-                    <div class="col-sm-1 col-sm-offset-11">
-                        <button type="button" class="btn btn-primary autoform-add-item btn-sm"
-                                data-autoform-field="{{this.atts.name}}" data-autoform-minCount="{{this.atts.minCount}}"
-                                data-autoform-maxCount="{{this.atts.maxCount}}">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </div>
-                </div>
-            {{/if}}
-
-        </div>
-    </div>
-</template>
-
-<template name="Moto_customObjectFieldForEmployeeContact">
-    <div class="col-sm-5">
-        {{> afQuickField name=current.type template="bootstrap3" label=false class="input-sm"}}
-    </div>
-    <div class="col-sm-6">
-        {{> afQuickField name=current.number template="bootstrap3" label=false class="input-sm"}}
     </div>
 </template>

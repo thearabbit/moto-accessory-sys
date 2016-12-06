@@ -42,16 +42,21 @@
 <template name="Moto_orderItemsNew">
     {{#autoForm schema=schema id="Moto_orderItemsNew"}}
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 {{> afQuickField name="itemId" label=false placeholder="Item"}}
+            </div>
+            <div class="col-sm-1">
+                {{> afQuickField name="memoItem" label=false placeholder="Memo Item"}}
             </div>
             <div class="col-sm-1">
                 {{> afQuickField name="qty" label=false placeholder="Qty"}}
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-1">
+                {{> afQuickField name="price" value=itemDoc.price label=false placeholder="Price" readonly=true}}
+            </div>
+            <div class="col-sm-1">
                 {{> afQuickField name="orderPrice" value=orderPrice label=false placeholder="Order Price"}}
                 {{> afQuickField name="currencyId" value=itemDoc.currencyId label=false placeholder="Currency" readonly=true}}
-                {{> afQuickField name="price" value=itemDoc.price label=false placeholder="Price" readonly=true}}
                 {{> afQuickField name="khrPrice" value=itemDoc.khrPrice label=false placeholder="KHR Price" readonly=true}}
             </div>
             <div class="col-sm-1">
@@ -80,9 +85,10 @@
             <div class="row">
                 <div class="col-md-12">
                     {{> afQuickField name="itemId" class="itemIdEdit" placeholder="Item"}}
+                    {{> afQuickField name="memoItem" placeholder="Memo Item"}}
                     {{> afQuickField name="qty" placeholder="Qty"}}
                     {{> afQuickField name="currencyId" label=false value=itemDoc.currencyId  readonly=true}}
-                    {{> afQuickField name="price" label=false value=itemDoc.price readonly=true}}
+                    {{> afQuickField name="price" value=itemDoc.price readonly=true}}
                     {{> afQuickField name="khrPrice" label=false value=itemDoc.khrPrice readonly=true}}
                     {{> afQuickField name="orderPrice" value=orderPrice readonly="true"}}
                     {{> afQuickField name="discount" placeholder="Discount"}}

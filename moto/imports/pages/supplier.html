@@ -37,6 +37,7 @@
                     <div class="col-md-12">
                         {{> afQuickField name="name"}}
                         {{> afQuickField name="companyName"}}
+                        {{> afQuickField name="contact"}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
                     </div>
                 </div>
@@ -61,6 +62,8 @@
                     <dd>{{name}}</dd>
                     <dt>Company Name</dt>
                     <dd>{{companyName}}</dd>
+                    <dt>Contact</dt>
+                    <dd>{{contact}}</dd>
                 </dl>
             {{/with}}
         {{else}}

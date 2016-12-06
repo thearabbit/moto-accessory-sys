@@ -28,6 +28,7 @@ import {lookupOrder} from '../../common/methods/lookupOrder';
 // Collection
 import {Order} from '../../common/collections/order.js';
 import {Exchange} from '../../../core/common/collections/exchange.js';
+// import {Files} from '../../../core/common/collections/fiels.js';
 
 // Tabular
 import {OrderTabular} from '../../common/tabulars/order.js';
@@ -119,6 +120,7 @@ formTmpl.onCreated(function () {
         }
 
         this.subscribe('core.exchange');
+        this.subscribe('files');
     });
 });
 
@@ -139,7 +141,6 @@ formTmpl.helpers({
         if (currentData) {
             data.formType = 'update';
             data.doc = Template.instance().orderDoc.get();
-
             Session.set('discountAmountUpdate', data.doc.discountAmount);
         }
 
@@ -170,6 +171,15 @@ formTmpl.helpers({
             result = false;
         }
         return result;
+    },
+    image(){
+        let result = "/no-image.png";
+        if (Session.get("image")) {
+            let photoUrl = Files.findOne({_id: Session.get("image")}).url();
+            result = photoUrl;
+
+        }
+        return result;
     }
 });
 
@@ -198,6 +208,7 @@ formTmpl.onDestroyed(function () {
     Session.set('discountType', null);
     Session.set('update', false);
     Session.set('discountAmountUpdate', null);
+    Session.set('image', null);
 });
 
 // Show
@@ -211,6 +222,7 @@ showTmpl.onCreated(function () {
         lookupOrder.callPromise({
             orderId: currentData.orderId
         }).then((result) => {
+            console.log(result);
             this.orderDoc.set(result);
 
             $.unblockUI();
