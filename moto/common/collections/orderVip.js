@@ -13,6 +13,10 @@ export const OrderVip = new Mongo.Collection("moto_orderVip");
 
 // Items sub schema
 OrderVip.itemsSchema = new SimpleSchema({
+    _id: {
+        type: String,
+        label: 'Id'
+    },
     itemId: {
         type: String,
         label: 'Item'
@@ -109,7 +113,7 @@ OrderVip.schema = new SimpleSchema({
             afFieldInput: {
                 type: "bootstrap-datetimepicker",
                 dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
+                    format: 'DD/MM/YYYY hh:mm:ss',
                     showTodayButton: true
                 }
             }

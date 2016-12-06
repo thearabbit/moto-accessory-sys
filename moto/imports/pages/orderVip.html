@@ -34,19 +34,30 @@
             {{#autoForm collection=collection id="Moto_orderVipForm" doc=data.doc type=data.formType
                         resetOnSuccess=false}}
                 <div class="row">
+                    <div class="col-md-3">
+                        <form>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Image</label>
+                                <div id="animation">
+                                    <img src="{{image}}" class="img-thumbnail custom-image img-responsive">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     <div class="col-md-6">
-                        {{> afQuickField name="orderDate"}}
-
                         <div class="row">
+                            <div class="col-md-6">
+                                {{> afQuickField name="orderDate"}}
+                            </div>
                             <div class="col-md-6">
                                 {{> afQuickField name="customerId"}}
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
                                 {{> afQuickField name="employeeId"}}
-                            </div>
 
-                            <div class="col-md-6">
-                                {{> afQuickField name="type"}}
                             </div>
                             <div class="col-md-6">
                                 {{> afQuickField name="discountType"}}
@@ -54,7 +65,7 @@
                         </div>
 
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         {{> afQuickField name="des"}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
                     </div>
@@ -98,7 +109,7 @@
                     <div class="col-xs-12">
                         <h2 class="page-header">
                             <i class="fa fa-shopping-cart"></i> Order Vip
-                            <small class="pull-right">Date: {{moFormat orderDate "DD/MM/YYYY"}}</small>
+                            <small class="pull-right">Date: {{moFormat orderDate "DD/MM/YYYY hh:mm:ss"}}</small>
                         </h2>
                     </div>
                     <!-- /.col -->
@@ -110,10 +121,7 @@
                         <address>
                             <strong>{{employeeDoc.position}}, {{employeeDoc.name}}.</strong><br>
                             {{employeeDoc.address}}<br>
-                            {{#each employeeDoc.contact}}
-                                ({{type}}) Phone: {{number}}<br>
-                            {{/each}}
-                            Email: {{employeeDoc.email}}
+                            {{employeeDoc.contact}}
                         </address>
                     </div>
                     <!-- /.col -->
@@ -122,10 +130,7 @@
                         <address>
                             <strong>{{customerDoc.name}}</strong><br>
                             {{customerDoc.address}}<br>
-                            {{#each customerDoc.contact}}
-                                ({{type}}) Phone: {{number}}<br>
-                            {{/each}}
-                            Email: {{customerDoc.email}}
+                            {{customerDoc.contact}}
                         </address>
                     </div>
                     <!-- /.col -->
@@ -150,7 +155,9 @@
                             <tr>
                                 <th>#</th>
                                 <th>Item</th>
+                                <th>Memo Item</th>
                                 <th>Qty</th>
+                                <th>Price</th>
                                 <th>Order Price</th>
                                 <th>Discount</th>
                                 <th>Amount</th>
@@ -163,7 +170,9 @@
                                 <tr>
                                     <td>{{itemId}}</td>
                                     <td>{{itemName}}</td>
+                                    <td>{{memoItem}}</td>
                                     <td>{{qty}}</td>
+                                    <td>{{price}} {{itemCurrency}}</td>
                                     <td>{{orderPrice}} {{itemCurrency}}</td>
                                     <td>{{discount}} {{discountType}}</td>
                                     <td>{{amount}} {{itemCurrency}}</td>
@@ -190,7 +199,7 @@
                     </div>
                     <!-- /.col -->
                     <div class="col-xs-6">
-                        <p class="lead">Amount Due {{moFormat orderDate "DD/MM/YYYY"}}</p>
+                        <p class="lead">Amount Due {{moFormat orderDate "DD/MM/YYYY hh:mm:ss"}}</p>
 
                         <div class="table-responsive">
                             <table class="table">

@@ -247,7 +247,7 @@ Order.schema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency();
+                return inputmaskOptions.currency({prefix: "៛"});
             }
         },
         optional: true

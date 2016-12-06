@@ -158,6 +158,15 @@ formTmpl.helpers({
         }
 
         return {};
+    },
+    image(){
+        let result = "/no-image.png";
+        if (Session.get("image")) {
+            let photoUrl = Files.findOne({_id: Session.get("image")}).url();
+            result = photoUrl;
+
+        }
+        return result;
     }
 });
 
@@ -188,6 +197,7 @@ formTmpl.onDestroyed(function () {
     Session.set('discountAmountUpdate', null);
     Session.set('discountAmountUsdUpdate', null);
     Session.set('discountAmountThbUpdate', null);
+    Session.set('image', null);
 });
 
 // Show

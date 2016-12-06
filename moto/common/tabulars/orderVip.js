@@ -26,7 +26,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             data: "orderDate",
             title: "Date",
             render: function (val, type, doc) {
-                return moment(val).format('DD/MM/YYYY');
+                return moment(val).format('DD/MM/YYYY hh:mm:ss');
             }
         },
         {data: "customerId", title: "Customer"},
