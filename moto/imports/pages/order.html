@@ -25,6 +25,13 @@
     {{/columnAction}}
 </template>
 
+<!--Payment-Link-Action-->
+<template name="Moto_paymentLinkAction">
+    <button type="button" class="btn btn-social btn-sm btn-info js-payment">
+        <i class="fa fa-star"></i> Payment
+    </button>
+</template>
+
 <!--Form-->
 <template name="Moto_orderForm">
     <div class="box-body">
@@ -45,16 +52,41 @@
                         </form>
                     </div>
                     <div class="col-md-6">
-                        {{> afQuickField name="orderDate"}}
-
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{> afQuickField name="orderDate"}}
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
-                                {{> afQuickField name="customerId"}}
+                                <div class="form-group{{#if afFieldIsInvalid
+                                                            name='customerId'}} has-error{{/if}}"
+                                     data-required="true">
+                                    <label class="control-label" for="customerId">
+                                        Customer
+                                    </label>
+                                    <b>|</b>
+                                    <div class="btn-group">
+                                        <button type="button" data-toggle="tooltip" data-placement="top" title="Grand Order Total" class="btn btn-xs btn-default">
+                                            <b>{{orderLog.totalOrderLog}} ៛</b></button>
+                                        <button type="button" class="btn btn-xs btn-info" data-toggle="modal"
+                                                data-target="#myModal">{{fa
+                                                "info-circle"}} More Detail
+                                        </button>
+                                    </div>
+
+                                    {{> afFieldInput name='customerId'}}
+
+                                    {{#if afFieldIsInvalid name='customerId'}}
+                                        <span class="help-block">{{afFieldMessage name='customerId'}}</span>
+                                    {{/if}}
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 {{> afQuickField name="employeeId"}}
                             </div>
-
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 {{> afQuickField name="type"}}
                             </div>
@@ -62,8 +94,9 @@
                                 {{> afQuickField name="discountType"}}
                             </div>
                         </div>
-
                     </div>
+
+
                     <div class="col-md-3">
                         {{#if showExchange}}
                             {{> afQuickField name="exchangeId"}}
@@ -97,6 +130,43 @@
                         </div>
                     </div>
 
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog  modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">{{fa "info"}} More Detail</h4>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered table-striped table-responsive">
+                                    <tbody>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Order Reference Id</th>
+                                        <th>Order Total</th>
+                                        <th>Description</th>
+                                    </tr>
+
+                                    {{#each orderLog.orderLog}}
+                                        <tr>
+                                            <td>{{moFormat oldOrderDate "DD/MM/YYYY hh:mm:ss"}}</td>
+                                            <td>{{oldOrderRefId}}</td>
+                                            <td>{{oldOrderTotal}} ៛</td>
+                                            <td>{{{des}}}</td>
+                                        </tr>
+                                    {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <p class="pull-right"><b>Grand Order Total:</b> {{orderLog.totalOrderLog}} ៛</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             {{/autoForm}}

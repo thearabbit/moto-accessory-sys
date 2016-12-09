@@ -8,40 +8,57 @@ import {moment} from 'meteor/momentjs:moment';
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../imports/libs/selectOpts.js';
 
-export const Payment = new Mongo.Collection("moto_payment");
+export const OrderPayment = new Mongo.Collection("moto_orderPayment");
 
-// Payment schema
-Payment.schema = new SimpleSchema({
-    paymentDate: {
+// OrderPayment schema
+OrderPayment.schema = new SimpleSchema({
+    paidDate: {
         type: Date,
-        label: 'Payment date',
+        label: 'Paid date',
         defaultValue: moment().toDate(),
         autoform: {
             afFieldInput: {
                 type: "bootstrap-datetimepicker",
                 dateTimePickerOptions: {
-                    format: 'DD/MM/YYYY',
+                    format: 'DD/MM/YYYY hh:mm:ss',
                     showTodayButton: true
                 }
             }
         }
     },
-    orderId: {
+    customerId: {
         type: String,
         label: 'Customer',
-        autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Select One',
-                optionsMethod: 'moto.selectOptsMethod.order',
-                optionsMethodParams: function () {
-                    if (Meteor.isClient) {
-                        let currentBranch = Session.get('currentBranch');
-                        return {branchId: currentBranch};
-                    }
-                }
-            }
-        }
+        // autoform: {
+        //     type: 'universe-select',
+        //     afFieldInput: {
+        //         uniPlaceholder: 'Select One',
+        //         optionsMethod: 'moto.selectOptsMethod.customer',
+        //         optionsMethodParams: function () {
+        //             if (Meteor.isClient) {
+        //                 let currentBranch = Session.get('currentBranch');
+        //                 return {branchId: currentBranch};
+        //             }
+        //         }
+        //     }
+        // }
+    },
+    orderId: {
+        type: String,
+        label: 'Order Id',
+        // autoform: {
+        //     type: 'universe-select',
+        //     afFieldInput: {
+        //         uniPlaceholder: 'Select One',
+        //         optionsMethod: 'moto.selectOptsMethod.order',
+        //         optionsMethodParams: function () {
+        //             if (Meteor.isClient) {
+        //                 let currentBranch = Session.get('currentBranch');
+        //                 return {branchId: currentBranch};
+        //             }
+        //         }
+        //     }
+        // }
     },
     employeeId: {
         type: String,
@@ -50,7 +67,7 @@ Payment.schema = new SimpleSchema({
             type: 'universe-select',
             afFieldInput: {
                 uniPlaceholder: 'Select One',
-                optionsMethod: 'moto.selectOptsMethod.customer',
+                optionsMethod: 'moto.selectOptsMethod.employee',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
                         let currentBranch = Session.get('currentBranch');
@@ -67,29 +84,42 @@ Payment.schema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency();
+                return inputmaskOptions.currency({prefix: "៛"});
             }
         }
     },
     paidAmount: {
         type: Number,
         label: 'Paid amount',
+        defaultValue: 0,
+        min: 50,
         decimal: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency();
+                return inputmaskOptions.currency({prefix: "៛"});
             }
-        }
+        },
+        custom: function () {
+            if (this.value > this.field('dueAmount').value) {
+                return "greaterThanDue";
+            }
+        },
+    },
+    status: {
+        type: String,
+        label: "Status",
+        optional: true
     },
     balance: {
         type: Number,
         label: 'Balance',
         decimal: true,
+        defaultValue: 0,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency();
+                return inputmaskOptions.currency({prefix: "៛"});
             }
         }
     },
@@ -119,4 +149,8 @@ Payment.schema = new SimpleSchema({
     }
 });
 
-Payment.attachSchema(Payment.schema);
+OrderPayment.attachSchema(OrderPayment.schema);
+
+SimpleSchema.messages({
+    "greaterThanDue": "Paid Amount Can't Be Greater Than Due Amount",
+});

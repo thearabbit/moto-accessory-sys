@@ -160,6 +160,23 @@ MotoRoutes.route('/order', {
     }
 });
 
+//Order Payment
+import '../imports/pages/orderPayment.js';
+MotoRoutes.route('/orderPayment/:orderId?', {
+    name: 'moto.orderPayment',
+    title: 'Order Payment',
+    action: function (params, queryParams) {
+        Layout.main('Moto_orderPayment');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Order Payment',
+        // icon: 'tags',
+        parent: 'moto.order'
+    }
+});
+
 // Order Vip
 import '../imports/pages/orderVip.js';
 MotoRoutes.route('/orderVip', {
