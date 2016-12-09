@@ -30,9 +30,27 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         },
         {data: "customerId", title: "Customer"},
-        {data: "subTotal", title: "SubTotal"},
-        {data: "discountAmount", title: "Discount Amount"},
-        {data: "total", title: "Total"},
+        {
+            data: "subTotal",
+            title: "SubTotal",
+            render(val, type, doc){
+                return `${val} ៛`;
+            }
+        },
+        {
+            data: "discountAmount",
+            title: "Discount Amount",
+            render(val, type, doc){
+                return `${val} ៛`;
+            }
+        },
+        {
+            data: "total",
+            title: "Total",
+            render(val, type, doc){
+                return `${val} ៛`;
+            }
+        },
         {data: "des", title: "Description"},
         {
             data: "type",
@@ -44,6 +62,10 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return `<span class="badge bg-teal-active"><i class="fa fa-star"></i> ${val} </span>`;
             }
         },
+        {
+            title: "Payment",
+            tmpl: Meteor.isClient && Template.Moto_paymentLinkAction
+        }
     ],
     extraFields:['employeeId','discountType','items']
 });

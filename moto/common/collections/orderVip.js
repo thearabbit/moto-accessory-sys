@@ -199,7 +199,10 @@ OrderVip.schema = new SimpleSchema({
     items: {
         type: [OrderVip.itemsSchema],
     },
-    oldTotal: {
+    'orderLog.$': {
+        type: Object
+    },
+    'orderLog.$.oldTotal': {
         type: Number,
         label: 'Old total',
         decimal: true,
@@ -211,7 +214,7 @@ OrderVip.schema = new SimpleSchema({
         },
         optional: true
     },
-    oldTotalRef: {
+    'orderLog.$.oldTotalRef': {
         type: String,
         label: 'Old total ref',
         optional: true

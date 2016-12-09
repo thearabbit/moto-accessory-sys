@@ -24,6 +24,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Method
 import {lookupOrder} from '../../common/methods/lookupOrder';
+import {lookupOrderLog} from '../../common/methods/lookupOrderLog';
 
 // Collection
 import {Order} from '../../common/collections/order.js';
@@ -49,7 +50,7 @@ let itemsCollection = new Mongo.Collection(null);
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('order', {size: 'lg'});
-    createNewAlertify('orderShow',);
+    createNewAlertify('orderShow');
 });
 
 indexTmpl.helpers({
@@ -85,6 +86,12 @@ indexTmpl.events({
         let path = FlowRouter.path("moto.invoiceReportGe", params, queryParams);
 
         window.open(path, '_blank');
+    },
+    'click .js-payment' (event, instance) {
+        let params = {
+            orderId: this._id
+        };
+        FlowRouter.go("moto.orderPayment", params);
     }
 });
 
@@ -93,6 +100,7 @@ formTmpl.onCreated(function () {
     let self = this;
     self.isLoading = new ReactiveVar(false);
     self.orderDoc = new ReactiveVar();
+    self.orderLog = new ReactiveVar(0);
     Session.set('customerType', 'Retail');
     Session.set('discountType', 'Percentage');
 
@@ -180,6 +188,10 @@ formTmpl.helpers({
 
         }
         return result;
+    },
+    orderLog(){
+        let instance = Template.instance();
+        return instance.orderLog.get();
     }
 });
 
@@ -197,6 +209,17 @@ formTmpl.events({
         let exchangeId = event.currentTarget.value;
         let exchange = Exchange.findOne({_id: exchangeId});
         Session.set('exchangeDoc', exchange);
+    },
+    'change [name="customerId"]': function (event, instance) {
+        let customerId = event.currentTarget.value;
+
+        lookupOrderLog.callPromise({
+            customerId: customerId
+        }).then((result) => {
+            instance.orderLog.set(result || 0);
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 });
 
