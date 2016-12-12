@@ -25,6 +25,13 @@
     {{/columnAction}}
 </template>
 
+<!--Payment-Link-Action-->
+<template name="Moto_paymentVipLinkAction">
+    <button type="button" class="btn btn-social btn-sm btn-info js-paymentVip">
+        <i class="fa fa-star"></i> Payment
+    </button>
+</template>
+
 <!--Form-->
 <template name="Moto_orderVipForm">
     <div class="box-body">
@@ -46,20 +53,41 @@
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 {{> afQuickField name="orderDate"}}
                             </div>
-                            <div class="col-md-6">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
                                 {{> afQuickField name="customerId"}}
+                            </div>
+                            <div class="col-md-7">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Order Vip Log</label>
+                                        <div class="btn-group" style="display: block;">
+                                            <button type="button" data-toggle="tooltip" data-placement="top" title="Grand Order Total Khr" class="btn btn-default">
+                                                <b>{{orderVipLog.totalOrderVipLogKhr}} ៛</b></button>
+                                            <button type="button" data-toggle="tooltip" data-placement="top" title="Grand Order Total Usd" class="btn btn-default">
+                                                <b>{{orderVipLog.totalOrderVipLogUsd}} $</b></button>
+                                            <button type="button" data-toggle="tooltip" data-placement="top" title="Grand Order Total Thb" class="btn btn-default">
+                                                <b>{{orderVipLog.totalOrderVipLogThb}} B</b></button>
+                                            <button type="button" class="btn btn-info" data-toggle="modal"
+                                                    data-target="#myModal">{{fa
+                                                    "info-circle"}} More Detail
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 {{> afQuickField name="employeeId"}}
 
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 {{> afQuickField name="discountType"}}
                             </div>
                         </div>
@@ -92,6 +120,49 @@
                         </div>
                     </div>
 
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog  modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">{{fa "info"}} More Detail</h4>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered table-striped table-responsive">
+                                    <tbody>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Order Vip Reference Id</th>
+                                        <th>Order Vip Total</th>
+                                        <th>Description</th>
+                                    </tr>
+
+                                    {{#each orderVipLog.orderVipLog}}
+                                        <tr>
+                                            <td>{{moFormat oldOrderVipDate "DD/MM/YYYY hh:mm:ss"}}</td>
+                                            <td>{{oldOrderVipRefId}}</td>
+                                            <td>
+                                                Khr : {{oldOrderVipTotalKhr}} ៛ <br>
+                                                Usd : {{oldOrderVipTotalUsd}} $ <br>
+                                                Thb : {{oldOrderVipTotalThb}} B
+                                            </td>
+                                            <td>{{{des}}}</td>
+                                        </tr>
+                                    {{/each}}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <p class="pull-right"><b>Grand Order Total Khr:</b> {{orderVipLog.totalOrderVipLogKhr}} ៛</p><br>
+                                <p class="pull-right"><b>Grand Order Total Usd:</b> {{orderVipLog.totalOrderVipLogUsd}} $</p><br>
+                                <p class="pull-right"><b>Grand Order Total Thb:</b> {{orderVipLog.totalOrderVipLogThb}} B</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             {{/autoForm}}

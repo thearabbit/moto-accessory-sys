@@ -418,10 +418,8 @@ newTmpl.events({
                 totalAmount: totalAmount,
                 memo: memo
             });
-
-        console.log(itemsCollection.find().fetch());
         // }
-    },
+    }
 });
 
 // Edit
