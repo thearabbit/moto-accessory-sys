@@ -5,6 +5,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import {Branch} from '../../../core/common/collections/branch';
 import {Currency} from '../../../core/common/collections/currency';
 import {Unit} from '../../../moto/common/collections/unit';
+import {Customer} from '../../../moto/common/collections/customer';
 
 export const SelectOpts = {
     branch: function (selectOne) {
@@ -56,4 +57,17 @@ export const SelectOpts = {
 
         return list;
     },
+    customer: function (selectOne) {
+        let list = [];
+        if (selectOne) {
+            list.push({label: '(Select One)', value: ''});
+        }
+        let currentBranch = Session.get('currentBranch'), customerType = Session.get('customerType');
+        Customer.find({branchId: currentBranch, type: customerType})
+            .forEach(function (obj) {
+                list.push({label: obj._id + ' : ' + obj.name, value: obj._id})
+            });
+
+        return list;
+    }
 };

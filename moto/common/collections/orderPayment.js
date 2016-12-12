@@ -84,7 +84,7 @@ OrderPayment.schema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: "៛"});
+                return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
             }
         }
     },
@@ -97,7 +97,7 @@ OrderPayment.schema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: "៛"});
+                return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
             }
         },
         custom: function () {
@@ -119,7 +119,7 @@ OrderPayment.schema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: "៛"});
+                return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
             }
         }
     },

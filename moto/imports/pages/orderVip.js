@@ -24,6 +24,7 @@ import '../../../core/client/components/form-footer.js';
 
 // Method
 import {lookupOrderVip} from '../../common/methods/lookupOrderVip';
+import {lookupOrderVipLog} from '../../common/methods/lookupOrderVipLog';
 
 // Collection
 import {OrderVip} from '../../common/collections/orderVip.js';
@@ -84,6 +85,12 @@ indexTmpl.events({
         let path = FlowRouter.path("moto.invoiceReportGe", params, queryParams);
 
         window.open(path, '_blank');
+    },
+    'click .js-paymentVip' (event, instance) {
+        let params = {
+            orderVipId: this._id
+        };
+        FlowRouter.go("moto.orderVipPayment", params);
     }
 });
 
@@ -92,6 +99,7 @@ formTmpl.onCreated(function () {
     let self = this;
     self.isLoading = new ReactiveVar(false);
     self.orderVipDoc = new ReactiveVar();
+    self.orderVipLog = new ReactiveVar(0);
     Session.set('customerType', 'Vip');
     Session.set('discountType', 'Percentage');
 
@@ -167,6 +175,10 @@ formTmpl.helpers({
 
         }
         return result;
+    },
+    orderVipLog(){
+        let instance = Template.instance();
+        return instance.orderVipLog.get();
     }
 });
 
@@ -184,6 +196,17 @@ formTmpl.events({
         let exchangeId = event.currentTarget.value;
         let exchange = Exchange.findOne({_id: exchangeId});
         Session.set('exchangeDoc', exchange);
+    },
+    'change [name="customerId"]': function (event, instance) {
+        let customerId = event.currentTarget.value;
+
+        lookupOrderVipLog.callPromise({
+            customerId: customerId
+        }).then((result) => {
+            instance.orderVipLog.set(result || 0);
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 });
 

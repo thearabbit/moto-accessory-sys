@@ -128,17 +128,9 @@ Order.schema = new SimpleSchema({
         type: String,
         label: 'Customer',
         autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Select One',
-                optionsMethod: 'moto.selectOptsMethod.customer',
-                optionsMethodParams: function () {
-                    if (Meteor.isClient) {
-                        let currentBranch = Session.get('currentBranch'), customerType = Session.get('customerType');
-                        // console.log(customerType);
-                        return {branchId: currentBranch, type: customerType};
-                    }
-                }
+            type: "select2",
+            options: function () {
+                return SelectOpts.customer("selectOne",true);
             }
         }
     },
@@ -222,23 +214,6 @@ Order.schema = new SimpleSchema({
     },
     items: {
         type: [Order.itemsSchema],
-    },
-    oldTotal: {
-        type: Number,
-        label: 'Old total',
-        decimal: true,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                return inputmaskOptions.currency();
-            }
-        },
-        optional: true
-    },
-    oldTotalRef: {
-        type: String,
-        label: 'Old total ref',
-        optional: true
     },
     subTotal: {
         type: Number,

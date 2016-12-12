@@ -101,6 +101,7 @@ formTmpl.onCreated(function () {
     self.isLoading = new ReactiveVar(false);
     self.orderDoc = new ReactiveVar();
     self.orderLog = new ReactiveVar(0);
+
     Session.set('customerType', 'Retail');
     Session.set('discountType', 'Percentage');
 
@@ -129,6 +130,7 @@ formTmpl.onCreated(function () {
 
         this.subscribe('core.exchange');
         this.subscribe('files');
+        this.subscribe('moto.customerForOrder');
     });
 });
 
@@ -200,6 +202,7 @@ formTmpl.events({
         let type = event.currentTarget.value;
         Session.set('customerType', type);
         Session.set('exchangeDoc', null);
+        itemsCollection.remove({});
     },
     'click [name="discountType"]': function (event, instance) {
         let discountType = event.currentTarget.value;

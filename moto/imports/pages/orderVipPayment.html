@@ -1,0 +1,116 @@
+<!--Index-->
+<template name="Moto_orderVipPayment">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            {{> addNewButton}}
+        </h3>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!--Tabular-->
+        {{> tabular table=tabularTable selector=selector class="table table-striped table-bordered table-condensed"}}
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<!--Action-->
+<template name="Moto_orderVipPaymentAction">
+    {{#columnAction}}
+        <li><a href="#" class="js-update"><i class="fa fa-pencil"></i> {{_ "action.edit"}}</a></li>
+        <li><a href="#" class="js-destroy"><i class="fa fa-remove"></i> {{_ "action.delete"}}</a></li>
+        <li><a href="#" class="js-display"><i class="fa fa-eye"></i> {{_ "action.show"}}</a></li>
+    {{/columnAction}}
+</template>
+
+<!--Form-->
+<template name="Moto_orderVipPaymentForm">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#autoForm collection=collection id="Moto_orderVipPaymentForm" doc=data.doc type=data.formType}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{> afQuickField type="hidden" name="customerId"}}
+                                {{> afQuickField name="employeeId" }}
+                            </div>
+                            <div class="col-md-6">
+                                {{> afQuickField type="hidden" name="orderVipId" }}
+                                {{> afQuickField name="paidDate" }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{> afQuickField name="dueAmountKhr" readOnly=true}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="paidAmountKhr"}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="balanceKhr" value=balanceKhr readOnly=true}}
+                            </div>
+
+                            <div class="col-md-4">
+                                {{> afQuickField name="dueAmountUsd" readOnly=true}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="paidAmountUsd"}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="balanceUsd" value=balanceUsd readOnly=true}}
+                            </div>
+
+                            <div class="col-md-4">
+                                {{> afQuickField name="dueAmountThb" readOnly=true}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="paidAmountThb"}}
+                            </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="balanceThb" value=balanceThb readOnly=true}}
+                            </div>
+                        </div>
+
+
+
+                        {{> afQuickField name="des"}}
+                        {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
+                    </div>
+                </div>
+
+                {{> formFooterWithButton}}
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>
+
+<!--Show-->
+<template name="Moto_orderVipPaymentShow">
+    <div class="box-body">
+        {{#if Template.subscriptionsReady}}
+            {{#with data}}
+                <dl class="dl-horizontal">
+                    <dt>ID</dt>
+                    <dd>{{_id}}</dd>
+                    <dt>Customer</dt>
+                    <dd>{{customerId}}</dd>
+                    <dt>Employee</dt>
+                    <dd>{{employeeId}}</dd>
+                    <dt>Due Amount</dt>
+                    <dd>Khr : {{dueAmountKhr}} ៛ | Thb : {{dueAmountThb}} B | Usd : {{dueAmountUsd}} $</dd>
+                    <dt>Paid Amount</dt>
+                    <dd>Khr : {{paidAmountKhr}} ៛ | Thb : {{paidAmountThb}} B | Usd : {{paidAmountUsd}} $</dd>
+                    <dt>Balance</dt>
+                    <dd>Khr : {{balanceKhr}} ៛ | Thb : {{balancethb}} B | Usd : {{balanceUsd}} $</dd>
+                    <dt>Status</dt>
+                    <dd>{{status}}</dd>
+                </dl>
+            {{/with}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+    </div>
+</template>

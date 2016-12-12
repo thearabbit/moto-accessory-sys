@@ -62,6 +62,10 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return `<span class="badge bg-navy-active"><i class="fa fa-trophy"></i> ${val} </span>`;
             }
         },
+        {
+            title: "Payment",
+            tmpl: Meteor.isClient && Template.Moto_paymentVipLinkAction
+        }
     ],
     extraFields: ['employeeId', 'discountType', 'items', 'subTotalUsd', 'discountAmountUsd', 'totalUsd','subTotalThb', 'discountAmountThb', 'totalThb']
 });

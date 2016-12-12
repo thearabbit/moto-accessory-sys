@@ -194,6 +194,23 @@ MotoRoutes.route('/orderVip', {
     }
 });
 
+//Order Payment
+import '../imports/pages/orderVipPayment.js';
+MotoRoutes.route('/orderVipPayment/:orderVipId?', {
+    name: 'moto.orderVipPayment',
+    title: 'Order Vip Payment',
+    action: function (params, queryParams) {
+        Layout.main('Moto_orderVipPayment');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Order Vip Payment',
+        // icon: 'tags',
+        parent: 'moto.orderVip'
+    }
+});
+
 // Unit
 import '../imports/pages/unit.js';
 MotoRoutes.route('/unit', {

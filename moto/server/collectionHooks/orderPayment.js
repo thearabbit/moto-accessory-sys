@@ -3,7 +3,6 @@ import {idGenerator} from 'meteor/theara:id-generator';
 
 // Collection
 import {OrderPayment} from '../../common/collections/orderPayment.js';
-import {Order} from '../../common/collections/order.js';
 
 OrderPayment.before.insert(function (userId, doc) {
     let prefix = `${doc.branchId}-`;

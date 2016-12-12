@@ -199,26 +199,6 @@ OrderVip.schema = new SimpleSchema({
     items: {
         type: [OrderVip.itemsSchema],
     },
-    'orderLog.$': {
-        type: Object
-    },
-    'orderLog.$.oldTotal': {
-        type: Number,
-        label: 'Old total',
-        decimal: true,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                return inputmaskOptions.currency();
-            }
-        },
-        optional: true
-    },
-    'orderLog.$.oldTotalRef': {
-        type: String,
-        label: 'Old total ref',
-        optional: true
-    },
     subTotal: {
         type: Number,
         label: 'Subtotal',
