@@ -52,36 +52,45 @@
 
     <!--Settings-->
     {{#if isInRole 'setting' 'Moto'}}
-        <li class="header"><i class="fa fa-cogs"></i> SETTING</li>
-        <li class="{{isActiveRoute name='moto.item'}}">
-            <a href="{{pathFor 'moto.item'}}">
-                <i class="fa fa-archive"></i> <span>{{_ "moto.sidebarMenu.item"}}</span>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-cogs"></i> <span>SETTING</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
             </a>
-        </li>
-        <li class="{{isActiveRoute name='moto.employee'}}">
-            <a href="{{pathFor 'moto.employee'}}">
-                <i class="fa fa-male"></i> <span>Employee</span>
-            </a>
-        </li>
-        <li class="{{isActiveRoute name='moto.supplier'}}">
-            <a href="{{pathFor 'moto.supplier'}}">
-                <i class="fa fa-truck"></i> <span>Supplier</span>
-            </a>
-        </li>
-        <li class="{{isActiveRoute name='moto.location'}}">
-            <a href="{{pathFor 'moto.location'}}">
-                <i class="fa fa-sitemap"></i> <span>Location</span>
-            </a>
-        </li>
-        <li class="{{isActiveRoute name='moto.lookupValue'}}">
-            <a href="{{pathFor 'moto.lookupValue'}}">
-                <i class="fa fa-cog"></i> <span>Lookup Value</span>
-            </a>
-        </li>
-        <li class="{{isActiveRoute name='moto.unit'}}">
-            <a href="{{pathFor 'moto.unit'}}">
-                <i class="fa fa-cog"></i> <span>Unit</span>
-            </a>
+            <ul class="treeview-menu" style="display: none;">
+                <li class="{{isActiveRoute name='moto.item'}}">
+                    <a href="{{pathFor 'moto.item'}}">
+                        <i class="fa fa-archive"></i> <span>{{_ "moto.sidebarMenu.item"}}</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moto.employee'}}">
+                    <a href="{{pathFor 'moto.employee'}}">
+                        <i class="fa fa-male"></i> <span>Employee</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moto.supplier'}}">
+                    <a href="{{pathFor 'moto.supplier'}}">
+                        <i class="fa fa-truck"></i> <span>Supplier</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moto.location'}}">
+                    <a href="{{pathFor 'moto.location'}}">
+                        <i class="fa fa-sitemap"></i> <span>Location</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moto.lookupValue'}}">
+                    <a href="{{pathFor 'moto.lookupValue'}}">
+                        <i class="fa fa-cog"></i> <span>Lookup Value</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moto.unit'}}">
+                    <a href="{{pathFor 'moto.unit'}}">
+                        <i class="fa fa-cubes"></i> <span>Unit</span>
+                    </a>
+                </li>
+            </ul>
         </li>
     {{/if}}
 </template>

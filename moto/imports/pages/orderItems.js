@@ -419,6 +419,7 @@ newTmpl.events({
                 memo: memo
             });
         // }
+        console.log(itemsCollection.find().fetch());
     }
 });
 
@@ -619,12 +620,13 @@ let hooksObject = {
                         }
                     }
                 );
+                console.log('2');
             } else {
                 let itemName = Session.get('update') == true ? _.split($('[name="itemId"] option:selected').text(), " : ")[1] : _.split($('[name="itemId"] option:selected').text(), " : ")[2];
                 let discountType = Session.get('discountType') == "Percentage" ? "%" : "៛";
 
                 itemsCollection.insert({
-                    _id: insertDoc._id,
+                    _id: currentDoc._id,
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     qty: insertDoc.qty,

@@ -653,7 +653,7 @@ let hooksObject = {
                 let itemName = Session.get('update') == true ? _.split($('[name="itemId"] option:selected').text(), " : ")[1] : _.split($('[name="itemId"] option:selected').text(), " : ")[2];
 
                 itemsCollection.insert({
-                    _id: insertDoc._id,
+                    _id: currentDoc._id,
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     memoItem: insertDoc.memoItem,
