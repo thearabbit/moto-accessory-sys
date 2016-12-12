@@ -12,6 +12,11 @@ import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {lookupItem} from '../methods/lookupItem.js';
 
 export const OrderItemsSchema = new SimpleSchema({
+    _id: {
+        type: String,
+        label: 'Id',
+        optional:true
+    },
     itemId: {
         type: String,
         label: 'Item',
