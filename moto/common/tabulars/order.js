@@ -51,7 +51,20 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return `${val} ៛`;
             }
         },
-        {data: "des", title: "Description"},
+        {
+            data: "lastOrderBalance",
+            title: "Last Order Balance",
+            render(val, type, doc){
+                return `${val} ៛`;
+            }
+        },
+        {
+            data: "balance",
+            title: "Balance",
+            render(val, type, doc){
+                return `${val} ៛`;
+            }
+        },
         {
             data: "type",
             title: "Type",

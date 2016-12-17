@@ -26,9 +26,24 @@ OrderVip.itemsSchema = new SimpleSchema({
         label: 'Qty',
         min: 1
     },
+    unit: {
+        type: String,
+        label: "Unit"
+    },
     currencyId: {
         type: String,
         label: 'Currency'
+    },
+    purchasePrice: {
+        type: Number,
+        label: 'Purchase Price',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
     },
     price: {
         type: Number,
@@ -308,14 +323,72 @@ OrderVip.schema = new SimpleSchema({
             }
         }
     },
-    balance: {
+    lastOrderBalanceKhr: {
+        type: Number,
+        label: 'Last Balance Khr',
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
+            }
+        },
+        optional: true
+    },
+    lastOrderBalanceUsd: {
+        type: Number,
+        label: 'Last Balance Usd',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "$ ", placeholder: ""});
+            }
+        },
+        optional: true
+    },
+    lastOrderBalanceThb: {
+        type: Number,
+        label: 'Last Balance Thb',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "B ", placeholder: ""});
+            }
+        },
+        optional: true
+    },
+    balanceKhr: {
+        type: Number,
+        label: 'Balance',
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
+            }
+        },
+        optional: true
+    },
+    balanceUsd: {
         type: Number,
         label: 'Balance',
         decimal: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: "B"});
+                return inputmaskOptions.currency({prefix: "$ ", placeholder: ""});
+            }
+        },
+        optional: true
+    },
+    balanceThb: {
+        type: Number,
+        label: 'Balance',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "B ", placeholder: ""});
             }
         },
         optional: true

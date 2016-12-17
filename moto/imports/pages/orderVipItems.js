@@ -73,14 +73,28 @@ indexTmpl.helpers({
                 {
                     key: 'qty',
                     label: 'Qty',
-                    // fn(value, obj, key){
-                    //     return Spacebars.SafeString(`<input type="text" value="${value}" class="item-qty">`);
-                    // }
+                    fn(value, obj, key){
+                        return `${value} ${obj.unit}`;
+                    }
                 },
                 {
-                    key: 'price', label: 'Price',
+                    key: 'memo',
+                    label: 'Memo',
+                },
+                {
+                    key: 'purchasePrice',
+                    label: 'Purchase Price',
                     fn(value, obj, key){
-                        return `${obj.itemCurrency} ${value}`;
+                        let currency;
+                        if (obj.currencyId == "KHR") {
+                            currency = "៛";
+                        } else if (obj.currencyId == "USD") {
+                            currency = "$";
+                        } else {
+                            currency = "B";
+                        }
+
+                        return `${currency} ${value}`;
                     }
                 },
                 {
@@ -110,10 +124,6 @@ indexTmpl.helpers({
                     fn (value, obj, key) {
                         return `${obj.itemCurrency} ${value}`;
                     }
-                },
-                {
-                    key: 'memo',
-                    label: 'Memo',
                 },
                 {
                     key: '_id',
@@ -291,7 +301,7 @@ newTmpl.onCreated(function () {
 
 newTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
-    // $('[name="price"]').hide();
+    $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
 });
 
@@ -340,6 +350,13 @@ newTmpl.helpers({
 
         return {disabled: true};
     },
+    unit(){
+        let result = fa("cubes"), itemDoc = Template.instance().itemDoc.get();
+        if (itemDoc) {
+            result = itemDoc.unitDoc.name;
+        }
+        return result;
+    }
 });
 
 newTmpl.events({
@@ -401,6 +418,8 @@ newTmpl.events({
 
         let memoItem = instance.$('[name="memoItem"]').val();
         let qty = parseInt(instance.$('[name="qty"]').val());
+        let unit = instance.$('[name="unit"]').val();
+        let purchasePrice = parseFloat(instance.$('[name="purchasePrice"]').val());
         let price = round2(parseFloat(instance.$('[name="price"]').val()), 2);
         let khrPrice = parseFloat(instance.$('[name="khrPrice"]').val());
         let currency = instance.$('[name="currencyId"]').val();
@@ -460,9 +479,11 @@ newTmpl.events({
             itemName: itemName,
             memoItem: memoItem,
             qty: qty,
+            unit:unit,
             currencyId: currency,
             itemCurrency: itemCurrency,
             price: price,
+            purchasePrice: purchasePrice,
             khrPrice: khrPrice,
             orderPrice: orderPrice,
             discount: discount,
@@ -500,7 +521,7 @@ editTmpl.onCreated(function () {
 
 editTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
-    // $('[name="price"]').hide();
+    $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
 });
 
@@ -637,8 +658,10 @@ let hooksObject = {
                         $set: {
                             memoItem: insertDoc.memoItem,
                             qty: newQty,
+                            unit: insertDoc.unit,
                             currencyId: insertDoc.currencyId,
                             price: insertDoc.price,
+                            purchasePrice: insertDoc.purchasePrice,
                             itemCurrency: itemCurrency,
                             khrPrice: insertDoc.khrPrice,
                             orderPrice: insertDoc.orderPrice,
@@ -658,9 +681,11 @@ let hooksObject = {
                     itemName: itemName,
                     memoItem: insertDoc.memoItem,
                     qty: insertDoc.qty,
+                    unit: insertDoc.unit,
                     currencyId: insertDoc.currencyId,
                     itemCurrency: itemCurrency,
                     price: insertDoc.price,
+                    purchasePrice: insertDoc.purchasePrice,
                     khrPrice: insertDoc.khrPrice,
                     orderPrice: insertDoc.orderPrice,
                     discount: insertDoc.discount,

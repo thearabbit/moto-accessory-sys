@@ -31,6 +31,10 @@ Order.itemsSchema = new SimpleSchema({
         label: 'Qty',
         min: 1
     },
+    unit: {
+        type: String,
+        label: "Unit"
+    },
     currencyId: {
         type: String,
         label: 'Currency'
@@ -38,6 +42,17 @@ Order.itemsSchema = new SimpleSchema({
     price: {
         type: Number,
         label: 'Price',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency();
+            }
+        }
+    },
+    purchasePrice: {
+        type: Number,
+        label: 'Purchase Price',
         decimal: true,
         autoform: {
             type: 'inputmask',
@@ -130,7 +145,7 @@ Order.schema = new SimpleSchema({
         autoform: {
             type: "select2",
             options: function () {
-                return SelectOpts.customer("selectOne",true);
+                return SelectOpts.customer("selectOne", true);
             }
         }
     },
@@ -215,6 +230,18 @@ Order.schema = new SimpleSchema({
     items: {
         type: [Order.itemsSchema],
     },
+    lastOrderBalance: {
+        type: Number,
+        label: 'Last Order Balance',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "៛",placeholder:""});
+            }
+        },
+        optional: true
+    },
     subTotal: {
         type: Number,
         label: 'Subtotal',
@@ -258,7 +285,7 @@ Order.schema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency();
+                return inputmaskOptions.currency({prefix: "៛"});
             }
         },
         optional: true

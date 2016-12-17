@@ -8,6 +8,7 @@ import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {_} from 'meteor/erasaur:meteor-lodash';
 import 'meteor/theara:jsonview';
 import {TAPi18n} from 'meteor/tap:i18n';
+import {round2} from 'meteor/theara:round2';
 import 'meteor/tap:i18n-ui';
 
 // Lib
@@ -101,6 +102,7 @@ formTmpl.onCreated(function () {
     self.isLoading = new ReactiveVar(false);
     self.orderDoc = new ReactiveVar();
     self.orderLog = new ReactiveVar(0);
+    self.lastOrderBalance = new ReactiveVar(0);
 
     Session.set('customerType', 'Retail');
     Session.set('discountType', 'Percentage');
@@ -121,6 +123,7 @@ formTmpl.onCreated(function () {
                     itemsCollection.insert(value);
                 });
 
+                self.lastOrderBalance.set(result.lastOrderBalance);
                 self.orderDoc.set(result);
                 self.isLoading.set(false);
             }).catch((err) => {
@@ -194,6 +197,11 @@ formTmpl.helpers({
     orderLog(){
         let instance = Template.instance();
         return instance.orderLog.get();
+    },
+    lastOrderBalance(){
+        let instance = Template.instance();
+        let lastOrderBalance = _.isUndefined(instance.lastOrderBalance.get()) ? 0 : instance.lastOrderBalance.get();
+        return lastOrderBalance;
     }
 });
 
@@ -215,11 +223,26 @@ formTmpl.events({
     },
     'change [name="customerId"]': function (event, instance) {
         let customerId = event.currentTarget.value;
+        let currentData = Template.currentData();
 
         lookupOrderLog.callPromise({
             customerId: customerId
         }).then((result) => {
-            instance.orderLog.set(result || 0);
+            let data = result;
+            if (_.isUndefined(result)) {
+                data = 0;
+            }
+
+            if (currentData && customerId == "") {
+                instance.lastOrderBalance.set(instance.orderDoc.get().lastOrderBalance);
+            } else if (currentData && instance.orderDoc.get().customerId == customerId) {
+                instance.lastOrderBalance.set(instance.orderDoc.get().lastOrderBalance);
+            }
+            else {
+                instance.lastOrderBalance.set(data.totalOrderLog);
+            }
+
+            instance.orderLog.set(data);
         }).catch((err) => {
             console.log(err);
         });
@@ -235,6 +258,7 @@ formTmpl.onDestroyed(function () {
     Session.set('update', false);
     Session.set('discountAmountUpdate', null);
     Session.set('image', null);
+    Session.set('total', null);
 });
 
 // Show
@@ -248,7 +272,6 @@ showTmpl.onCreated(function () {
         lookupOrder.callPromise({
             orderId: currentData.orderId
         }).then((result) => {
-            console.log(result);
             this.orderDoc.set(result);
 
             $.unblockUI();

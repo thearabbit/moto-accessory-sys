@@ -53,37 +53,58 @@
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 {{> afQuickField name="orderDate"}}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group{{#if afFieldIsInvalid name='employeeId'}} has-error{{/if}}"
+                                     data-required="true">
+                                    <label class="control-label" for="employeeId">Employee</label>
+                                    <div class="input-group select2-bootstrap-append">
+                                        <span class="input-group-btn">
+                                            {{> employeeDropDown}}
+                                        </span>
+                                        {{> afFieldInput name='employeeId'}}
+                                    </div>
+                                    {{#if afFieldIsInvalid name='employeeId'}}
+                                        <span class="help-block">{{afFieldMessage name='employeeId'}}</span>
+                                    {{/if}}
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group{{#if afFieldIsInvalid
-                                                            name='customerId'}} has-error{{/if}}"
-                                     data-required="true">
-                                    <label class="control-label" for="customerId">
-                                        Customer
-                                    </label>
-                                    <b>|</b>
-                                    <div class="btn-group">
-                                        <button type="button" data-toggle="tooltip" data-placement="top" title="Grand Order Total" class="btn btn-xs btn-default">
-                                            <b>{{orderLog.totalOrderLog}} ៛</b></button>
-                                        <button type="button" class="btn btn-xs btn-info" data-toggle="modal"
-                                                data-target="#myModal">{{fa
-                                                "info-circle"}} More Detail
-                                        </button>
+                                    <div class="form-group{{#if afFieldIsInvalid name='customerId'}} has-error{{/if}}"
+                                         data-required="true">
+                                        <label class="control-label" for="customerId">Customer</label>
+                                        <div class="input-group select2-bootstrap-append">
+                                        <span class="input-group-btn">
+                                            {{> customerDropDown}}
+                                        </span>
+                                            {{> afFieldInput name='customerId'}}
+                                        </div>
+                                        {{#if afFieldIsInvalid name='customerId'}}
+                                            <span class="help-block">{{afFieldMessage name='customerId'}}</span>
+                                        {{/if}}
                                     </div>
-
-                                    {{> afFieldInput name='customerId'}}
-
-                                    {{#if afFieldIsInvalid name='customerId'}}
-                                        <span class="help-block">{{afFieldMessage name='customerId'}}</span>
-                                    {{/if}}
-                                </div>
                             </div>
                             <div class="col-md-6">
-                                {{> afQuickField name="employeeId"}}
+                                <div class="form-group{{#if afFieldIsInvalid
+                                                            name='lastOrderBalance' }} has-error{{/if}}"
+                                     data-required="true">
+                                    <label class="control-label" for="lastOrderBalance">Last Order Balance</label>
+
+                                    <div class="input-group select2-bootstrap-append">
+                                        {{> afFieldInput name="lastOrderBalance" class="form-control" value=lastOrderBalance readOnly=true}}
+                                        <span class="input-group-btn">
+                           <button type="button" class="btn btn-info"
+                                   data-toggle="modal" data-target="#myModal">{{fa "info-circle"}} More Detail</button>
+                       </span>
+                                    </div>
+                                    {{#if afFieldIsInvalid name='lastOrderBalance'}}
+                                        <span class="help-block">{{afFieldMessage name='lastOrderBalance'}}</span>
+                                    {{/if}}
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -101,7 +122,6 @@
                         {{#if showExchange}}
                             {{> afQuickField name="exchangeId"}}
                         {{/if}}
-
                         {{> afQuickField name="des"}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
                     </div>
@@ -147,7 +167,7 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Order Reference Id</th>
-                                        <th>Order Total</th>
+                                        <th>Last Order Balance</th>
                                         <th>Description</th>
                                     </tr>
 
@@ -232,7 +252,7 @@
                                 <th>Item</th>
                                 <th>Memo Item</th>
                                 <th>Qty</th>
-                                <th>Price</th>
+                                <th>Purchase Price</th>
                                 <th>Order Price</th>
                                 <th>Discount</th>
                                 <th>Amount</th>
@@ -246,8 +266,8 @@
                                     <td>{{itemId}}</td>
                                     <td>{{itemName}}</td>
                                     <td>{{memoItem}}</td>
-                                    <td>{{qty}}</td>
-                                    <td>{{price}}</td>
+                                    <td>{{qty}} {{unit}}</td>
+                                    <td>{{purchasePrice}}</td>
                                     <td>{{orderPrice}} ៛</td>
                                     <td>{{discount}} {{discountType}}</td>
                                     <td>{{amount}} ៛</td>
@@ -291,6 +311,14 @@
                                     <th>Total:</th>
                                     <td>{{total}} ៛</td>
                                 </tr>
+                                <tr>
+                                    <th>Last Order Balance:</th>
+                                    <td>{{lastOrderBalance}} ៛</td>
+                                </tr>
+                                <tr>
+                                    <th>Balance:</th>
+                                    <td>{{balance}} ៛</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -300,5 +328,35 @@
                 <!-- /.row -->
             </section>
         {{/with}}
+    </div>
+</template>
+
+<!--Employee-->
+<template name="employeeDropDown">
+    <div class="input-group-btn" style="z-index: 999">
+        <div class="btn-group" style="margin-bottom: 4px;" role="group">
+            <div class="dropdown dropdown-lg">
+                <a class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown"
+                   aria-expanded="false"><span>{{fa "plus-square"}}</span></a>
+                <div class="dropdown-menu dropdown-menu-left dropdown-form-shadow" role="menu">
+                    {{>Moto_employeeForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--Customer-->
+<template name="customerDropDown">
+    <div class="input-group-btn" style="z-index: 999">
+        <div class="btn-group" style="margin-bottom: 4px;" role="group">
+            <div class="dropdown dropdown-lg">
+                <a class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown"
+                   aria-expanded="false"><span>{{fa "plus-square"}}</span></a>
+                <div class="dropdown-menu dropdown-menu-left dropdown-form-shadow" role="menu">
+                    {{>Moto_customerForm}}
+                </div>
+            </div>
+        </div>
     </div>
 </template>

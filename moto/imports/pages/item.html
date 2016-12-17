@@ -53,11 +53,37 @@
                             <div class="col-md-6">
                                 {{> afQuickField name="price"}}
                                 {{> afQuickField name="khrPrice"}}
-                                {{> afQuickField name="unitId"}}
+
+                                <div class="form-group{{#if afFieldIsInvalid name='unitId'}} has-error{{/if}}"
+                                     data-required="true">
+                                    <label class="control-label" for="unitId">Unit</label>
+                                    <div class="input-group select2-bootstrap-append">
+                                        <span class="input-group-btn">
+                                            {{> unitDropDown}}
+                                        </span>
+                                        {{> afFieldInput name='unitId'}}
+                                    </div>
+                                    {{#if afFieldIsInvalid name='unitId'}}
+                                        <span class="help-block">{{afFieldMessage name='unitId'}}</span>
+                                    {{/if}}
+                                </div>
 
                             </div>
                             <div class="col-md-6">
-                                {{> afQuickField name="supplierId"}}
+                                <div class="form-group{{#if afFieldIsInvalid name='supplierId'}} has-error{{/if}}"
+                                     data-required="true">
+                                    <label class="control-label" for="supplierId">Supplier</label>
+                                    <div class="input-group select2-bootstrap-append">
+                                        <span class="input-group-btn">
+                                            {{> supplierDropDown}}
+                                        </span>
+                                        {{> afFieldInput name='supplierId'}}
+                                    </div>
+                                    {{#if afFieldIsInvalid name='supplierId'}}
+                                        <span class="help-block">{{afFieldMessage name='supplierId'}}</span>
+                                    {{/if}}
+                                </div>
+
                                 {{> afQuickField name="purchase"}}
                                 {{> afQuickField name="photo"}}
                             </div>
@@ -103,3 +129,34 @@
         {{/if}}
     </div>
 </template>
+
+<!--unit-->
+<template name="unitDropDown">
+    <div class="input-group-btn" style="z-index: 999">
+        <div class="btn-group" style="margin-bottom: 4px;" role="group">
+            <div class="dropdown dropdown-lg">
+                <a class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown"
+                   aria-expanded="false"><span>{{fa "plus-square"}}</span></a>
+                <div class="dropdown-menu dropdown-menu-left dropdown-form-shadow" role="menu">
+                    {{>Moto_unitForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--Supplier-->
+<template name="supplierDropDown">
+    <div class="input-group-btn" style="z-index: 999">
+        <div class="btn-group" style="margin-bottom: 4px;" role="group">
+            <div class="dropdown dropdown-lg">
+                <a class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown"
+                   aria-expanded="false"><span>{{fa "plus-square"}}</span></a>
+                <div class="dropdown-menu dropdown-menu-left dropdown-form-shadow" role="menu">
+                    {{>Moto_supplierForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+

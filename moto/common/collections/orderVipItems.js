@@ -45,6 +45,10 @@ export const OrderVipItemsSchema = new SimpleSchema({
             }
         }
     },
+    unit: {
+        type: String,
+        label: "Unit"
+    },
     currencyId: {
         type: String,
         label: 'Currency'
@@ -65,6 +69,29 @@ export const OrderVipItemsSchema = new SimpleSchema({
                         prefix = '$';
                     } else if (prefix == 'THB') {
                         prefix = 'B';
+                    }
+
+                    return inputmaskOptions.currency({prefix: prefix});
+                }
+            }
+        }
+    },
+    purchasePrice: {
+        type: Number,
+        label: 'Purchase Price',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                if (Meteor.isClient) {
+                    let prefix = AutoForm.getFieldValue('currencyId') || '$';
+
+                    if (prefix == 'KHR') {
+                        prefix = '៛ '
+                    } else if (prefix == 'USD') {
+                        prefix = '$ ';
+                    } else if (prefix == 'THB') {
+                        prefix = 'B ';
                     }
 
                     return inputmaskOptions.currency({prefix: prefix});

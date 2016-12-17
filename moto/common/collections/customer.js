@@ -63,11 +63,13 @@ Customer.generalSchema = new SimpleSchema({
     },
     address: {
         type: String,
-        label: 'Address'
+        label: 'Address',
+        optional: true
     },
     contact: {
         type: String,
-        label: "Contact"
+        label: "Contact",
+        optional: true
     },
     email: {
         type: String,

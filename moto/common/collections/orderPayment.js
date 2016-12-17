@@ -99,12 +99,7 @@ OrderPayment.schema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
             }
-        },
-        custom: function () {
-            if (this.value > this.field('dueAmount').value) {
-                return "greaterThanDue";
-            }
-        },
+        }
     },
     status: {
         type: String,

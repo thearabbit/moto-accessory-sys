@@ -15,7 +15,7 @@ export const OrderItemsSchema = new SimpleSchema({
     _id: {
         type: String,
         label: 'Id',
-        optional:true
+        optional: true
     },
     itemId: {
         type: String,
@@ -37,13 +37,11 @@ export const OrderItemsSchema = new SimpleSchema({
         type: Number,
         label: 'Qty',
         defaultValue: 0,
-        min: 1,
-        autoform: {
-            type: 'inputmask',
-            inputmaskOptions: function () {
-                return inputmaskOptions.integer();
-            }
-        }
+        min: 1
+    },
+    unit: {
+        type: String,
+        label: "Unit"
     },
     currencyId: {
         type: String,
@@ -60,11 +58,34 @@ export const OrderItemsSchema = new SimpleSchema({
                     let prefix = AutoForm.getFieldValue('currencyId') || '$';
 
                     if (prefix == 'KHR') {
-                        prefix = '៛'
+                        prefix = '៛ '
                     } else if (prefix == 'USD') {
-                        prefix = '$';
+                        prefix = '$ ';
                     } else if (prefix == 'THB') {
-                        prefix = 'B';
+                        prefix = 'B ';
+                    }
+
+                    return inputmaskOptions.currency({prefix: prefix});
+                }
+            }
+        }
+    },
+    purchasePrice: {
+        type: Number,
+        label: 'Purchase Price',
+        decimal: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                if (Meteor.isClient) {
+                    let prefix = AutoForm.getFieldValue('currencyId') || '$';
+
+                    if (prefix == 'KHR') {
+                        prefix = '៛ '
+                    } else if (prefix == 'USD') {
+                        prefix = '$ ';
+                    } else if (prefix == 'THB') {
+                        prefix = 'B ';
                     }
 
                     return inputmaskOptions.currency({prefix: prefix});
@@ -79,7 +100,7 @@ export const OrderItemsSchema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: '៛'});
+                return inputmaskOptions.currency({prefix: '៛ '});
             }
         }
     },
@@ -90,7 +111,7 @@ export const OrderItemsSchema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: '៛'});
+                return inputmaskOptions.currency({prefix: '៛ '});
             }
         }
     },
@@ -101,7 +122,7 @@ export const OrderItemsSchema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: '៛'});
+                return inputmaskOptions.currency({prefix: '៛ '});
             }
         }
     },
@@ -117,7 +138,7 @@ export const OrderItemsSchema = new SimpleSchema({
                     if (discountType == 'Percentage') {
                         type = inputmaskOptions.percentage();
                     } else {
-                        type = inputmaskOptions.currency({prefix: '៛'});
+                        type = inputmaskOptions.currency({prefix: '៛ '});
                     }
                     return type;
                 }
@@ -132,7 +153,7 @@ export const OrderItemsSchema = new SimpleSchema({
             type: 'inputmask',
             inputmaskOptions: function () {
                 if (Meteor.isClient) {
-                    return inputmaskOptions.currency({prefix: '៛'});
+                    return inputmaskOptions.currency({prefix: '៛ '});
                 }
             }
         }

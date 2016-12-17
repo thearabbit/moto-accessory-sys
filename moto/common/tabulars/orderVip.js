@@ -54,7 +54,22 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return result;
             }
         },
-        {data: "des", title: "Description"},
+        {
+            data: "lastOrderBalanceKhr",
+            title: "Last Order Balance",
+            render: function (val, type, doc) {
+                let result = `KHR : ${val} <br> USD : ${doc.lastOrderBalanceUsd} <br> THB : ${doc.lastOrderBalanceThb}`;
+                return result;
+            }
+        },
+        {
+            data: "balanceKhr",
+            title: "Balance",
+            render: function (val, type, doc) {
+                let result = `KHR : ${val} <br> USD : ${doc.balanceUsd} <br> THB : ${doc.balanceThb}`;
+                return result;
+            }
+        },
         {
             data: "type",
             title: "Type",
@@ -67,7 +82,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             tmpl: Meteor.isClient && Template.Moto_paymentVipLinkAction
         }
     ],
-    extraFields: ['employeeId', 'discountType', 'items', 'subTotalUsd', 'discountAmountUsd', 'totalUsd','subTotalThb', 'discountAmountThb', 'totalThb']
+    extraFields: ['employeeId', 'discountType', 'items', 'subTotalUsd', 'discountAmountUsd', 'totalUsd','subTotalThb', 'discountAmountThb', 'totalThb','lastOrderBalanceUsd','lastOrderBalanceThb','balanceUsd','balanceThb']
 });
 
 export const OrderVipTabular = new Tabular.Table(tabularData);

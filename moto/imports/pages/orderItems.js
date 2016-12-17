@@ -71,22 +71,38 @@ indexTmpl.helpers({
                 {
                     key: 'qty',
                     label: 'Qty',
+                    fn(value, obj, key){
+                        return `${value} ${obj.unit}`;
+                    }
                     // fn(value, obj, key){
                     //     return Spacebars.SafeString(`<input type="text" value="${value}" class="item-qty">`);
                     // }
                 },
                 {
-                    key: 'price',
-                    label: 'Price',
+                    key: 'memo',
+                    label: 'Memo',
+                },
+                {
+                    key: 'purchasePrice',
+                    label: 'Purchase Price',
                     fn(value, obj, key){
-                        return `${value}`;
+                        let currency;
+                        if (obj.currencyId == "KHR") {
+                            currency = "៛";
+                        } else if (obj.currencyId == "USD") {
+                            currency = "$";
+                        } else {
+                            currency = "B";
+                        }
+
+                        return `${currency} ${value}`;
                     }
                 },
                 {
                     key: 'orderPrice',
                     label: 'Order Price',
                     fn(value, obj, key){
-                        return `៛${value}`;
+                        return `៛ ${value}`;
                     }
                 },
                 {
@@ -106,19 +122,15 @@ indexTmpl.helpers({
                     key: 'amount',
                     label: 'Amount',
                     fn (value, object, key) {
-                        return `៛${value}`;
+                        return `៛ ${value}`;
                     }
                 },
                 {
                     key: 'totalAmount',
                     label: 'Total Amount',
                     fn (value, object, key) {
-                        return `៛${value}`;
+                        return `៛ ${value}`;
                     }
-                },
-                {
-                    key: 'memo',
-                    label: 'Memo',
                 },
                 {
                     key: '_id',
@@ -163,6 +175,7 @@ indexTmpl.helpers({
             total += obj.totalAmount;
         });
 
+        Session.set('total', total - discountAmount);
         return round2(total - discountAmount, 2);
     }
 });
@@ -219,7 +232,7 @@ newTmpl.onCreated(function () {
 
 newTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
-    // $('[name="price"]').hide();
+    $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
 });
 
@@ -304,6 +317,13 @@ newTmpl.helpers({
 
         return {disabled: true};
     },
+    unit(){
+        let result = fa("cubes"), itemDoc = Template.instance().itemDoc.get();
+        if (itemDoc) {
+            result = itemDoc.unitDoc.name;
+        }
+        return result;
+    }
 });
 
 newTmpl.events({
@@ -365,6 +385,8 @@ newTmpl.events({
 
         itemName = _.trim(_.split(itemName, " : ")[1]);
         let qty = parseInt(instance.$('[name="qty"]').val());
+        let unit = instance.$('[name="unit"]').val();
+        let purchasePrice = parseFloat(instance.$('[name="purchasePrice"]').val());
         let price = round2(parseFloat(instance.$('[name="price"]').val()), 2);
         let khrPrice = parseFloat(instance.$('[name="khrPrice"]').val());
         let currency = instance.$('[name="currencyId"]').val();
@@ -402,24 +424,25 @@ newTmpl.events({
         //         }
         //     );
         // } else {
-            itemsCollection.insert({
-                // _id: itemId,
-                itemId: itemId,
-                itemName: itemName,
-                memoItem: memoItem,
-                qty: qty,
-                currencyId: currency,
-                price: price,
-                khrPrice: khrPrice,
-                orderPrice: orderPrice,
-                discount: discount,
-                discountType: discountType,
-                amount: amount,
-                totalAmount: totalAmount,
-                memo: memo
-            });
+        itemsCollection.insert({
+            // _id: itemId,
+            itemId: itemId,
+            itemName: itemName,
+            memoItem: memoItem,
+            qty: qty,
+            unit: unit,
+            currencyId: currency,
+            price: price,
+            purchasePrice: purchasePrice,
+            khrPrice: khrPrice,
+            orderPrice: orderPrice,
+            discount: discount,
+            discountType: discountType,
+            amount: amount,
+            totalAmount: totalAmount,
+            memo: memo
+        });
         // }
-        console.log(itemsCollection.find().fetch());
     }
 });
 
@@ -430,6 +453,7 @@ editTmpl.onCreated(function () {
     this.qty = new ReactiveVar(0);
     this.orderPrice = new ReactiveVar(0);
     this.price = new ReactiveVar(0);
+    this.purchasePrice = new ReactiveVar(0);
     this.khrPrice = new ReactiveVar(0);
     this.amount = new ReactiveVar(0);
     this.currencyId = new ReactiveVar();
@@ -448,7 +472,7 @@ editTmpl.onCreated(function () {
 
 editTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
-    // $('[name="price"]').hide();
+    $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
 });
 
@@ -581,7 +605,6 @@ editTmpl.events({
 let hooksObject = {
     onSubmit: function (insertDoc, updateDoc, currentDoc) {
         this.event.preventDefault();
-
         // Check old item
         if (insertDoc.itemId == currentDoc.itemId) {
             itemsCollection.update(
@@ -609,8 +632,10 @@ let hooksObject = {
                     {
                         $set: {
                             qty: newQty,
+                            unit: insertDoc.unit,
                             currencyId: insertDoc.currencyId,
                             price: insertDoc.price,
+                            purchasePrice: insertDoc.purchasePrice,
                             khrPrice: insertDoc.khrPrice,
                             orderPrice: insertDoc.orderPrice,
                             discount: newDiscount,
@@ -620,7 +645,6 @@ let hooksObject = {
                         }
                     }
                 );
-                console.log('2');
             } else {
                 let itemName = Session.get('update') == true ? _.split($('[name="itemId"] option:selected').text(), " : ")[1] : _.split($('[name="itemId"] option:selected').text(), " : ")[2];
                 let discountType = Session.get('discountType') == "Percentage" ? "%" : "៛";
@@ -630,8 +654,10 @@ let hooksObject = {
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     qty: insertDoc.qty,
+                    unit: insertDoc.unit,
                     currencyId: insertDoc.currencyId,
                     price: insertDoc.price,
+                    purchasePrice: insertDoc.purchasePrice,
                     khrPrice: insertDoc.khrPrice,
                     orderPrice: insertDoc.orderPrice,
                     discount: insertDoc.discount,
