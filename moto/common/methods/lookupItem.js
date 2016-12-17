@@ -16,7 +16,20 @@ export const lookupItem = new ValidatedMethod({
     }).validator(),
     run({itemId}) {
         if (!this.isSimulation) {
-            return Item.findOne({_id: itemId});
+            let data = Item.aggregate([
+                {$match: {_id: itemId}},
+                {
+                    $lookup: {
+                        from: "moto_unit",
+                        localField: "unitId",
+                        foreignField: "_id",
+                        as: "unitDoc"
+                    }
+                },
+                {$unwind: {path: "$unitDoc", preserveNullAndEmptyArrays: true}}
+            ]);
+
+            return data[0];
         }
     }
 });

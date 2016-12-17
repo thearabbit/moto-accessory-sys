@@ -77,14 +77,12 @@ OrderVipPayment.schema = new SimpleSchema({
             }
         },
         custom: function () {
-            if (this.value > this.field('dueAmountKhr').value) {
-                return "greaterThanDue";
-            } else if (this.dueAmountKhr > 0) {
+            if (this.dueAmountKhr > 0) {
                 return 'required';
             }
         }
     },
-    balanceKhr: {
+    paymentBalanceKhr: {
         type: Number,
         label: 'Balance Khr',
         decimal: true,
@@ -128,14 +126,12 @@ OrderVipPayment.schema = new SimpleSchema({
             }
         },
         custom: function () {
-            if (this.value > this.field('dueAmountUsd').value) {
-                return "greaterThanDue";
-            } else if (this.dueAmountUsd > 0) {
+            if (this.dueAmountUsd > 0) {
                 return 'required';
             }
         }
     },
-    balanceUsd: {
+    paymentBalanceUsd: {
         type: Number,
         label: 'Balance Usd',
         decimal: true,
@@ -179,14 +175,12 @@ OrderVipPayment.schema = new SimpleSchema({
             }
         },
         custom: function () {
-            if (this.value > this.field('dueAmountThb').value) {
-                return "greaterThanDue";
-            } else if (this.dueAmountThb > 0) {
-                return "required";
+            if (this.dueAmountThb > 0) {
+                return 'required';
             }
         }
     },
-    balanceThb: {
+    paymentBalanceThb: {
         type: Number,
         label: 'Balance Thb',
         decimal: true,

@@ -50,15 +50,17 @@ export const lookupOrderVipLog = new ValidatedMethod({
                 {
                     $group: {
                         _id: "$_id",
-                        customerId: { $last: "$customerId" },
-                        customerDoc: { $last: "$customerDoc" },
-                        orderVipDate: {$last: "$orderDate"},
-                        totalKhr: { $last: "$total" },
-                        balanceKhr: { $last: "$paymentVipDoc.balanceKhr" },
-                        totalUsd: { $last: "$totalUsd" },
-                        balanceUsd: { $last: "$paymentVipDoc.balanceUsd" },
-                        totalThb: { $last: "$totalThb" },
-                        balanceThb: { $last: "$paymentVipDoc.balanceThb" }
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
+                        orderDate: {$last: "$orderDate"},
+                        total: {$last: "$total"},
+                        balanceKhr: {$last: "$balanceKhr"},
+                        paymentBalanceKhr: {$last: "$paymentVipDoc.paymentBalanceKhr"},
+                        balanceUsd: {$last: "$balanceUsd"},
+                        paymentBalanceUsd: {$last: "$paymentVipDoc.paymentBalanceUsd"},
+                        balanceThb: {$last: "$balanceThb"},
+                        paymentBalanceThb: {$last: "$paymentVipDoc.paymentBalanceThb"},
+                        des: {$last: "$des"}
                     }
                 },
                 {
@@ -66,40 +68,43 @@ export const lookupOrderVipLog = new ValidatedMethod({
                         _id: 1,
                         customerId: 1,
                         customerDoc: 1,
-                        orderVipDate:1,
-                        totalKhr: 1,
+                        orderDate: 1,
+                        total: 1,
                         balanceKhr: 1,
-                        totalUsd: 1,
+                        paymentBalanceKhr: 1,
                         balanceUsd: 1,
-                        totalThb: 1,
-                        balanceThb: 1
+                        paymentBalanceUsd: 1,
+                        balanceThb: 1,
+                        paymentBalanceThb: 1,
+                        des: 1
                     }
 
                 },
                 {
                     $group: {
                         _id: "$customerId",
-                        customerId: { $last: "$customerId" },
-                        customerDoc: { $last: "$customerDoc" },
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
                         orderVipLog: {
                             $addToSet: {
                                 oldOrderVipRefId: "$_id",
-                                oldOrderVipDate:"$orderVipDate",
+                                oldOrderVipDate: "$orderDate",
                                 oldOrderVipTotalKhr: {
                                     $cond: [
-                                        { $eq: ["$balanceKhr", null] }, "$totalKhr", "$balanceKhr"
+                                        {$eq: ["$paymentBalanceKhr", null]}, "$balanceKhr", "$paymentBalanceKhr"
                                     ]
                                 },
                                 oldOrderVipTotalUsd: {
                                     $cond: [
-                                        { $eq: ["$balanceUsd", null] }, "$totalUsd", "$balanceUsd"
+                                        {$eq: ["$paymentBalanceUsd", null]}, "$balanceUsd", "$paymentBalanceUsd"
                                     ]
                                 },
                                 oldOrderVipTotalThb: {
                                     $cond: [
-                                        { $eq: ["$balanceThb", null] }, "$totalThb", "$balanceThb"
+                                        {$eq: ["$paymentBalanceThb", null]}, "$balanceThb", "$paymentBalanceThb"
                                     ]
-                                }
+                                },
+                                des: "$des"
                             }
                         }
                     }
@@ -110,16 +115,55 @@ export const lookupOrderVipLog = new ValidatedMethod({
                     }
                 },
                 {
+                    $project: {
+                        _id: 1,
+                        customerId: 1,
+                        customerDoc: 1,
+                        orderVipLog: 1,
+                        des: 1,
+                        totalOrderVipLogKhr: {
+                            $cond: {
+                                if: {$lte: ["$orderVipLog.oldOrderVipTotalKhr", 0]},
+                                then: "$orderVipLog.oldOrderVipTotalKhr",
+                                else: {
+                                    $sum: "$orderVipLog.oldOrderVipTotalKhr"
+
+                                }
+                            }
+                        },
+                        totalOrderVipLogUsd: {
+                            $cond: {
+                                if: {$lte: ["$orderVipLog.oldOrderVipTotalUsd", 0]},
+                                then: "$orderVipLog.oldOrderVipTotalUsd",
+                                else: {
+                                    $sum: "$orderVipLog.oldOrderVipTotalUsd"
+
+                                }
+                            }
+                        },
+                        totalOrderVipLogThb: {
+                            $cond: {
+                                if: {$lte: ["$orderVipLog.oldOrderVipTotalThb", 0]},
+                                then: "$orderVipLog.oldOrderVipTotalThb",
+                                else: {
+                                    $sum: "$orderVipLog.oldOrderVipTotalThb"
+
+                                }
+                            }
+                        }
+                    }
+                },
+                {
                     $group: {
                         _id: "$customerId",
-                        customerId: { $last: "$customerId" },
-                        customerDoc: { $last: "$customerDoc" },
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
                         orderVipLog: {
                             $addToSet: "$orderVipLog"
                         },
-                        totalOrderVipLogKhr: { $sum: "$orderVipLog.oldOrderVipTotalKhr" },
-                        totalOrderVipLogUsd: { $sum: "$orderVipLog.oldOrderVipTotalUsd" },
-                        totalOrderVipLogThb: { $sum: "$orderVipLog.oldOrderVipTotalThb" }
+                        totalOrderVipLogKhr: {$last: "$totalOrderVipLogKhr"},
+                        totalOrderVipLogUsd: {$last: "$totalOrderVipLogUsd"},
+                        totalOrderVipLogThb: {$last: "$totalOrderVipLogThb"},
                     }
                 }
             ]);

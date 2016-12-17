@@ -35,9 +35,9 @@ export const lookupOrderVipPayment = new ValidatedMethod({
                         customerId: 1,
                         orderDate: 1,
                         paymentVipDoc: 1,
-                        total: 1,
-                        totalUsd: 1,
-                        totalThb: 1,
+                        balanceKhr: 1,
+                        balanceUsd: 1,
+                        balanceThb: 1,
                         paymentVipCount: { $size: '$paymentVipDoc' }
                     }
                 },

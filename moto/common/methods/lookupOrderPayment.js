@@ -35,7 +35,7 @@ export const lookupOrderPayment = new ValidatedMethod({
                         customerId: 1,
                         orderDate: 1,
                         paymentDoc: 1,
-                        total: 1,
+                        balance: 1,
                         paymentCount: { $size: '$paymentDoc' }
                     }
                 },

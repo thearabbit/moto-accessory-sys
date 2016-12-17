@@ -117,13 +117,12 @@ formTmpl.helpers({
     },
     data () {
         let paymentDoc = Template.instance().paymentDoc.get();
-
         let data = {
             formType: 'insert',
             doc: {
                 orderId: paymentDoc._id,
                 customerId: paymentDoc.customerId,
-                dueAmount: paymentDoc.payment.total || paymentDoc.payment.balance,
+                dueAmount: paymentDoc.payment.balance,
                 paidDate: moment().toDate()
             }
         };

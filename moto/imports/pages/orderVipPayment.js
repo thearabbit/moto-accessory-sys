@@ -104,9 +104,9 @@ formTmpl.onCreated(function () {
             lookupOrderVipPayment.callPromise({
                 orderVipId: orderVipId
             }).then((result)=> {
-                self.dueAmountKhr.set(result.paymentVip.total || result.paymentVip.balanceKhr);
-                self.dueAmountUsd.set(result.paymentVip.totalUsd || result.paymentVip.balanceUsd);
-                self.dueAmountThb.set(result.paymentVip.totalThb || result.paymentVip.balanceThb);
+                self.dueAmountKhr.set(result.paymentVip.balanceKhr || result.paymentVip.paymentBalanceKhr);
+                self.dueAmountUsd.set(result.paymentVip.balanceUsd || result.paymentVip.paymentBalanceUsd);
+                self.dueAmountThb.set(result.paymentVip.balanceThb || result.paymentVip.paymentBalanceThb);
                 self.paymentVipDoc.set(result);
             }).catch((err)=> {
                 console.log(err);
@@ -129,9 +129,9 @@ formTmpl.helpers({
             doc: {
                 orderVipId: paymentVipDoc._id,
                 customerId: paymentVipDoc.customerId,
-                dueAmountKhr: paymentVipDoc.paymentVip.total || paymentVipDoc.paymentVip.balanceKhr,
-                dueAmountUsd: paymentVipDoc.paymentVip.totalUsd || paymentVipDoc.paymentVip.balanceUsd,
-                dueAmountThb: paymentVipDoc.paymentVip.totalThb || paymentVipDoc.paymentVip.balanceThb,
+                dueAmountKhr: paymentVipDoc.paymentVip.balanceKhr || paymentVipDoc.paymentVip.paymentBalanceKhr,
+                dueAmountUsd: paymentVipDoc.paymentVip.balanceUsd || paymentVipDoc.paymentVip.paymentBalanceUsd,
+                dueAmountThb: paymentVipDoc.paymentVip.balanceThb || paymentVipDoc.paymentVip.paymentBalanceThb,
                 paidDate: moment().toDate()
             }
         };
@@ -150,21 +150,21 @@ formTmpl.helpers({
 
         return data;
     },
-    balanceKhr (){
+    paymentBalanceKhr (){
         let instance = Template.instance();
         let dueAmountKhr = instance.dueAmountKhr.get();
         let paidAmountKhr = instance.paidAmountKhr.get();
 
         return dueAmountKhr - paidAmountKhr;
     },
-    balanceUsd(){
+    paymentBalanceUsd(){
         let instance = Template.instance();
         let dueAmountUsd = instance.dueAmountUsd.get();
         let paidAmountUsd = instance.paidAmountUsd.get();
 
         return dueAmountUsd - paidAmountUsd;
     },
-    balanceThb(){
+    paymentBalanceThb(){
         let instance = Template.instance();
         let dueAmountThb = instance.dueAmountThb.get();
         let paidAmountThb = instance.paidAmountThb.get();

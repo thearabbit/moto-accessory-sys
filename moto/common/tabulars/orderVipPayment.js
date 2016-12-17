@@ -50,12 +50,12 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         },
         {
-            data: "balanceKhr",
+            data: "paymentBalanceKhr",
             title: "Balance",
             render(val, type, doc){
                 return `KHR : ${val} ៛ <br> 
-                         USD : ${doc.balanceUsd} $<br>
-                         THB : ${doc.balanceThb} B`;
+                         USD : ${doc.paymentBalanceUsd} $<br>
+                         THB : ${doc.paymentBalanceThb} B`;
             }
         },
         {
@@ -67,7 +67,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return `<span class="badge bg-teal-active"><i class="fa fa-heart"></i> ${val} </span>`;
             }
         }],
-    extraFields: ['customerId', 'employeeId', 'dueAmountUsd', 'dueAmountThb', 'paidAmountUsd', 'paidAmountThb' , 'balanceUsd' ,'balanceThb']
+    extraFields: ['customerId', 'employeeId', 'dueAmountUsd', 'dueAmountThb', 'paidAmountUsd', 'paidAmountThb' , 'paymentBalanceUsd' ,'paymentBalanceThb']
 });
 
 export const OrderPaymentTabular = new Tabular.Table(tabularData);

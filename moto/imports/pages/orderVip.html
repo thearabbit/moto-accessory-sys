@@ -53,41 +53,70 @@
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 {{> afQuickField name="orderDate"}}
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                {{> afQuickField name="customerId"}}
-                            </div>
-                            <div class="col-md-7">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Order Vip Log</label>
-                                        <div class="btn-group" style="display: block;">
-                                            <button type="button" data-toggle="tooltip" data-placement="top" title="Grand Order Total Khr" class="btn btn-default">
-                                                <b>{{orderVipLog.totalOrderVipLogKhr}} ៛</b></button>
-                                            <button type="button" data-toggle="tooltip" data-placement="top" title="Grand Order Total Usd" class="btn btn-default">
-                                                <b>{{orderVipLog.totalOrderVipLogUsd}} $</b></button>
-                                            <button type="button" data-toggle="tooltip" data-placement="top" title="Grand Order Total Thb" class="btn btn-default">
-                                                <b>{{orderVipLog.totalOrderVipLogThb}} B</b></button>
-                                            <button type="button" class="btn btn-info" data-toggle="modal"
-                                                    data-target="#myModal">{{fa
-                                                    "info-circle"}} More Detail
-                                            </button>
-                                        </div>
+                            <div class="col-md-6">
+                                <div class="form-group{{#if afFieldIsInvalid name='employeeId'}} has-error{{/if}}"
+                                     data-required="true">
+                                    <label class="control-label" for="employeeId">Employee</label>
+                                    <div class="input-group select2-bootstrap-append">
+                                        <span class="input-group-btn">
+                                            {{> employeeOrderVipDropDown}}
+                                        </span>
+                                        {{> afFieldInput name='employeeId'}}
                                     </div>
-                                </form>
+                                    {{#if afFieldIsInvalid name='employeeId'}}
+                                        <span class="help-block">{{afFieldMessage name='employeeId'}}</span>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group{{#if afFieldIsInvalid
+                                                            name='customerId'}} has-error{{/if}}"
+                                     data-required="true">
+                                    <label class="control-label" for="customerId">
+                                        Customer
+                                    </label>
+                                    <b>|</b>
+
+                                    <button type="button" class="btn btn-xs btn-info" data-toggle="modal"
+                                            data-target="#myModal">{{fa
+                                            "info-circle"}} More Detail
+                                    </button>
+
+
+                                    <div class="input-group select2-bootstrap-append">
+                                        <span class="input-group-btn">
+                                            {{> customerOrderVipDropDown}}
+                                        </span>
+                                        {{> afFieldInput name='customerId'}}
+                                    </div>
+
+                                    {{#if afFieldIsInvalid name='customerId'}}
+                                        <span class="help-block">{{afFieldMessage name='customerId'}}</span>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{> afQuickField name="lastOrderBalanceKhr" value=lastOrderBalanceKhr readOnly=true}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{> afQuickField name="lastOrderBalanceUsd" value=lastOrderBalanceUsd readOnly=true}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{> afQuickField name="lastOrderBalanceThb" value=lastOrderBalanceThb readOnly=true}}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-5">
-                                {{> afQuickField name="employeeId"}}
-
-                            </div>
-                            <div class="col-md-7">
+                            <div class="col-md-12">
                                 {{> afQuickField name="discountType"}}
                             </div>
                         </div>
@@ -137,7 +166,7 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Order Vip Reference Id</th>
-                                        <th>Order Vip Total</th>
+                                        <th>Last Order Balance</th>
                                         <th>Description</th>
                                     </tr>
 
@@ -157,9 +186,12 @@
                                 </table>
                             </div>
                             <div class="modal-footer">
-                                <p class="pull-right"><b>Grand Order Total Khr:</b> {{orderVipLog.totalOrderVipLogKhr}} ៛</p><br>
-                                <p class="pull-right"><b>Grand Order Total Usd:</b> {{orderVipLog.totalOrderVipLogUsd}} $</p><br>
-                                <p class="pull-right"><b>Grand Order Total Thb:</b> {{orderVipLog.totalOrderVipLogThb}} B</p>
+                                <p class="pull-right"><b>Grand Order Total Khr:</b> {{orderVipLog.totalOrderVipLogKhr}}
+                                    ៛</p><br>
+                                <p class="pull-right"><b>Grand Order Total Usd:</b> {{orderVipLog.totalOrderVipLogUsd}}
+                                    $</p><br>
+                                <p class="pull-right"><b>Grand Order Total Thb:</b> {{orderVipLog.totalOrderVipLogThb}}
+                                    B</p>
                             </div>
                         </div>
                     </div>
@@ -228,12 +260,12 @@
                                 <th>Item</th>
                                 <th>Memo Item</th>
                                 <th>Qty</th>
+                                <th>Memo</th>
                                 <th>Price</th>
                                 <th>Order Price</th>
                                 <th>Discount</th>
                                 <th>Amount</th>
                                 <th>Total Amount</th>
-                                <th>Memo</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -243,12 +275,12 @@
                                     <td>{{itemName}}</td>
                                     <td>{{memoItem}}</td>
                                     <td>{{qty}}</td>
+                                    <td>{{memo}}</td>
                                     <td>{{price}} {{itemCurrency}}</td>
                                     <td>{{orderPrice}} {{itemCurrency}}</td>
                                     <td>{{discount}} {{discountType}}</td>
                                     <td>{{amount}} {{itemCurrency}}</td>
                                     <td>{{totalAmount}} {{itemCurrency}}</td>
-                                    <td>{{memo}}</td>
                                 </tr>
                             {{/each}}
                             </tbody>
@@ -276,28 +308,36 @@
                             <table class="table">
                                 <tbody>
                                 <tr>
-                                    <th style="width:50%"></th>
+                                    <th></th>
                                     <th style="">Sub Total</th>
                                     <th style="">Discount Amount</th>
                                     <th style="">Total</th>
+                                    <th style="">Last Order Balance</th>
+                                    <th style="">Balance</th>
                                 </tr>
                                 <tr>
-                                    <th style="width:50%">KHR:</th>
+                                    <th>KHR:</th>
                                     <td>{{subTotal}}​ ៛</td>
                                     <td>{{discountAmount}}​ ៛</td>
                                     <td>{{total}}​ ៛</td>
+                                    <td>{{lastOrderBalanceKhr}}​ ៛</td>
+                                    <td>{{balanceKhr}}​ ៛</td>
                                 </tr>
                                 <tr>
                                     <th>USD:</th>
                                     <td>{{subTotalUsd}}​ $</td>
                                     <td>{{discountAmountUsd}}​ $</td>
                                     <td>{{totalUsd}}​ $</td>
+                                    <td>{{lastOrderBalanceUsd}}​ $</td>
+                                    <td>{{balanceUsd}}​ $</td>
                                 </tr>
                                 <tr>
                                     <th>THB:</th>
                                     <td>{{subTotalThb}} B</td>
                                     <td>{{discountAmountthb}} B</td>
                                     <td>{{totalThb}} B</td>
+                                    <td>{{lastOrderBalanceThb}} B</td>
+                                    <td>{{balanceThb}} B</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -308,5 +348,35 @@
                 <!-- /.row -->
             </section>
         {{/with}}
+    </div>
+</template>
+
+<!--Employee-->
+<template name="employeeOrderVipDropDown">
+    <div class="input-group-btn" style="z-index: 999">
+        <div class="btn-group" style="margin-bottom: 4px;" role="group">
+            <div class="dropdown dropdown-lg">
+                <a class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown"
+                   aria-expanded="false"><span>{{fa "plus-square"}}</span></a>
+                <div class="dropdown-menu dropdown-menu-left dropdown-form-shadow" role="menu">
+                    {{>Moto_employeeForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--Customer-->
+<template name="customerOrderVipDropDown">
+    <div class="input-group-btn" style="z-index: 999">
+        <div class="btn-group" style="margin-bottom: 4px;" role="group">
+            <div class="dropdown dropdown-lg">
+                <a class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown"
+                   aria-expanded="false"><span>{{fa "plus-square"}}</span></a>
+                <div class="dropdown-menu dropdown-menu-left dropdown-form-shadow" role="menu">
+                    {{>Moto_customerForm}}
+                </div>
+            </div>
+        </div>
     </div>
 </template>

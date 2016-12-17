@@ -48,7 +48,7 @@
                                 {{> afQuickField name="paidAmountKhr"}}
                             </div>
                             <div class="col-md-4">
-                                {{> afQuickField name="balanceKhr" value=balanceKhr readOnly=true}}
+                                {{> afQuickField name="paymentBalanceKhr" value=paymentBalanceKhr readOnly=true}}
                             </div>
 
                             <div class="col-md-4">
@@ -58,7 +58,7 @@
                                 {{> afQuickField name="paidAmountUsd"}}
                             </div>
                             <div class="col-md-4">
-                                {{> afQuickField name="balanceUsd" value=balanceUsd readOnly=true}}
+                                {{> afQuickField name="paymentBalanceUsd" value=paymentBalanceUsd readOnly=true}}
                             </div>
 
                             <div class="col-md-4">
@@ -68,7 +68,7 @@
                                 {{> afQuickField name="paidAmountThb"}}
                             </div>
                             <div class="col-md-4">
-                                {{> afQuickField name="balanceThb" value=balanceThb readOnly=true}}
+                                {{> afQuickField name="paymentBalanceThb" value=paymentBalanceThb readOnly=true}}
                             </div>
                         </div>
 
@@ -104,7 +104,7 @@
                     <dt>Paid Amount</dt>
                     <dd>Khr : {{paidAmountKhr}} ៛ | Thb : {{paidAmountThb}} B | Usd : {{paidAmountUsd}} $</dd>
                     <dt>Balance</dt>
-                    <dd>Khr : {{balanceKhr}} ៛ | Thb : {{balancethb}} B | Usd : {{balanceUsd}} $</dd>
+                    <dd>Khr : {{paymentBalanceKhr}} ៛ | Thb : {{paymentBalancethb}} B | Usd : {{paymentBalanceUsd}} $</dd>
                     <dt>Status</dt>
                     <dd>{{status}}</dd>
                 </dl>

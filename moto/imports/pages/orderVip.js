@@ -102,6 +102,9 @@ formTmpl.onCreated(function () {
     self.orderVipLog = new ReactiveVar(0);
     Session.set('customerType', 'Vip');
     Session.set('discountType', 'Percentage');
+    self.lastOrderBalanceKhr = new ReactiveVar(0);
+    self.lastOrderBalanceUsd = new ReactiveVar(0);
+    self.lastOrderBalanceThb = new ReactiveVar(0);
 
     self.autorun(() => {
         // Lookup value
@@ -118,7 +121,9 @@ formTmpl.onCreated(function () {
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
                 });
-
+                self.lastOrderBalanceKhr.set(result.lastOrderBalanceKhr);
+                self.lastOrderBalanceUsd.set(result.lastOrderBalanceUsd);
+                self.lastOrderBalanceThb.set(result.lastOrderBalanceThb);
                 self.orderVipDoc.set(result);
                 self.isLoading.set(false);
             }).catch((err) => {
@@ -179,6 +184,21 @@ formTmpl.helpers({
     orderVipLog(){
         let instance = Template.instance();
         return instance.orderVipLog.get();
+    },
+    lastOrderBalanceKhr(){
+        let instance = Template.instance();
+        let lastOrderBalanceKhr = _.isUndefined(instance.lastOrderBalanceKhr.get()) ? 0 : instance.lastOrderBalanceKhr.get();
+        return lastOrderBalanceKhr;
+    },
+    lastOrderBalanceUsd(){
+        let instance = Template.instance();
+        let lastOrderBalanceUsd = _.isUndefined(instance.lastOrderBalanceUsd.get()) ? 0 : instance.lastOrderBalanceUsd.get();
+        return lastOrderBalanceUsd;
+    },
+    lastOrderBalanceThb(){
+        let instance = Template.instance();
+        let lastOrderBalanceThb = _.isUndefined(instance.lastOrderBalanceThb.get()) ? 0 : instance.lastOrderBalanceThb.get();
+        return lastOrderBalanceThb;
     }
 });
 
@@ -199,11 +219,33 @@ formTmpl.events({
     },
     'change [name="customerId"]': function (event, instance) {
         let customerId = event.currentTarget.value;
+        let currentData = Template.currentData();
 
         lookupOrderVipLog.callPromise({
             customerId: customerId
         }).then((result) => {
-            instance.orderVipLog.set(result || 0);
+            // instance.orderVipLog.set(result || 0);
+            let data = result;
+            if (_.isUndefined(result)) {
+                data = 0;
+            }
+
+            if (currentData && customerId == "") {
+                instance.lastOrderBalanceKhr.set(instance.orderVipDoc.get().lastOrderBalanceKhr);
+                instance.lastOrderBalanceUsd.set(instance.orderVipDoc.get().lastOrderBalanceUsd);
+                instance.lastOrderBalanceThb.set(instance.orderVipDoc.get().lastOrderBalanceThb);
+            } else if (currentData && instance.orderVipDoc.get().customerId == customerId) {
+                instance.lastOrderBalanceKhr.set(instance.orderVipDoc.get().lastOrderBalanceKhr);
+                instance.lastOrderBalanceUsd.set(instance.orderVipDoc.get().lastOrderBalanceUsd);
+                instance.lastOrderBalanceThb.set(instance.orderVipDoc.get().lastOrderBalanceThb);
+            }
+            else {
+                instance.lastOrderBalanceKhr.set(data.totalOrderVipLogKhr);
+                instance.lastOrderBalanceUsd.set(data.totalOrderVipLogUsd);
+                instance.lastOrderBalanceThb.set(data.totalOrderVipLogThb);
+            }
+
+            instance.orderVipLog.set(data);
         }).catch((err) => {
             console.log(err);
         });

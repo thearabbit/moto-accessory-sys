@@ -33,16 +33,21 @@
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
             {{#autoForm collection=collection id="Moto_supplierForm" doc=data.doc type=data.formType}}
-                <div class="row">
                     <div class="col-md-12">
+                        <div class="row">
                         {{> afQuickField name="name"}}
-                        {{> afQuickField name="companyName"}}
-                        {{> afQuickField name="contact"}}
-                        {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
+                        </div>
+                        <div class="row">
+                            {{> afQuickField name="companyName"}}
+                        </div>
+                        <div class="row">
+                            {{> afQuickField name="contact"}}
+                            {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
+                        </div>
+                        <div class="row">
+                            {{> formFooterWithButton}}
+                        </div>
                     </div>
-                </div>
-
-                {{> formFooterWithButton}}
             {{/autoForm}}
         {{else}}
             {{> loading}}
