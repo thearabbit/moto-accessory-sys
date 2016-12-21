@@ -135,15 +135,19 @@ export const OrderItemsSchema = new SimpleSchema({
             inputmaskOptions: function () {
                 if (Meteor.isClient) {
                     let type, discountType = Session.get('discountType');
-                    if (discountType == 'Percentage') {
+                    if (discountType == 'Percentage' || discountType == "%") {
                         type = inputmaskOptions.percentage();
-                    } else {
+                    } else{
                         type = inputmaskOptions.currency({prefix: '៛ '});
                     }
+
                     return type;
                 }
             }
         }
+    },
+    discountType: {
+        type: String,
     },
     totalAmount: {
         type: Number,

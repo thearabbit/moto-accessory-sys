@@ -105,6 +105,9 @@ Order.itemsSchema = new SimpleSchema({
             }
         }
     },
+    discountType: {
+        type: String
+    },
     totalAmount: {
         type: Number,
         label: 'Total amount',
@@ -237,7 +240,7 @@ Order.schema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.currency({prefix: "៛",placeholder:""});
+                return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
             }
         },
         optional: true

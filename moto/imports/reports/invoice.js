@@ -9,7 +9,7 @@ import 'printthis';
 
 // Lib
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
-
+import {roundKhrCurrency}  from '../../../moto/common/libs/roundKhrCurrency';
 
 // Component
 import '../../../core/imports/layouts/report/content.html';
@@ -73,6 +73,11 @@ genTmpl.onCreated(function () {
 
         invoiceReport.callPromise(queryParams)
             .then((result)=> {
+                roundKhrCurrency(result.rptContent.total);
+                roundKhrCurrency(result.rptContent.lastOrderBalance);
+                roundKhrCurrency(result.rptContent.balance);
+                roundKhrCurrency(result.rptContent.totalPaidAmount);
+                roundKhrCurrency(result.rptContent.overDue);
                 this.rptData.set(result);
             }).catch((err)=> {
                 console.log(err.message);

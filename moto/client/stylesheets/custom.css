@@ -3,3 +3,7 @@
     width: 100%;
     height: 202px;
 }
+
+.rpt-content-header th {
+    background-color: #d0d2d0 !important;
+}

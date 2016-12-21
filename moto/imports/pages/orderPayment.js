@@ -17,7 +17,7 @@ import {renderTemplate} from '../../../core/client/libs/render-template.js';
 import {destroyAction} from '../../../core/client/libs/destroy-action.js';
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
-
+import {roundKhrCurrency}  from '../../../moto/common/libs/roundKhrCurrency';
 // Component
 import '../../../core/client/components/loading.js';
 import '../../../core/client/components/column-action.js';
@@ -100,7 +100,7 @@ formTmpl.onCreated(function () {
             lookupOrderPayment.callPromise({
                 orderId: orderId
             }).then((result)=> {
-                self.dueAmount.set(result.payment.total || result.payment.balance);
+                self.dueAmount.set(roundKhrCurrency(result.payment.total) || roundKhrCurrency(result.payment.balance));
                 self.paymentDoc.set(result);
             }).catch((err)=> {
                 console.log(err);
@@ -122,7 +122,7 @@ formTmpl.helpers({
             doc: {
                 orderId: paymentDoc._id,
                 customerId: paymentDoc.customerId,
-                dueAmount: paymentDoc.payment.balance,
+                dueAmount: roundKhrCurrency(paymentDoc.payment.balance),
                 paidDate: moment().toDate()
             }
         };
@@ -131,8 +131,8 @@ formTmpl.helpers({
         if (currentData) {
             data.formType = 'update';
             data.doc = OrderPayment.findOne(currentData.orderPaymentId);
-            Template.instance().dueAmount.set(data.doc.dueAmount);
-            Template.instance().paidAmount.set(data.doc.paidAmount);
+            Template.instance().dueAmount.set(roundKhrCurrency(data.doc.dueAmount));
+            Template.instance().paidAmount.set(roundKhrCurrency(data.doc.paidAmount));
         }
 
         return data;
@@ -142,7 +142,7 @@ formTmpl.helpers({
         let dueAmount = instance.dueAmount.get();
         let paidAmount = instance.paidAmount.get();
 
-        return dueAmount - paidAmount;
+        return roundKhrCurrency(dueAmount - paidAmount);
     }
 });
 
