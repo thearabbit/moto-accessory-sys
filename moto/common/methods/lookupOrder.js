@@ -75,11 +75,7 @@ export const lookupOrder = new ValidatedMethod({
                         itemDoc: 1,
                         itemName: "$itemDoc.name",
                         type: 1,
-                        discountType: 1,
-                        itemDiscountType: {
-                            $cond: {if: {$eq: ["$discountType", "Percentage"]}, then: "%", else: "៛"}
-
-                        }
+                        discountType: 1
                     }
                 },
                 {
@@ -113,15 +109,14 @@ export const lookupOrder = new ValidatedMethod({
                                 khrPrice: "$items.khrPrice",
                                 orderPrice: "$items.orderPrice",
                                 discount: "$items.discount",
-                                discountType: "$itemDiscountType",
+                                discountType: "$items.discountType",
                                 amount: "$items.amount",
                                 totalAmount: "$items.totalAmount",
                                 memo: "$items.memo"
                             }
                         }
                     }
-                }
-            ]);
+                }]);
 
             return data[0];
         }

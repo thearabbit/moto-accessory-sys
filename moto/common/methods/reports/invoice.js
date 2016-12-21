@@ -31,20 +31,6 @@ export const invoiceReport = new ValidatedMethod({
                     $match: {_id: orderId}
                 },
                 {
-                    $unwind: "$items"
-                },
-                {
-                    $lookup: {
-                        from: "moto_item",
-                        localField: "items.itemId",
-                        foreignField: "_id",
-                        as: "itemDoc"
-                    }
-                },
-                {
-                    $unwind: "$itemDoc"
-                },
-                {
                     $lookup: {
                         from: "moto_customer",
                         localField: "customerId",
@@ -56,6 +42,18 @@ export const invoiceReport = new ValidatedMethod({
                     $unwind: "$customerDoc"
                 },
                 {
+                    $unwind: "$items"
+                },
+                {
+                    $lookup: {
+                        from: "moto_item",
+                        localField: "items.itemId",
+                        foreignField: "_id",
+                        as: "itemDoc"
+                    }
+                },
+                {$unwind: {path: '$itemDoc', preserveNullAndEmptyArrays: true}},
+                {
                     $group: {
                         _id: "$_id",
                         customerId: {$last: "$customerId"},
@@ -64,15 +62,63 @@ export const invoiceReport = new ValidatedMethod({
                         des: {$last: "$des"},
                         branchId: {$last: "$branchId"},
                         total: {$last: "$total"},
+                        lastOrderBalance: {$last: "$lastOrderBalance"},
+                        balance: {$last: "$balance"},
                         items: {
                             $addToSet: {
+                                _id: "$items._id",
                                 itemId: "$items.itemId",
                                 itemName: "$itemDoc.name",
+                                memoItem: "$items.memoItem",
                                 qty: "$items.qty",
-                                price: "$items.price",
-                                amount: "$items.amount"
+                                unit: "$items.unit",
+                                orderPrice: "$items.orderPrice",
+                                discount: "$items.discount",
+                                discountType: "$items.discountType",
+                                totalAmount: "$items.totalAmount",
+                                memo:"$items.memo"
                             }
                         }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "moto_orderPayment",
+                        localField: "_id",
+                        foreignField: "orderId",
+                        as: "orderPaymentDoc"
+                    }
+                },
+                {$unwind: {path: '$orderPaymentDoc', preserveNullAndEmptyArrays: true}},
+                {
+                    $group: {
+                        _id: "$_id",
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
+                        orderDate: {$last: "$orderDate"},
+                        des: {$last: "$des"},
+                        branchId: {$last: "$branchId"},
+                        items: {$last: "$items"},
+                        total: {$last: "$total"},
+                        lastOrderBalance: {$last: "$lastOrderBalance"},
+                        balance: {$last: "$balance"},
+                        totalPaidAmount: {$sum: "$orderPaymentDoc.paidAmount"}
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        customerId: 1,
+                        customerDoc: 1,
+                        orderDate: 1,
+                        des: 1,
+                        branchId: 1,
+                        items: 1,
+                        total: 1,
+                        lastOrderBalance: 1,
+                        balance: 1,
+                        totalPaidAmount: 1,
+                        overDue: {$subtract: ["$balance", "$totalPaidAmount"]}
                     }
                 }
             ])[0];

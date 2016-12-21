@@ -17,7 +17,7 @@ import {renderTemplate} from '../../../core/client/libs/render-template.js';
 import {destroyAction} from '../../../core/client/libs/destroy-action.js';
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
-
+import {roundKhrCurrency}  from '../../../moto/common/libs/roundKhrCurrency';
 // Component
 import '../../../core/client/components/loading.js';
 import '../../../core/client/components/column-action.js';
@@ -105,7 +105,9 @@ formTmpl.onCreated(function () {
     self.lastOrderBalance = new ReactiveVar(0);
 
     Session.set('customerType', 'Retail');
-    Session.set('discountType', 'Percentage');
+    if (!Template.currentData()) {
+        Session.set('discountType', 'Percentage');
+    }
 
     self.autorun(() => {
         // Lookup value
@@ -201,7 +203,7 @@ formTmpl.helpers({
     lastOrderBalance(){
         let instance = Template.instance();
         let lastOrderBalance = _.isUndefined(instance.lastOrderBalance.get()) ? 0 : instance.lastOrderBalance.get();
-        return lastOrderBalance;
+        return  roundKhrCurrency(lastOrderBalance);
     }
 });
 
