@@ -1,11 +1,11 @@
 <!--Report-->
-<template name="Moto_invoiceReport">
+<template name="Moto_invoiceVipReport">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm schema=schema id="Moto_invoiceReport" resetOnSuccess=false type="normal"}}
+            {{#autoForm schema=schema id="Moto_invoiceVipReport" resetOnSuccess=false type="normal"}}
                 <div class="row">
                     <div class="col-md-6">
-                        {{> afQuickField name="orderId"}}
+                        {{> afQuickField name="orderVipId"}}
 
                         {{> reportFormFooterWithButton}}
                     </div>
@@ -18,7 +18,7 @@
     <!-- /.box-body -->
 </template>
 
-<template name="Moto_invoiceReportGen">
+<template name="Moto_invoiceVipReportGen">
     <div class="rpt rpt-2x rpt-portrait-a5">
         {{#if rptData}}
 
@@ -29,7 +29,7 @@
                     <div class="rpt-title">
                         <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
                         <div class="rpt-title-3x">{{enName}}</div>
-                        <div class="rpt-title-2x"><u>Order Invoice</u></div>
+                        <div class="rpt-title-2x"><u>Order Vip Invoice</u></div>
                         <div>Address: {{enAddress}}, Tel: {{telephone}}</div>
                     </div>
                 {{/with}}
@@ -69,33 +69,43 @@
                                 <td>{{item.itemName}} <b>{{item.memoItem}}</b></td>
                                 <td>{{item.qty}} {{item.unit}}</td>
                                 <td class="text-right">{{item.memo}}</td>
-                                <td class="text-right">{{item.orderPrice}} ​៛</td>
+                                <td class="text-right">{{item.orderPrice}} {{item.itemCurrency}}</td>
                                 <td class="text-right">{{item.discount}} {{item.discountType}}</td>
-                                <td class="text-right">{{item.totalAmount}}​ ៛</td>
+                                <td class="text-right">{{item.totalAmount}}​ {{item.itemCurrency}}</td>
                             </tr>
                         {{/each}}
                         </tbody>
 
                         <tfoot class="rpt-content-footer">
                         <tr>
-                            <td colspan="6" class="text-right">សរុបវិក័យប័ត្រ :</td>
+                            <td colspan="4" class="text-right">សរុបវិក័យប័ត្រ :</td>
                             <td class="text-right">{{total}} ៛</td>
+                            <td class="text-right">{{totalUsd}} $</td>
+                            <td class="text-right">{{totalThb}} B</td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="text-right">ខ្វះពីមុន :</td>
-                            <td class="text-right">{{lastOrderBalance}} ៛</td>
+                            <td colspan="4" class="text-right">ខ្វះពីមុន :</td>
+                            <td class="text-right">{{lastOrderBalanceKhr}} ៛</td>
+                            <td class="text-right">{{lastOrderBalanceUsd}} $</td>
+                            <td class="text-right">{{lastOrderBalanceThb}} B</td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="text-right">សរុបទាំងអស់ :</td>
-                            <td class="text-right">{{balance}} ៛</td>
+                            <td colspan="4" class="text-right">សរុបទាំងអស់ :</td>
+                            <td class="text-right">{{balanceKhr}} ៛</td>
+                            <td class="text-right">{{balanceUsd}} $</td>
+                            <td class="text-right">{{balanceThb}} B</td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="text-right">បានបង់ :</td>
-                            <td class="text-right">{{totalPaidAmount}} ៛</td>
+                            <td colspan="4" class="text-right">បានបង់ :</td>
+                            <td class="text-right">{{totalPaidAmountKhr}} ៛</td>
+                            <td class="text-right">{{totalPaidAmountUsd}} $</td>
+                            <td class="text-right">{{totalPaidAmountThb}} B</td>
                         </tr>
                         <tr>
-                            <td colspan="6" class="text-right">ជំពាក់លើនេះ :</td>
-                            <td class="text-right">{{overDue}} ៛</td>
+                            <td colspan="4" class="text-right">ជំពាក់លើនេះ :</td>
+                            <td class="text-right">{{overDueKhr}} ៛</td>
+                            <td class="text-right">{{overDueUsd}} $</td>
+                            <td class="text-right">{{overDueThb}} B</td>
                         </tr>
                         </tfoot>
                     </table>

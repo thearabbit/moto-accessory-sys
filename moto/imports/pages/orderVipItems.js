@@ -20,6 +20,7 @@ import {destroyAction} from '../../../core/client/libs/destroy-action.js';
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 import {reactiveTableSettings} from '../../../core/client/libs/reactive-table-settings.js';
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
+import {roundKhrCurrency}  from '../../../moto/common/libs/roundKhrCurrency';
 
 // Component
 import '../../../core/client/components/loading.js';
@@ -107,9 +108,15 @@ indexTmpl.helpers({
                 {
                     key: 'discount',
                     label: 'Discount',
-                    // fn(value, obj, key){
-                    //     return result;
-                    // }
+                    fn(value, obj, key){
+                        let type;
+                        if (obj.discountType == "%") {
+                            type = `${value} ${obj.discountType}`;
+                        } else {
+                            type = `${obj.discountType} ${value}`;
+                        }
+                        return type;
+                    }
                 },
                 {
                     key: 'amount',
@@ -146,7 +153,7 @@ indexTmpl.helpers({
         let getItems = itemsCollection.find();
         getItems.forEach((obj) => {
             if (obj.currencyId == "KHR") {
-                total += round2(obj.totalAmount, 2);
+                total += roundKhrCurrency(obj.totalAmount);
             }
         });
 
@@ -172,14 +179,15 @@ indexTmpl.helpers({
             }
         });
 
-        return round2(total - discountAmount, 2);
+        Session.set('total', roundKhrCurrency(total - discountAmount));
+        return roundKhrCurrency(total - discountAmount);
     },
     subTotalUsd: function () {
         let total = 0;
         let getItems = itemsCollection.find();
         getItems.forEach((obj) => {
             if (obj.currencyId == "USD") {
-                total += obj.totalAmount;
+                total += round2(obj.totalAmount, 2);
             }
         });
 
@@ -204,14 +212,15 @@ indexTmpl.helpers({
             }
         });
 
-        return total - discountAmountUsd;
+        Session.set('totalUsd', round2(total - discountAmountUsd, 2));
+        return round2(total - discountAmountUsd, 2);
     },
     subTotalThb: function () {
         let total = 0;
         let getItems = itemsCollection.find();
         getItems.forEach((obj) => {
             if (obj.currencyId == "THB") {
-                total += obj.totalAmount;
+                total += round2(obj.totalAmount, 2);
             }
         });
 
@@ -237,12 +246,18 @@ indexTmpl.helpers({
             }
         });
 
-        return total - discountAmountThb;
+        Session.set('totalThb', round2(total - discountAmountThb, 2));
+        return round2(total - discountAmountThb, 2);
     }
 });
 
 indexTmpl.events({
     'click .js-update-item': function (event, instance) {
+        if (_.isNull(Session.get('discountType'))) {
+            Session.set("discountType", this.discountType);
+        } else {
+            Session.set("discountType", Session.get('discountType'));
+        }
         alertify.item(fa('pencil', 'Items'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy-item': function (event, instance) {
@@ -335,7 +350,7 @@ newTmpl.helpers({
         const instance = Template.instance();
         let totalAmount, amount = instance.amount.get(), discount = instance.discount.get(), discountType = Session.get('discountType');
 
-        if (discountType == "Percentage") {
+        if (discountType == "Percentage" || discountType == "%") {
             totalAmount = amount - (amount * discount / 100);
         } else {
             totalAmount = amount - discount;
@@ -479,7 +494,7 @@ newTmpl.events({
             itemName: itemName,
             memoItem: memoItem,
             qty: qty,
-            unit:unit,
+            unit: unit,
             currencyId: currency,
             itemCurrency: itemCurrency,
             price: price,
@@ -507,6 +522,7 @@ editTmpl.onCreated(function () {
     this.amount = new ReactiveVar(0);
     this.currencyId = new ReactiveVar();
     this.discount = new ReactiveVar(0);
+    this.discountType = new ReactiveVar();
     this.totalAmount = new ReactiveVar(0);
 
     this.autorun(() => {
@@ -516,6 +532,7 @@ editTmpl.onCreated(function () {
         this.currencyId.set(data.currencyId);
         this.khrPrice.set(data.khrPrice);
         this.discount.set(data.discount);
+        this.discountType.set(data.discountType);
     });
 });
 
@@ -561,12 +578,29 @@ editTmpl.helpers({
         const instance = Template.instance();
         let totalAmount, amount = instance.amount.get(), discount = instance.discount.get(), discountType = Session.get('discountType');
 
-        if (discountType == "Percentage") {
+        if (discountType == "Percentage" || discountType == "%") {
             totalAmount = amount - (amount * discount / 100);
         } else {
             totalAmount = amount - discount;
         }
         return totalAmount;
+    },
+    discountType(){
+        let result, itemCurrency, instance = Template.instance();
+
+        if (instance.currencyId.get() == "KHR") {
+            itemCurrency = "៛";
+        } else if (instance.currencyId.get() == "USD") {
+            itemCurrency = "$";
+        } else {
+            itemCurrency = "B";
+        }
+
+        if (!_.isNull(Session.get('discountType'))) {
+            result = Session.get('discountType') == "Amount" ? itemCurrency : "%";
+        }
+
+        return result;
     }
 });
 
@@ -646,6 +680,7 @@ let hooksObject = {
                 let newQty = exist.qty + insertDoc.qty;
                 let newAmount = newQty * insertDoc.orderPrice;
                 let newTotalAmount, newDiscount = insertDoc.discount;
+                let discountType = Session.get('discountType') == "Percentage" ? "%" : itemCurrency;
                 if (Session.get('discountType') == "Percentage") {
                     newTotalAmount = newAmount - (newAmount * newDiscount / 100);
                 } else {
@@ -666,6 +701,7 @@ let hooksObject = {
                             khrPrice: insertDoc.khrPrice,
                             orderPrice: insertDoc.orderPrice,
                             discount: newDiscount,
+                            discountType: discountType,
                             amount: newAmount,
                             totalAmount: newTotalAmount,
                             memo: insertDoc.memo
@@ -674,7 +710,7 @@ let hooksObject = {
                 );
             } else {
                 let itemName = Session.get('update') == true ? _.split($('[name="itemId"] option:selected').text(), " : ")[1] : _.split($('[name="itemId"] option:selected').text(), " : ")[2];
-
+                let discountType = Session.get('discountType') == "Percentage" ? "%" : itemCurrency;
                 itemsCollection.insert({
                     _id: currentDoc._id,
                     itemId: insertDoc.itemId,
@@ -689,6 +725,7 @@ let hooksObject = {
                     khrPrice: insertDoc.khrPrice,
                     orderPrice: insertDoc.orderPrice,
                     discount: insertDoc.discount,
+                    discountType: discountType,
                     amount: insertDoc.amount,
                     totalAmount: insertDoc.totalAmount,
                     memo: insertDoc.memo

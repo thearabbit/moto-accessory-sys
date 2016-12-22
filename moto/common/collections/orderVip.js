@@ -100,6 +100,9 @@ OrderVip.itemsSchema = new SimpleSchema({
             }
         }
     },
+    discountType: {
+        type: String,
+    },
     totalAmount: {
         type: Number,
         label: 'Total amount',

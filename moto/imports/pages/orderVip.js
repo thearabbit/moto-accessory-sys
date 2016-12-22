@@ -9,6 +9,7 @@ import {_} from 'meteor/erasaur:meteor-lodash';
 import 'meteor/theara:jsonview';
 import {TAPi18n} from 'meteor/tap:i18n';
 import 'meteor/tap:i18n-ui';
+import {round2} from 'meteor/theara:round2';
 
 // Lib
 import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
@@ -16,6 +17,7 @@ import {renderTemplate} from '../../../core/client/libs/render-template.js';
 import {destroyAction} from '../../../core/client/libs/destroy-action.js';
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
+import {roundKhrCurrency}  from '../../../moto/common/libs/roundKhrCurrency';
 
 // Component
 import '../../../core/client/components/loading.js';
@@ -82,7 +84,7 @@ indexTmpl.events({
     'click .js-invoice' (event, instance) {
         let params = {};
         let queryParams = {orderVipId: this._id};
-        let path = FlowRouter.path("moto.invoiceReportGe", params, queryParams);
+        let path = FlowRouter.path("moto.invoiceVipReportGe", params, queryParams);
 
         window.open(path, '_blank');
     },
@@ -101,7 +103,9 @@ formTmpl.onCreated(function () {
     self.orderVipDoc = new ReactiveVar();
     self.orderVipLog = new ReactiveVar(0);
     Session.set('customerType', 'Vip');
-    Session.set('discountType', 'Percentage');
+    if (!Template.currentData()) {
+        Session.set('discountType', 'Percentage');
+    }
     self.lastOrderBalanceKhr = new ReactiveVar(0);
     self.lastOrderBalanceUsd = new ReactiveVar(0);
     self.lastOrderBalanceThb = new ReactiveVar(0);
@@ -188,17 +192,17 @@ formTmpl.helpers({
     lastOrderBalanceKhr(){
         let instance = Template.instance();
         let lastOrderBalanceKhr = _.isUndefined(instance.lastOrderBalanceKhr.get()) ? 0 : instance.lastOrderBalanceKhr.get();
-        return lastOrderBalanceKhr;
+        return roundKhrCurrency(lastOrderBalanceKhr);
     },
     lastOrderBalanceUsd(){
         let instance = Template.instance();
         let lastOrderBalanceUsd = _.isUndefined(instance.lastOrderBalanceUsd.get()) ? 0 : instance.lastOrderBalanceUsd.get();
-        return lastOrderBalanceUsd;
+        return round2(lastOrderBalanceUsd, 2);
     },
     lastOrderBalanceThb(){
         let instance = Template.instance();
         let lastOrderBalanceThb = _.isUndefined(instance.lastOrderBalanceThb.get()) ? 0 : instance.lastOrderBalanceThb.get();
-        return lastOrderBalanceThb;
+        return round2(lastOrderBalanceThb, 2);
     }
 });
 

@@ -82,7 +82,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             tmpl: Meteor.isClient && Template.Moto_paymentVipLinkAction
         }
     ],
-    extraFields: ['employeeId', 'discountType', 'items', 'subTotalUsd', 'discountAmountUsd', 'totalUsd','subTotalThb', 'discountAmountThb', 'totalThb','lastOrderBalanceUsd','lastOrderBalanceThb','balanceUsd','balanceThb']
+    extraFields: ['employeeId', 'items', 'subTotalUsd', 'discountAmountUsd', 'totalUsd','subTotalThb', 'discountAmountThb', 'totalThb','lastOrderBalanceUsd','lastOrderBalanceThb','balanceUsd','balanceThb']
 });
 
 export const OrderVipTabular = new Tabular.Table(tabularData);

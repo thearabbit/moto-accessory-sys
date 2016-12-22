@@ -145,6 +145,7 @@ export const lookupOrderVip = new ValidatedMethod({
                                 khrPrice: "$items.khrPrice",
                                 orderPrice: "$items.orderPrice",
                                 discount: "$items.discount",
+                                discountType: "$items.discountType",
                                 amount: "$items.amount",
                                 totalAmount: "$items.totalAmount",
                                 memo: "$items.memo"
