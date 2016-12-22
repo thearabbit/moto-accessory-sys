@@ -15,7 +15,7 @@ export const OrderVipItemsSchema = new SimpleSchema({
     _id: {
         type: String,
         label: 'Id',
-        optional:true
+        optional: true
     },
     itemId: {
         type: String,
@@ -165,7 +165,7 @@ export const OrderVipItemsSchema = new SimpleSchema({
             inputmaskOptions: function () {
                 if (Meteor.isClient) {
                     let type, discountType = Session.get('discountType');
-                    if (discountType == 'Percentage') {
+                    if (discountType == 'Percentage' || discountType == "%") {
                         type = inputmaskOptions.percentage();
                     } else {
 
@@ -187,6 +187,9 @@ export const OrderVipItemsSchema = new SimpleSchema({
                 }
             }
         }
+    },
+    discountType: {
+        type: String,
     },
     totalAmount: {
         type: Number,

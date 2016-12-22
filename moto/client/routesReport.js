@@ -60,11 +60,40 @@ MotoRoutes.route('/invoice-report', {
         parent: 'moto.home'
     }
 });
+
+// Invoice
 MotoRoutes.route('/invoice-report-gen', {
     name: 'moto.invoiceReportGe',
-    title: 'Invoice Report',
+    title: 'Invoice',
     action: function (params, queryParams) {
         Layout.report('Moto_invoiceReportGen');
+    }
+});
+
+
+// Invoice Vip
+import '../imports/reports/invoiceVip.js';
+MotoRoutes.route('/invoice-vip-report', {
+    name: 'moto.invoiceVipReport',
+    title: 'Invoice Vip Report',
+    action: function (params, queryParams) {
+        Layout.main('Moto_invoiceVipReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Invoice Vip Report',
+        // icon: 'cart-plus',
+        parent: 'moto.home'
+    }
+});
+
+// Invoice Vip
+MotoRoutes.route('/invoice-vip-report-gen', {
+    name: 'moto.invoiceVipReportGe',
+    title: 'Invoice Vip',
+    action: function (params, queryParams) {
+        Layout.report('Moto_invoiceVipReportGen');
     }
 });
 

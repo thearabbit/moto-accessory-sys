@@ -11,6 +11,7 @@ import {Employee} from '../collections/employee';
 import {Item} from '../collections/item';
 import {Location} from '../collections/location';
 import {Order} from '../collections/order';
+import {OrderVip} from '../collections/orderVip';
 import {Supplier} from '../collections/supplier';
 
 export let SelectOptsMethod = {};
@@ -272,7 +273,38 @@ SelectOptsMethod.order = new ValidatedMethod({
 
             let data = Order.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = `${value._id} | Date: ` + moment(value.orderDate).format('DD/MM/YYYY') + ` | Amount: ` + numeral(value.total).format('0,0.00');
+                let label = `${value._id} | Date: ` + moment(value.orderDate).format('DD/MM/YYYY') + ` | Amount: ` + `${value.total} ៛`;
+                list.push({label: label, value: value._id});
+            });
+
+            return list;
+        }
+    }
+});
+
+SelectOptsMethod.orderVip = new ValidatedMethod({
+    name: 'moto.selectOptsMethod.orderVip',
+    validate: null,
+    run(options) {
+        if (!this.isSimulation) {
+            this.unblock();
+
+            let list = [], selector = {};
+            let searchText = options.searchText;
+            let values = options.values;
+
+            if (searchText) {
+                selector = {
+                    _id: {$regex: searchText, $options: 'i'},
+                    branchId: params.branchId
+                };
+            } else if (values.length) {
+                selector = {_id: {$in: values}};
+            }
+
+            let data = OrderVip.find(selector, {limit: 10});
+            data.forEach(function (value) {
+                let label = `${value._id} | Date: ` + moment(value.orderDate).format('DD/MM/YYYY') + ` | Amount: ` + `${value.total} ៛ : ${value.totalUsd} $ : ${value.totalThb} B`;
                 list.push({label: label, value: value._id});
             });
 

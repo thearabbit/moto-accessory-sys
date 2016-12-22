@@ -565,7 +565,6 @@ editTmpl.helpers({
         if (!_.isNull(Session.get('discountType'))) {
             result = Session.get('discountType') == "Amount" ? "៛" : "%";
         }
-        ;
 
         return result;
     }
