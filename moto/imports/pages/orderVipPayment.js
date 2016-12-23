@@ -209,9 +209,9 @@ showTmpl.helpers({
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {
-        if (formType == 'update') {
+        // if (formType == 'update') {
             alertify.orderVipPayment().close();
-        }
+        // }
         displaySuccess();
     },
     onError (formType, error) {

@@ -30,13 +30,28 @@
             {{#autoForm collection=collection id="Moto_orderPaymentForm" doc=data.doc type=data.formType}}
                 <div class="row">
                     <div class="col-md-12">
-                        {{> afQuickField type="hidden" name="customerId"}}
-                        {{> afQuickField name="employeeId" }}
-                        {{> afQuickField type="hidden" name="orderId" }}
                         {{> afQuickField name="paidDate" }}
-                        {{> afQuickField name="dueAmount" readOnly=true}}
-                        {{> afQuickField name="paidAmount"}}
-                        {{> afQuickField name="balance" value=balance readOnly=true}}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{> afQuickField type="hidden" name="customerId"}}
+                                {{> afQuickField name="employeeId" }}
+                            </div>
+                            <div class="col-md-6">
+                                {{> afQuickField type="hidden" name="orderId" }}
+                                {{> afQuickField name="dueAmount" readOnly=true}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{> afQuickField name="paidAmount"}}
+                            </div>
+                            <div class="col-md-6">
+                                {{> afQuickField name="balance" value=balance readOnly=true}}
+                            </div>
+                        </div>
+
                         {{> afQuickField name="des"}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
                     </div>

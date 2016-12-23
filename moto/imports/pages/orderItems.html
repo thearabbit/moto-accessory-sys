@@ -98,26 +98,56 @@
         {{#autoForm schema=schema id="Moto_orderItemsEdit" doc=data}}
             <div class="row">
                 <div class="col-md-12">
-                    {{> afQuickField name="itemId" class="itemIdEdit" placeholder="Item"}}
-                    {{> afQuickField name="memoItem" placeholder="Memo Item"}}
+
                     <div class="row">
-                        <div class="col-md-7">
+                        <div class="col-md-6">
+                            {{> afQuickField name="itemId" class="itemIdEdit" placeholder="Item"}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="memoItem" placeholder="Memo Item"}}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
                             {{> afQuickField name="qty" placeholder="Qty"}}
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             {{> afQuickField  name="unit" value=itemDoc.unitDoc.name placeholder="Unit" readOnly=true}}
                         </div>
                     </div>
-                    {{> afQuickField name="memo" placeholder="Memo"}}
-                    {{> afQuickField name="currencyId" label=false value=itemDoc.currencyId  readonly=true}}
-                    {{> afQuickField name="purchasePrice" value=itemDoc.purchase readonly=true}}
-                    {{> afQuickField name="price" value=itemDoc.price readonly=true label=false}}
-                    {{> afQuickField name="khrPrice" label=false value=itemDoc.khrPrice readonly=true}}
-                    {{> afQuickField name="orderPrice" value=orderPrice readonly="true"}}
-                    {{> afQuickField name="discount" placeholder="Discount"}}
-                    {{> afQuickField type="hidden" name="discountType" value=discountType placeholder="Discount"}}
-                    {{> afQuickField name="amount" value=amount readonly=true}}
-                    {{> afQuickField name="totalAmount" value=totalAmount readonly="true"}}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{> afQuickField name="memo" placeholder="Memo"}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="purchasePrice" value=itemDoc.purchase readonly=true}}
+                            {{> afQuickField name="currencyId" label=false value=itemDoc.currencyId  readonly=true}}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{> afQuickField name="orderPrice" value=orderPrice readonly="true"}}
+                            {{> afQuickField name="price" value=itemDoc.price readonly=true label=false}}
+                            {{> afQuickField name="khrPrice" label=false value=itemDoc.khrPrice readonly=true}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="discount" placeholder="Discount"}}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{> afQuickField type="hidden" name="discountType" value=discountType placeholder="Discount"}}
+                            {{> afQuickField name="amount" value=amount readonly=true}}
+                        </div>
+                        <div class="col-md-6">
+                            {{> afQuickField name="totalAmount" value=totalAmount readonly="true"}}
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

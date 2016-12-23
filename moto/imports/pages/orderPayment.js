@@ -174,9 +174,9 @@ showTmpl.helpers({
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {
-        if (formType == 'update') {
+        // if (formType == 'update') {
             alertify.orderPayment().close();
-        }
+        // }
         displaySuccess();
     },
     onError (formType, error) {
