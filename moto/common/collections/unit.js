@@ -9,7 +9,6 @@ import {SelectOpts} from '../../imports/libs/selectOpts.js';
 import {getLookupValue} from '../../imports/libs/getLookupValue.js';
 
 export const Unit = new Mongo.Collection("moto_unit");
-
 Unit.generalSchema = new SimpleSchema({
     name: {
         type: String,

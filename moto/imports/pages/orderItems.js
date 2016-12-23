@@ -55,6 +55,7 @@ indexTmpl.onCreated(function () {
     let data = Template.currentData();
     itemsCollection = data.itemsCollection;
     this.discountAmount = new ReactiveVar(0);
+    this.subscribe('moto.items');
 });
 
 indexTmpl.helpers({
@@ -329,6 +330,9 @@ newTmpl.helpers({
             result = itemDoc.unitDoc.name;
         }
         return result;
+    },
+    s2Opts: function () {
+        return {tags: true};
     }
 });
 
@@ -567,6 +571,9 @@ editTmpl.helpers({
         }
 
         return result;
+    },
+    s2Opts: function () {
+        return {tags: true};
     }
 });
 
