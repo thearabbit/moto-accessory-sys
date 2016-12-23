@@ -96,7 +96,7 @@ export const OrderItemsSchema = new SimpleSchema({
                         prefix = 'B ';
                     }
 
-                    return inputmaskOptions.currency({prefix: prefix});
+                    return inputmaskOptions.currency({prefix: prefix ,  placeholder: ""});
                 }
             }
         }

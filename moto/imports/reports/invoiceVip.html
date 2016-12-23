@@ -80,32 +80,32 @@
                         <tr>
                             <td colspan="4" class="text-right">សរុបវិក័យប័ត្រ :</td>
                             <td class="text-right">{{total}} ៛</td>
-                            <td class="text-right">{{totalUsd}} $</td>
-                            <td class="text-right">{{totalThb}} B</td>
+                            <td class="text-right">{{numFormat totalUsd "0,0.00"}} $</td>
+                            <td class="text-right">{{numFormat totalThb "0,0.00"}} B</td>
                         </tr>
                         <tr>
                             <td colspan="4" class="text-right">ខ្វះពីមុន :</td>
                             <td class="text-right">{{lastOrderBalanceKhr}} ៛</td>
-                            <td class="text-right">{{lastOrderBalanceUsd}} $</td>
-                            <td class="text-right">{{lastOrderBalanceThb}} B</td>
+                            <td class="text-right">{{numFormat lastOrderBalanceUsd "0,0.00"}} $</td>
+                            <td class="text-right">{{numFormat lastOrderBalanceThb "0,0.00"}} B</td>
                         </tr>
                         <tr>
                             <td colspan="4" class="text-right">សរុបទាំងអស់ :</td>
                             <td class="text-right">{{balanceKhr}} ៛</td>
-                            <td class="text-right">{{balanceUsd}} $</td>
-                            <td class="text-right">{{balanceThb}} B</td>
+                            <td class="text-right">{{numFormat balanceUsd "0,0.00"}} $</td>
+                            <td class="text-right">{{numFormat balanceThb "0,0.00"}} B</td>
                         </tr>
                         <tr>
                             <td colspan="4" class="text-right">បានបង់ :</td>
                             <td class="text-right">{{totalPaidAmountKhr}} ៛</td>
-                            <td class="text-right">{{totalPaidAmountUsd}} $</td>
-                            <td class="text-right">{{totalPaidAmountThb}} B</td>
+                            <td class="text-right">{{numFormat totalPaidAmountUsd "0,0.00"}} $</td>
+                            <td class="text-right">{{numFormat totalPaidAmountThb "0,0.00"}} B</td>
                         </tr>
                         <tr>
                             <td colspan="4" class="text-right">ជំពាក់លើនេះ :</td>
                             <td class="text-right">{{overDueKhr}} ៛</td>
-                            <td class="text-right">{{overDueUsd}} $</td>
-                            <td class="text-right">{{overDueThb}} B</td>
+                            <td class="text-right">{{numFormat overDueUsd "0,0.00"}} $</td>
+                            <td class="text-right">{{numFormat overDueThb "0,0.00"}} B</td>
                         </tr>
                         </tfoot>
                     </table>

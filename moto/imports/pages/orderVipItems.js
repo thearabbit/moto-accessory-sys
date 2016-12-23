@@ -389,6 +389,9 @@ newTmpl.events({
             lookupItem.callPromise({
                 itemId: itemId
             }).then((result) => {
+                if (_.isUndefined(result.purchase)) {
+                    result.purchase = 0;
+                }
                 instance.price.set(result.price);
                 instance.khrPrice.set(result.khrPrice);
                 instance.currencyId.set(result.currencyId);
@@ -621,6 +624,9 @@ editTmpl.events({
             lookupItem.callPromise({
                 itemId: itemId
             }).then((result) => {
+                if (_.isUndefined(result.purchase)) {
+                    result.purchase = 0;
+                }
                 instance.price.set(result.price);
                 instance.khrPrice.set(result.khrPrice);
                 instance.currencyId.set(result.currencyId);

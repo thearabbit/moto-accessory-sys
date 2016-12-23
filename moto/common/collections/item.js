@@ -125,6 +125,7 @@ Item.schema = new SimpleSchema({
         decimal: true,
         label: "Purchase Price",
         min: 0,
+        optional: true,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
