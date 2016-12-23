@@ -6,6 +6,7 @@ import {Branch} from '../../../core/common/collections/branch';
 import {Currency} from '../../../core/common/collections/currency';
 import {Unit} from '../../../moto/common/collections/unit';
 import {Customer} from '../../../moto/common/collections/customer';
+import {Item} from '../../../moto/common/collections/item';
 
 export const SelectOpts = {
     branch: function (selectOne) {
@@ -66,6 +67,19 @@ export const SelectOpts = {
         Customer.find({branchId: currentBranch, type: customerType})
             .forEach(function (obj) {
                 list.push({label: obj._id + ' : ' + obj.name, value: obj._id})
+            });
+
+        return list;
+    },
+    memoItem: function (selectOne, param) {
+        let list = [];
+        if (selectOne) {
+            list.push({label: '(Select Or Type)', value: ''});
+        }
+
+        Item.find({_id: param})
+            .forEach(function (obj) {
+                list.push({label: obj.memoItem, value: obj.memoItem});
             });
 
         return list;

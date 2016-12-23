@@ -7,6 +7,7 @@ import {moment} from 'meteor/momentjs:moment';
 
 // Lib
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
+import {SelectOpts} from '../../imports/libs/selectOpts';
 
 // Method
 import {lookupItem} from '../methods/lookupItem.js';
@@ -31,7 +32,15 @@ export const OrderVipItemsSchema = new SimpleSchema({
     memoItem: {
         type: String,
         label: 'Memo Item',
-        optional: true
+        optional: true,
+        autoform: {
+            type: 'select2',
+            // multiple: true,
+            options: function () {
+                let param = AutoForm.getFieldValue('itemId');
+                return SelectOpts.memoItem('SelectOne',param);
+            }
+        }
     },
     qty: {
         type: Number,

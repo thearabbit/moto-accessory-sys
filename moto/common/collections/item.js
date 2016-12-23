@@ -26,7 +26,7 @@ Item.schema = new SimpleSchema({
     },
     name: {
         type: String,
-        max: 200,
+        max: 200
     },
     parent: {
         type: String,
@@ -183,8 +183,14 @@ Item.schema = new SimpleSchema({
     order: {
         type: String,
         optional: true
+    },
+    memoItem: {
+        type: String,
+        label: 'Memo Item',
+        optional: true
     }
-});
+})
+;
 
 Meteor.startup(function () {
     Item.schema.i18n("moto.item.schema");
