@@ -5,7 +5,7 @@ import {idGenerator} from 'meteor/theara:id-generator';
 import {Item} from '../../common/collections/item.js';
 
 Item.before.insert(function (userId, doc) {
-    doc._id = idGenerator.gen(Item, 9);
+    doc._id = idGenerator.gen(Item, 7);
     doc.code = idGenerator.gen(Item, 5);
 
     // Get ancestors
