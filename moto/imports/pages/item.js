@@ -40,6 +40,8 @@ let indexTmpl = Template.Moto_item,
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('item', {size: 'lg'});
+    createNewAlertify('unitAddOn', {size: 'sm'});
+    createNewAlertify('supplierAddOn', {size: 'sm'});
     createNewAlertify('itemShow');
 });
 
@@ -109,12 +111,21 @@ formTmpl.helpers({
     showTypeObj(){
         let type = Template.instance().type.get();
         return type == 'I' ? true : false;
+    },
+    s2Opts: function () {
+        return {placeholder: "Select One"};
     }
 });
 
 formTmpl.events({
     'change [name="type"]'(event, instance){
         instance.type.set(instance.$(event.currentTarget).val());
+    },
+    'click .unitAddOn': function (e, t) {
+        alertify.unitAddOn(fa("plus", "Unit"), renderTemplate(Template.Moto_unitForm));
+    },
+    'click .supplierAddOn': function (e, t) {
+        alertify.supplierAddOn(fa("plus", "Supplier"), renderTemplate(Template.Moto_supplierForm));
     }
 });
 
