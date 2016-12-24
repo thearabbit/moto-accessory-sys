@@ -55,7 +55,7 @@ Item.schema = new SimpleSchema({
         autoform: {
             type: "select2",
             options: function () {
-                return SelectOpts.unit('selectOne', true);
+                return SelectOpts.unit();
             }
         }
     },
@@ -144,11 +144,11 @@ Item.schema = new SimpleSchema({
                 }
             }
         },
-        custom: function () {
-            if (this.field('type').value == 'I' && !this.value) {
-                return 'required';
-            }
-        }
+        // custom: function () {
+        //     if (this.field('type').value == 'I' && !this.value) {
+        //         return 'required';
+        //     }
+        // }
     },
     supplierId: {
         type: String,

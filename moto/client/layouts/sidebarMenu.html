@@ -32,26 +32,35 @@
 
     <!--Report-->
     {{#if isInRole 'reporter' 'Moto'}}
-        <li class="header"><i class="fa fa-file-text-o"></i> REPORT</li>
-        <li class="{{isActiveRoute name='moto.itemListReport'}}">
-            <a href="{{pathFor 'moto.itemListReport'}}">
-                <i class="fa fa-file-o"></i> <span>Item List</span>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-file-text-o"></i> <span>REPORT</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
             </a>
-        </li>
-        <li class="{{isActiveRoute name='moto.invoiceReport'}}">
-            <a href="{{pathFor 'moto.invoiceReport'}}">
-                <i class="fa fa-file-o"></i> <span>Invoice</span>
-            </a>
-        </li>
-        <li class="{{isActiveRoute name='moto.invoiceVipReport'}}">
-            <a href="{{pathFor 'moto.invoiceVipReport'}}">
-                <i class="fa fa-file-o"></i> <span>Invoice Vip</span>
-            </a>
-        </li>
-        <li class="{{isActiveRoute name='moto.orderReport'}}">
-            <a href="{{pathFor 'moto.orderReport'}}">
-                <i class="fa fa-file-o"></i> <span>Order</span>
-            </a>
+            <ul class="treeview-menu" style="display: none;">
+                <li class="{{isActiveRoute name='moto.itemListReport'}}">
+                    <a href="{{pathFor 'moto.itemListReport'}}">
+                        <i class="fa fa-file-o"></i> <span>Item List</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moto.invoiceReport'}}">
+                    <a href="{{pathFor 'moto.invoiceReport'}}">
+                        <i class="fa fa-file-o"></i> <span>Invoice</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moto.invoiceVipReport'}}">
+                    <a href="{{pathFor 'moto.invoiceVipReport'}}">
+                        <i class="fa fa-file-o"></i> <span>Invoice Vip</span>
+                    </a>
+                </li>
+                <li class="{{isActiveRoute name='moto.orderReport'}}">
+                    <a href="{{pathFor 'moto.orderReport'}}">
+                        <i class="fa fa-file-o"></i> <span>Order</span>
+                    </a>
+                </li>
+            </ul>
         </li>
     {{/if}}
 

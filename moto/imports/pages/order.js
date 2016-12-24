@@ -121,6 +121,7 @@ formTmpl.onCreated(function () {
                 orderId: currentData.orderId
             }).then((result) => {
                 // Add items to local collection
+                Session.set('customerType', result.type);
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
                 });
@@ -203,7 +204,7 @@ formTmpl.helpers({
     lastOrderBalance(){
         let instance = Template.instance();
         let lastOrderBalance = _.isUndefined(instance.lastOrderBalance.get()) ? 0 : instance.lastOrderBalance.get();
-        return  roundKhrCurrency(lastOrderBalance);
+        return roundKhrCurrency(lastOrderBalance);
     }
 });
 
