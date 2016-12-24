@@ -184,11 +184,6 @@ Item.schema = new SimpleSchema({
     order: {
         type: String,
         optional: true
-    },
-    memoItem: {
-        type: String,
-        label: 'Memo Item',
-        optional: true
     }
 })
 ;
