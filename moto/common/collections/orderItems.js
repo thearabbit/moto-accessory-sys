@@ -31,15 +31,7 @@ export const OrderItemsSchema = new SimpleSchema({
     memoItem: {
         type: String,
         label: 'Memo Item',
-        optional: true,
-        autoform: {
-            type: 'select2',
-            // multiple: true,
-            options: function () {
-                let param = AutoForm.getFieldValue('itemId');
-                return SelectOpts.memoItem('SelectOne',param);
-            }
-        }
+        optional: true
     },
     qty: {
         type: Number,
