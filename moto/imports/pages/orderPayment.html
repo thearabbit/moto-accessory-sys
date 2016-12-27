@@ -1,10 +1,10 @@
 <!--Index-->
 <template name="Moto_orderPayment">
-    <div class="box-header with-border">
-        <h3 class="box-title">
-            {{> addNewButton}}
-        </h3>
-    </div>
+    <!--<div class="box-header with-border">-->
+        <!--<h3 class="box-title">-->
+            <!--{{> addNewButton}}-->
+        <!--</h3>-->
+    <!--</div>-->
     <!-- /.box-header -->
 
     <div class="box-body">
@@ -34,24 +34,24 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                {{> afQuickField type="hidden" name="customerId"}}
-                                {{> afQuickField name="employeeId" }}
+                                {{> afQuickField name="customerId"}}
                             </div>
                             <div class="col-md-6">
+                                {{> afQuickField name="employeeId" }}
                                 {{> afQuickField type="hidden" name="orderId" }}
-                                {{> afQuickField name="dueAmount" readOnly=true}}
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
-                                {{> afQuickField name="paidAmount"}}
+                                {{> afQuickField name="dueAmount" readOnly=true}}
                             </div>
                             <div class="col-md-6">
-                                {{> afQuickField name="balance" value=balance readOnly=true}}
+                                {{> afQuickField name="paidAmount"}}
                             </div>
                         </div>
 
+                        {{> afQuickField name="balance" value=balance readOnly=true}}
                         {{> afQuickField name="des"}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
                     </div>

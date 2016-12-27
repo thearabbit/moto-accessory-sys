@@ -7,6 +7,7 @@ import {moment} from 'meteor/momentjs:moment';
 // Lib
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../imports/libs/selectOpts.js';
+import {SelectOptsMethod} from '../../common/methods/selectOptsMethod.js';
 
 export const OrderPayment = new Mongo.Collection("moto_orderPayment");
 
@@ -29,19 +30,19 @@ OrderPayment.schema = new SimpleSchema({
     customerId: {
         type: String,
         label: 'Customer',
-        // autoform: {
-        //     type: 'universe-select',
-        //     afFieldInput: {
-        //         uniPlaceholder: 'Select One',
-        //         optionsMethod: 'moto.selectOptsMethod.customer',
-        //         optionsMethodParams: function () {
-        //             if (Meteor.isClient) {
-        //                 let currentBranch = Session.get('currentBranch');
-        //                 return {branchId: currentBranch};
-        //             }
-        //         }
-        //     }
-        // }
+        autoform: {
+            type: 'universe-select',
+            afFieldInput: {
+                uniPlaceholder: 'Select One',
+                optionsMethod: 'moto.selectOptsMethod.customerForOrderPayment',
+                optionsMethodParams: function () {
+                    if (Meteor.isClient) {
+                        let currentBranch = Session.get('currentBranch');
+                        return {branchId: currentBranch, type: "Vip"};
+                    }
+                }
+            }
+        }
     },
     orderId: {
         type: String,
@@ -81,6 +82,7 @@ OrderPayment.schema = new SimpleSchema({
         type: Number,
         label: 'Due amount',
         decimal: true,
+        min: 1,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
@@ -127,7 +129,7 @@ OrderPayment.schema = new SimpleSchema({
                 type: 'summernote',
                 class: 'editor', // optional
                 settings: {
-                    height: 150,                 // set editor height
+                    height: 85,                 // set editor height
                     minHeight: null,             // set minimum height of editor
                     maxHeight: null,             // set maximum height of editor
                     toolbar: [

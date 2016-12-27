@@ -30,6 +30,7 @@ import {lookupOrderVipLog} from '../../common/methods/lookupOrderVipLog';
 
 // Collection
 import {OrderVip} from '../../common/collections/orderVip.js';
+import {OrderVipPayment} from '../../common/collections/orderVipPayment.js';
 import {Exchange} from '../../../core/common/collections/exchange.js';
 
 // Tabular
@@ -50,8 +51,11 @@ let itemsCollection = new Mongo.Collection(null);
 // Index
 indexTmpl.onCreated(function () {
     // Create new  alertify
-    createNewAlertify('order', {size: 'lg'});
-    createNewAlertify('orderShow',);
+    createNewAlertify('orderVip', {size: 'lg'});
+    createNewAlertify('orderVipPayment', {size: 'lg'});
+    createNewAlertify('orderShow');
+
+    this.subscribe('moto.orderVipPayment');
 });
 
 indexTmpl.helpers({
@@ -65,32 +69,71 @@ indexTmpl.helpers({
 
 indexTmpl.events({
     'click .js-create' (event, instance) {
-        alertify.order(fa('plus', 'Order Vip'), renderTemplate(formTmpl)).maximize();
+        alertify.orderVip(fa('plus', 'Order Vip'), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
-        alertify.order(fa('pencil', 'Order Vip'), renderTemplate(formTmpl, {orderVipId: this._id})).maximize();
-        Session.set("update", true);
+        if (checkLastOrderVip(this.customerId) == this._id && _.isUndefined(checkOrderVipPaymentExist(this._id))) {
+            alertify.orderVip(fa('pencil', 'Order Vip'), renderTemplate(formTmpl, {orderVipId: this._id})).maximize();
+            Session.set("update", true);
+        } else if (checkOrderVipPaymentExist(this._id) == this._id) {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "Hmm , look like this record already payment , please delete it !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        } else {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "You can edit the last record only !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
     },
-    'click .js-destroy' (event, instance) {
+    'click .js-destroy'(event, instance){
+        if (checkLastOrderVip(this.customerId) == this._id && _.isUndefined(checkOrderVipPaymentExist(this._id))) {
         destroyAction(
             OrderVip,
             {_id: this._id},
             {title: 'Order Vip', itemTitle: this._id}
         );
+        } else if (checkOrderVipPaymentExist(this._id) == this._id) {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "Hmm , look like this record already payment , please delete it !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        } else {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "You can delete the last record only !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
     },
-    'click .js-display' (event, instance) {
+    'click .js-display'(event, instance){
         alertify.orderShow(fa('eye', 'Order Vip'), renderTemplate(showTmpl, {orderVipId: this._id})).maximize();
     },
-    'click .js-invoice' (event, instance) {
+    'click .js-invoice'(event, instance){
         let params = {};
         let queryParams = {orderVipId: this._id};
         let path = FlowRouter.path("moto.invoiceVipReportGe", params, queryParams);
 
         window.open(path, '_blank');
     },
-    'click .js-paymentVip' (event, instance) {
+    'click .js-payment-vip'(event, instance){
+        alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(Template.Moto_orderVipPaymentForm));
+    },
+    'click .js-payment-vip-form'(event, instance){
         let params = {
-            orderVipId: this._id
+            customerId: this.customerId
         };
         FlowRouter.go("moto.orderVipPayment", params);
     }
@@ -357,3 +400,17 @@ let hooksObject = {
 };
 
 AutoForm.addHooks(['Moto_orderVipForm'], hooksObject);
+
+function checkLastOrderVip(customer) {
+    let data = OrderVip.findOne({customerId: customer}, {sort: {_id: -1}});
+    if (data) {
+        return data._id;
+    }
+};
+
+function checkOrderVipPaymentExist(orderVip) {
+    let data = OrderVipPayment.findOne({orderVipId: orderVip});
+    if (data) {
+        return data.orderVipId;
+    }
+};

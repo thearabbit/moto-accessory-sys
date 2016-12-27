@@ -17,6 +17,7 @@ import {renderTemplate} from '../../../core/client/libs/render-template.js';
 import {destroyAction} from '../../../core/client/libs/destroy-action.js';
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
+import {roundKhrCurrency}  from '../../../moto/common/libs/roundKhrCurrency';
 
 // Component
 import '../../../core/client/components/loading.js';
@@ -45,7 +46,7 @@ let indexTmpl = Template.Moto_orderVipPayment,
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('orderVipPayment', {size: 'lg'});
-    createNewAlertify('orderVipPaymentShow',);
+    createNewAlertify('orderVipPaymentShow');
 });
 
 indexTmpl.helpers({
@@ -53,7 +54,7 @@ indexTmpl.helpers({
         return OrderPaymentTabular;
     },
     selector() {
-        return {branchId: Session.get('currentByBranch'), orderVipId: FlowRouter.getParam("orderVipId")};
+        return {branchId: Session.get('currentByBranch'), customerId: FlowRouter.getParam("customerId")};
     }
 });
 
@@ -62,14 +63,34 @@ indexTmpl.events({
         alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.orderVipPayment(fa('pencil', 'Order Vip Payment'), renderTemplate(formTmpl, {orderVipPaymentId: this._id}));
+        if (checkLastOrderVipPayment(this.customerId) == this._id) {
+            alertify.orderVipPayment(fa('pencil', 'Order Vip Payment'), renderTemplate(formTmpl, {orderVipPaymentId: this._id}));
+        } else {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "You can edit the last record only !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            OrderVipPayment,
-            {_id: this._id},
-            {title: 'Order Vip Payment', itemTitle: this._id}
-        );
+        if (checkLastOrderVipPayment(this.customerId) == this._id) {
+            destroyAction(
+                OrderVipPayment,
+                {_id: this._id},
+                {title: 'Order Vip Payment', itemTitle: this._id}
+            );
+        } else {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "You can delete the last record only !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
     },
     'click .js-display' (event, instance) {
         alertify.orderVipPaymentShow(fa('eye', 'Order Vip Payment'), renderTemplate(showTmpl, {orderVipPaymentId: this._id}));
@@ -90,29 +111,37 @@ formTmpl.onCreated(function () {
 
     let self = this;
     self.paymentVipDoc = new ReactiveVar(0);
-    self.dueAmountKhr = new ReactiveVar(0);
+    self.dueAmountKhr = new ReactiveVar();
     self.paidAmountKhr = new ReactiveVar(0);
-    self.dueAmountUsd = new ReactiveVar(0);
+    self.dueAmountUsd = new ReactiveVar();
     self.paidAmountUsd = new ReactiveVar(0);
-    self.dueAmountThb = new ReactiveVar(0);
+    self.dueAmountThb = new ReactiveVar();
     self.paidAmountThb = new ReactiveVar(0);
+    self.customerId = new ReactiveVar();
 
     self.autorun(()=> {
-        let orderVipId = FlowRouter.getParam("orderVipId");
+        let customerId = Template.instance().customerId.get();
 
-        if (orderVipId) {
+        if (customerId) {
             lookupOrderVipPayment.callPromise({
-                orderVipId: orderVipId
+                customerId: customerId
             }).then((result)=> {
-                self.dueAmountKhr.set(result.paymentVip.balanceKhr || result.paymentVip.paymentBalanceKhr);
-                self.dueAmountUsd.set(result.paymentVip.balanceUsd || result.paymentVip.paymentBalanceUsd);
-                self.dueAmountThb.set(result.paymentVip.balanceThb || result.paymentVip.paymentBalanceThb);
+                if (!_.isUndefined(result)) {
+                    self.dueAmountKhr.set(result.paymentVip.balanceKhr || result.paymentVip.paymentBalanceKhr);
+                    self.dueAmountUsd.set(result.paymentVip.balanceUsd || result.paymentVip.paymentBalanceUsd);
+                    self.dueAmountThb.set(result.paymentVip.balanceThb || result.paymentVip.paymentBalanceThb);
+                }
+                else {
+                    self.dueAmountKhr.set(0);
+                    self.dueAmountUsd.set(0);
+                    self.dueAmountThb.set(0);
+                }
+
                 self.paymentVipDoc.set(result);
             }).catch((err)=> {
                 console.log(err);
             });
         }
-
     });
 
 });
@@ -123,15 +152,18 @@ formTmpl.helpers({
     },
     data () {
         let paymentVipDoc = Template.instance().paymentVipDoc.get();
+        let dueAmountKhr = Template.instance().dueAmountKhr.get();
+        let dueAmountUsd = Template.instance().dueAmountUsd.get();
+        let dueAmountThb = Template.instance().dueAmountThb.get();
+        let customerId = Template.instance().customerId.get();
 
         let data = {
             formType: 'insert',
             doc: {
-                orderVipId: paymentVipDoc._id,
-                customerId: paymentVipDoc.customerId,
-                dueAmountKhr: paymentVipDoc.paymentVip.balanceKhr || paymentVipDoc.paymentVip.paymentBalanceKhr,
-                dueAmountUsd: paymentVipDoc.paymentVip.balanceUsd || paymentVipDoc.paymentVip.paymentBalanceUsd,
-                dueAmountThb: paymentVipDoc.paymentVip.balanceThb || paymentVipDoc.paymentVip.paymentBalanceThb,
+                orderVipId: _.isUndefined(paymentVipDoc) ? 404 : paymentVipDoc._id,
+                dueAmountKhr: roundKhrCurrency(dueAmountKhr),
+                dueAmountUsd: dueAmountUsd,
+                dueAmountThb: dueAmountThb,
                 paidDate: moment().toDate()
             }
         };
@@ -140,11 +172,42 @@ formTmpl.helpers({
         if (currentData) {
             data.formType = 'update';
             data.doc = OrderVipPayment.findOne(currentData.orderVipPaymentId);
-            Template.instance().dueAmountKhr.set(data.doc.dueAmountKhr);
+
+            if (data.doc.dueAmountKhr && _.isUndefined(dueAmountKhr)) {
+                data.doc.dueAmountKhr = data.doc.dueAmountKhr;
+            }
+            else if (FlowRouter.getParam("customerId") == customerId) {
+                data.doc.dueAmountKhr = data.doc.dueAmountKhr;
+            }
+            else {
+                data.doc.dueAmountKhr = dueAmountKhr;
+            }
+
+            if (data.doc.dueAmountUsd && _.isUndefined(dueAmountUsd)) {
+                data.doc.dueAmountUsd = data.doc.dueAmountUsd;
+            }
+            else if (FlowRouter.getParam("customerId") == customerId) {
+                data.doc.dueAmountUsd = data.doc.dueAmountUsd;
+            }
+            else {
+                data.doc.dueAmountUsd = dueAmountUsd;
+            }
+
+            if (data.doc.dueAmountThb && _.isUndefined(dueAmountThb)) {
+                data.doc.dueAmountThb = data.doc.dueAmountThb;
+            }
+            else if (FlowRouter.getParam("customerId") == customerId) {
+                data.doc.dueAmountThb = data.doc.dueAmountThb;
+            }
+            else {
+                data.doc.dueAmountThb = dueAmountThb;
+            }
+
+            Template.instance().dueAmountKhr.set(roundKhrCurrency(data.doc.dueAmountKhr || 0));
             Template.instance().paidAmountKhr.set(data.doc.paidAmountKhr);
-            Template.instance().dueAmountUsd.set(data.doc.dueAmountUsd);
+            Template.instance().dueAmountUsd.set(data.doc.dueAmountUsd || 0);
             Template.instance().paidAmountUsd.set(data.doc.paidAmountUsd);
-            Template.instance().dueAmountThb.set(data.doc.dueAmountThb);
+            Template.instance().dueAmountThb.set(data.doc.dueAmountThb || 0);
             Template.instance().paidAmountThb.set(data.doc.paidAmountThb);
         }
 
@@ -185,6 +248,10 @@ formTmpl.events({
     'keyup [name="paidAmountThb"]'(event, instance){
         let paidAmountThb = event.currentTarget.value;
         instance.paidAmountThb.set(paidAmountThb);
+    },
+    'change [name="customerId"]'(event, instance){
+        let customerId = event.currentTarget.value;
+        instance.customerId.set(customerId);
     }
 });
 
@@ -210,7 +277,7 @@ showTmpl.helpers({
 let hooksObject = {
     onSuccess (formType, result) {
         // if (formType == 'update') {
-            alertify.orderVipPayment().close();
+        alertify.orderVipPayment().close();
         // }
         displaySuccess();
     },
@@ -220,3 +287,10 @@ let hooksObject = {
 };
 
 AutoForm.addHooks(['Moto_orderVipPaymentForm'], hooksObject);
+
+function checkLastOrderVipPayment(customer) {
+    let data = OrderVipPayment.findOne({customerId: customer}, {sort: {_id: -1}});
+    if (data) {
+        return data._id;
+    }
+};

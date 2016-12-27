@@ -10,15 +10,15 @@ export const lookupOrderVipPayment = new ValidatedMethod({
     name: 'moto.lookupOrderVipPayment',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
-        orderVipId: {type: String}
+        customerId: {type: String}
     }).validator(),
-    run({orderVipId}) {
+    run({customerId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
 
             let data = OrderVip.aggregate([
                 {
-                    $match: {_id: orderVipId}
+                    $match: {customerId: customerId}
                 },
                 {
                     $lookup: {

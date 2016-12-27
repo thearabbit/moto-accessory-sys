@@ -162,7 +162,7 @@ MotoRoutes.route('/order', {
 
 //Order Payment
 import '../imports/pages/orderPayment.js';
-MotoRoutes.route('/orderPayment/:orderId?', {
+MotoRoutes.route('/orderPayment/:customerId?', {
     name: 'moto.orderPayment',
     title: 'Order Payment',
     action: function (params, queryParams) {
@@ -196,7 +196,7 @@ MotoRoutes.route('/orderVip', {
 
 //Order Payment
 import '../imports/pages/orderVipPayment.js';
-MotoRoutes.route('/orderVipPayment/:orderVipId?', {
+MotoRoutes.route('/orderVipPayment/:customerId?', {
     name: 'moto.orderVipPayment',
     title: 'Order Vip Payment',
     action: function (params, queryParams) {
