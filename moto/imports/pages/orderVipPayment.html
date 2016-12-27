@@ -1,10 +1,10 @@
 <!--Index-->
 <template name="Moto_orderVipPayment">
-    <div class="box-header with-border">
-        <h3 class="box-title">
-            {{> addNewButton}}
-        </h3>
-    </div>
+    <!--<div class="box-header with-border">-->
+        <!--<h3 class="box-title">-->
+            <!--{{> addNewButton}}-->
+        <!--</h3>-->
+    <!--</div>-->
     <!-- /.box-header -->
 
     <div class="box-body">
@@ -31,11 +31,13 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-6">
-                                {{> afQuickField type="hidden" name="customerId"}}
+                            <div class="col-md-4">
                                 {{> afQuickField name="paidDate" }}
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                {{> afQuickField name="customerId"}}
+                            </div>
+                            <div class="col-md-4">
                                 {{> afQuickField type="hidden" name="orderVipId" }}
                                 {{> afQuickField name="employeeId" }}
                             </div>

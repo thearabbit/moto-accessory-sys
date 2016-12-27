@@ -10,15 +10,15 @@ export const lookupOrderPayment = new ValidatedMethod({
     name: 'moto.lookupOrderPayment',
     mixins: [CallPromiseMixin],
     validate: new SimpleSchema({
-        orderId: {type: String}
+        customerId: {type: String}
     }).validator(),
-    run({orderId}) {
+    run({customerId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
 
             let data = Order.aggregate([
                 {
-                    $match: {_id: orderId}
+                    $match: {customerId: customerId}
                 },
                 {
                     $lookup: {

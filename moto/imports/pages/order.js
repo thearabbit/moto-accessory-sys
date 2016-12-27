@@ -29,6 +29,7 @@ import {lookupOrderLog} from '../../common/methods/lookupOrderLog';
 
 // Collection
 import {Order} from '../../common/collections/order.js';
+import {OrderPayment} from '../../common/collections/orderPayment.js';
 import {Exchange} from '../../../core/common/collections/exchange.js';
 // import {Files} from '../../../core/common/collections/fiels.js';
 
@@ -51,7 +52,9 @@ let itemsCollection = new Mongo.Collection(null);
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('order', {size: 'lg'});
+    createNewAlertify('orderPayment', {size: 'sm'});
     createNewAlertify('orderShow');
+    this.subscribe('moto.orderPayment');
 });
 
 indexTmpl.helpers({
@@ -68,15 +71,54 @@ indexTmpl.events({
         alertify.order(fa('plus', 'Order'), renderTemplate(formTmpl)).maximize();
     },
     'click .js-update' (event, instance) {
-        alertify.order(fa('pencil', 'Order'), renderTemplate(formTmpl, {orderId: this._id})).maximize();
-        Session.set("update", true);
+        if (checkLastOrder(this.customerId) == this._id && _.isUndefined(checkOrderPaymentExist(this._id))) {
+            alertify.order(fa('pencil', 'Order'), renderTemplate(formTmpl, {orderId: this._id})).maximize();
+            Session.set("update", true);
+        }
+        else if (checkOrderPaymentExist(this._id) == this._id) {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "Hmm , look like this record already payment , please delete it !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
+        else {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "You can edit the last record only !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            Order,
-            {_id: this._id},
-            {title: 'Order', itemTitle: this._id}
-        );
+        if (checkLastOrder(this.customerId) == this._id && _.isUndefined(checkOrderPaymentExist(this._id))) {
+            destroyAction(
+                Order,
+                {_id: this._id},
+                {title: 'Order', itemTitle: this._id}
+            );
+        }
+        else if (checkOrderPaymentExist(this._id) == this._id) {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "Hmm , look like this record already payment , please delete it !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        } else {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "You can delete the last record only !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
     },
     'click .js-display' (event, instance) {
         alertify.orderShow(fa('eye', 'Order'), renderTemplate(showTmpl, {orderId: this._id})).maximize();
@@ -86,11 +128,14 @@ indexTmpl.events({
         let queryParams = {orderId: this._id};
         let path = FlowRouter.path("moto.invoiceReportGe", params, queryParams);
 
-        window.open(path, '_blank');
+        window.open(path);
     },
     'click .js-payment' (event, instance) {
+        alertify.orderPayment(fa('plus', 'Order Payment'), renderTemplate(Template.Moto_orderPaymentForm));
+    },
+    'click .js-payment-form' (event, instance){
         let params = {
-            orderId: this._id
+            customerId: this.customerId
         };
         FlowRouter.go("moto.orderPayment", params);
     }
@@ -367,3 +412,17 @@ let hooksObject = {
 };
 
 AutoForm.addHooks(['Moto_orderForm'], hooksObject);
+
+function checkLastOrder(customer) {
+    let data = Order.findOne({customerId: customer}, {sort: {_id: -1}});
+    if (data) {
+        return data._id;
+    }
+};
+
+function checkOrderPaymentExist(order) {
+    let data = OrderPayment.findOne({orderId: order});
+    if (data) {
+        return data.orderId;
+    }
+};

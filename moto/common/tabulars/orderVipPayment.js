@@ -31,6 +31,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return moment(val).format('DD/MM/YYYY hh:mm:ss');
             }
         },
+        {data: "customerId", title: "Customer"},
         {
             data: "dueAmountKhr",
             title: "Due Amount",
@@ -67,7 +68,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return `<span class="badge bg-teal-active"><i class="fa fa-heart"></i> ${val} </span>`;
             }
         }],
-    extraFields: ['customerId', 'employeeId', 'dueAmountUsd', 'dueAmountThb', 'paidAmountUsd', 'paidAmountThb' , 'paymentBalanceUsd' ,'paymentBalanceThb']
+    extraFields: ['employeeId', 'dueAmountUsd', 'dueAmountThb', 'paidAmountUsd', 'paidAmountThb' , 'paymentBalanceUsd' ,'paymentBalanceThb']
 });
 
 export const OrderPaymentTabular = new Tabular.Table(tabularData);

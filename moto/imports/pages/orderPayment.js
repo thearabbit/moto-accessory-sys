@@ -7,6 +7,7 @@ import {fa} from 'meteor/theara:fa-helpers';
 import {lightbox} from 'meteor/theara:lightbox-helpers';
 import {TAPi18n} from 'meteor/tap:i18n';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
+import {_} from 'meteor/erasaur:meteor-lodash';
 import {moment} from 'meteor/momentjs:moment';
 // import {$} from 'meteor/jquery';
 
@@ -53,7 +54,7 @@ indexTmpl.helpers({
         return OrderPaymentTabular;
     },
     selector() {
-        return {branchId: Session.get('currentByBranch'), orderId: FlowRouter.getParam("orderId")};
+        return {branchId: Session.get('currentByBranch'), customerId: FlowRouter.getParam("customerId")};
     }
 });
 
@@ -62,14 +63,34 @@ indexTmpl.events({
         alertify.orderPayment(fa('plus', 'Order Payment'), renderTemplate(formTmpl));
     },
     'click .js-update' (event, instance) {
-        alertify.orderPayment(fa('pencil', 'Order Payment'), renderTemplate(formTmpl, {orderPaymentId: this._id}));
+        if (checkLastOrderPayment(this.customerId) == this._id) {
+            alertify.orderPayment(fa('pencil', 'Order Payment'), renderTemplate(formTmpl, {orderPaymentId: this._id}));
+        } else {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "You can edit the last record only !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
     },
     'click .js-destroy' (event, instance) {
-        destroyAction(
-            OrderPayment,
-            {_id: this._id},
-            {title: 'Order Payment', itemTitle: this._id}
-        );
+        if (checkLastOrderPayment(this.customerId) == this._id) {
+            destroyAction(
+                OrderPayment,
+                {_id: this._id},
+                {title: 'Order Payment', itemTitle: this._id}
+            );
+        } else {
+            swal({
+                title: "Information",
+                type: "info",
+                text: "You can delete the last record only !",
+                timer: 2200,
+                showConfirmButton: false
+            });
+        }
     },
     'click .js-display' (event, instance) {
         alertify.orderPaymentShow(fa('eye', 'Order Payment'), renderTemplate(showTmpl, {orderPaymentId: this._id}));
@@ -92,21 +113,25 @@ formTmpl.onCreated(function () {
     self.paymentDoc = new ReactiveVar();
     self.dueAmount = new ReactiveVar();
     self.paidAmount = new ReactiveVar();
+    self.customerId = new ReactiveVar();
 
     self.autorun(()=> {
-        let orderId = FlowRouter.getParam("orderId");
+        let customerId = Template.instance().customerId.get();
 
-        if (orderId) {
+        if (customerId) {
             lookupOrderPayment.callPromise({
-                orderId: orderId
+                customerId: customerId
             }).then((result)=> {
-                self.dueAmount.set(roundKhrCurrency(result.payment.total) || roundKhrCurrency(result.payment.balance));
+                if (!_.isUndefined(result)) {
+                    self.dueAmount.set(roundKhrCurrency(result.payment.total) || roundKhrCurrency(result.payment.balance));
+                } else {
+                    self.dueAmount.set(0);
+                }
                 self.paymentDoc.set(result);
             }).catch((err)=> {
                 console.log(err);
             });
         }
-
     });
 
 });
@@ -117,20 +142,30 @@ formTmpl.helpers({
     },
     data () {
         let paymentDoc = Template.instance().paymentDoc.get();
+        let dueAmount = Template.instance().dueAmount.get();
+        let customerId = Template.instance().customerId.get();
         let data = {
             formType: 'insert',
             doc: {
-                orderId: paymentDoc._id,
-                customerId: paymentDoc.customerId,
-                dueAmount: roundKhrCurrency(paymentDoc.payment.balance),
+                orderId: _.isUndefined(paymentDoc) ? 404 : paymentDoc._id,
+                dueAmount: roundKhrCurrency(dueAmount),
                 paidDate: moment().toDate()
             }
         };
         let currentData = Template.currentData();
-
         if (currentData) {
             data.formType = 'update';
             data.doc = OrderPayment.findOne(currentData.orderPaymentId);
+
+            if (data.doc.dueAmount && _.isUndefined(dueAmount)) {
+                data.doc.dueAmount = data.doc.dueAmount;
+
+            } else if (FlowRouter.getParam("customerId") == customerId) {
+                data.doc.dueAmount = data.doc.dueAmount;
+            } else {
+                data.doc.dueAmount = dueAmount;
+            }
+
             Template.instance().dueAmount.set(roundKhrCurrency(data.doc.dueAmount));
             Template.instance().paidAmount.set(roundKhrCurrency(data.doc.paidAmount));
         }
@@ -150,6 +185,10 @@ formTmpl.events({
     'keyup [name="paidAmount"]'(event, instance){
         let paidAmount = event.currentTarget.value;
         instance.paidAmount.set(paidAmount);
+    },
+    'change [name="customerId"]'(event, instance){
+        let customerId = event.currentTarget.value;
+        instance.customerId.set(customerId);
     }
 });
 
@@ -175,7 +214,7 @@ showTmpl.helpers({
 let hooksObject = {
     onSuccess (formType, result) {
         // if (formType == 'update') {
-            alertify.orderPayment().close();
+        alertify.orderPayment().close();
         // }
         displaySuccess();
     },
@@ -185,3 +224,10 @@ let hooksObject = {
 };
 
 AutoForm.addHooks(['Moto_orderPaymentForm'], hooksObject);
+
+function checkLastOrderPayment(customer) {
+    let data = OrderPayment.findOne({customerId: customer}, {sort: {_id: -1}});
+    if (data) {
+        return data._id;
+    }
+};

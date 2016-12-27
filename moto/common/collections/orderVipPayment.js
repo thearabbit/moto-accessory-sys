@@ -29,6 +29,19 @@ OrderVipPayment.schema = new SimpleSchema({
     customerId: {
         type: String,
         label: 'Customer',
+        autoform: {
+            type: 'universe-select',
+            afFieldInput: {
+                uniPlaceholder: 'Select One',
+                optionsMethod: 'moto.selectOptsMethod.customerForOrderVipPayment',
+                optionsMethodParams: function () {
+                    if (Meteor.isClient) {
+                        let currentBranch = Session.get('currentBranch');
+                        return {branchId: currentBranch, type: "Vip"};
+                    }
+                }
+            }
+        }
     },
     orderVipId: {
         type: String,
@@ -212,7 +225,7 @@ OrderVipPayment.schema = new SimpleSchema({
                 type: 'summernote',
                 class: 'editor', // optional
                 settings: {
-                    height: 150,                 // set editor height
+                    height: 85,                 // set editor height
                     minHeight: null,             // set minimum height of editor
                     maxHeight: null,             // set maximum height of editor
                     toolbar: [
