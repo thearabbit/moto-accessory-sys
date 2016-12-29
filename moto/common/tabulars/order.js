@@ -80,7 +80,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             tmpl: Meteor.isClient && Template.Moto_paymentLinkAction
         }
     ],
-    extraFields:['employeeId','items']
+    extraFields:['employeeId','items','exchangeId']
 });
 
 export const OrderTabular = new Tabular.Table(tabularData);

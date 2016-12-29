@@ -77,19 +77,19 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                    <div class="form-group{{#if afFieldIsInvalid name='customerId'}} has-error{{/if}}"
-                                         data-required="true">
-                                        <label class="control-label" for="customerId">Customer</label>
-                                        <div class="input-group select2-bootstrap-append">
+                                <div class="form-group{{#if afFieldIsInvalid name='customerId'}} has-error{{/if}}"
+                                     data-required="true">
+                                    <label class="control-label" for="customerId">Customer</label>
+                                    <div class="input-group select2-bootstrap-append">
                                         <span class="input-group-btn">
                                             {{> customerDropDown}}
                                         </span>
-                                            {{> afFieldInput name='customerId'}}
-                                        </div>
-                                        {{#if afFieldIsInvalid name='customerId'}}
-                                            <span class="help-block">{{afFieldMessage name='customerId'}}</span>
-                                        {{/if}}
+                                        {{> afFieldInput name='customerId'}}
                                     </div>
+                                    {{#if afFieldIsInvalid name='customerId'}}
+                                        <span class="help-block">{{afFieldMessage name='customerId'}}</span>
+                                    {{/if}}
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group{{#if afFieldIsInvalid
@@ -139,16 +139,14 @@
 
                         <div class="row">
                             <div class="col-sm-12 pull-right">
-                                <!--{{> formFooterWithButton}}-->
-
-                                {{#formFooter}}
+                                <div class="form-footer-customer">
                                     <button type="submit" class="btn btn-primary" {{disabledSubmitBtn}}>
                                         <i class="fa fa-floppy-o"></i> {{_ "form.btnSave"}}
                                     </button>
                                     <button type="reset" class="btn btn-default">
                                         <i class="fa fa-refresh"></i> {{_ "form.btnReset"}}
                                     </button>
-                                {{/formFooter}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -253,14 +251,13 @@
                             <tr>
                                 <th>#</th>
                                 <th>Item</th>
-                                <th>Memo Item</th>
+                                <th>Memo</th>
                                 <th>Qty</th>
                                 <th>Purchase Price</th>
                                 <th>Order Price</th>
                                 <th>Discount</th>
                                 <th>Amount</th>
                                 <th>Total Amount</th>
-                                <th>Memo</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -268,14 +265,13 @@
                                 <tr>
                                     <td>{{itemId}}</td>
                                     <td>{{itemName}}</td>
-                                    <td>{{memoItem}}</td>
+                                    <td>{{memo}}</td>
                                     <td>{{qty}} {{unit}}</td>
                                     <td>{{purchasePrice}}</td>
                                     <td>{{orderPrice}} ៛</td>
                                     <td>{{discount}} {{discountType}}</td>
                                     <td>{{amount}} ៛</td>
                                     <td>{{totalAmount}} ៛</td>
-                                    <td>{{memo}}</td>
                                 </tr>
                             {{/each}}
                             </tbody>

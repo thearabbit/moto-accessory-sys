@@ -55,22 +55,24 @@ indexTmpl.onCreated(function () {
     let data = Template.currentData();
     itemsCollection = data.itemsCollection;
     this.discountAmount = new ReactiveVar(0);
-    this.subscribe('moto.items');
+    this.purchasePriceHideAndShow = new ReactiveVar();
+    // this.subscribe('moto.items');
 });
 
 indexTmpl.helpers({
     tableSettings: function () {
         let i18nPrefix = 'moto.order.schema';
-
+        let instance = Template.instance();
         let reactiveTableData = _.assignIn(_.clone(reactiveTableSettings), {
             showFilter: false,
             showNavigation: 'never',
             showColumnToggles: false,
+            rowsPerPage: 100,
             collection: itemsCollection,
             fields: [
                 {key: 'itemId', label: 'ID', hidden: false},
                 {key: 'itemName', label: 'Item'},
-                {key: 'memoItem', label: 'Memo Item'},
+                {key: 'memo', label: 'Memo'},
                 {
                     key: 'qty',
                     label: 'Qty',
@@ -81,24 +83,28 @@ indexTmpl.helpers({
                     //     return Spacebars.SafeString(`<input type="text" value="${value}" class="item-qty">`);
                     // }
                 },
-                {
-                    key: 'memo',
-                    label: 'Memo',
-                },
+                // {
+                //     key: 'memo',
+                //     label: 'Memo',
+                // },
                 {
                     key: 'purchasePrice',
                     label: 'Purchase Price',
                     fn(value, obj, key){
                         let currency;
                         if (obj.currencyId == "KHR") {
-                            currency = "៛";
+                            currency = "៛ " + value;
                         } else if (obj.currencyId == "USD") {
-                            currency = "$";
+                            currency = "$ " + value;
                         } else {
-                            currency = "B";
+                            currency = "B " + value;
                         }
 
-                        return `${currency} ${value}`;
+                        if (instance.purchasePriceHideAndShow.get() == "show") {
+                            return Spacebars.SafeString(`<span class="purchasePrice">${currency}</span>`);
+                        } else {
+                            return Spacebars.SafeString(`<span class="purchasePrice">*******************</span>`);
+                        }
                     }
                 },
                 {
@@ -218,6 +224,12 @@ indexTmpl.events({
     'keyup [name="discountAmount"]': function (event, instance) {
         let discountAmount = event.currentTarget.value;
         instance.discountAmount.set(discountAmount);
+    },
+    'click .purchasePrice': function (event, instance) {
+        instance.purchasePriceHideAndShow.set('show');
+    },
+    'dblclick .purchasePrice': function (event, instance) {
+        instance.purchasePriceHideAndShow.set('hide');
     }
 });
 
@@ -252,7 +264,7 @@ newTmpl.helpers({
         let result, exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType');
 
         if (customerType == "Retail") {
-            result = instance.khrPrice.get();
+            result = roundKhrCurrency(instance.khrPrice.get());
         } else {
             fx.base = "USD";
             fx.rates = {
@@ -262,10 +274,10 @@ newTmpl.helpers({
             }
 
             if (instance.currencyId.get() == "USD") {
-                result = round2(fx.convert(instance.price.get(), {from: "USD", to: "KHR"}), -2);
+                result = roundKhrCurrency(fx.convert(instance.price.get(), {from: "USD", to: "KHR"}));
 
             } else if (instance.currencyId.get() == "THB") {
-                result = round2(fx.convert(instance.price.get(), {from: "THB", to: "KHR"}), -2);
+                result = roundKhrCurrency(fx.convert(instance.price.get(), {from: "THB", to: "KHR"}));
             } else {
                 result = roundKhrCurrency(instance.khrPrice.get());
             }
@@ -293,10 +305,10 @@ newTmpl.helpers({
             let tempAmount = instance.qty.get() * instance.price.get();
 
             if (instance.currencyId.get() == "USD") {
-                amount = round2(fx.convert(tempAmount, {from: "USD", to: "KHR"}), -2);
+                amount = roundKhrCurrency((fx.convert(tempAmount, {from: "USD", to: "KHR"})));
 
             } else if (instance.currencyId.get() == "THB") {
-                amount = round2(fx.convert(tempAmount, {from: "THB", to: "KHR"}), -2);
+                amount = roundKhrCurrency((fx.convert(tempAmount, {from: "THB", to: "KHR"})));
             } else if (instance.currencyId.get() == "KHR") {
                 amount = roundKhrCurrency(instance.qty.get() * instance.khrPrice.get());
             }
@@ -340,7 +352,7 @@ newTmpl.events({
 
         // Check item value
         if (itemId) {
-            $.blockUI();
+            // $.blockUI();
             lookupItem.callPromise({
                 itemId: itemId
             }).then((result) => {
@@ -501,7 +513,7 @@ editTmpl.helpers({
         let result, exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType');
 
         if (customerType == "Retail") {
-            result = instance.khrPrice.get();
+            result = roundKhrCurrency(instance.khrPrice.get());
         } else {
             fx.base = "USD";
             fx.rates = {
@@ -511,10 +523,10 @@ editTmpl.helpers({
             }
 
             if (instance.currencyId.get() == "USD") {
-                result = round2(fx.convert(instance.price.get(), {from: "USD", to: "KHR"}), -2);
+                result = roundKhrCurrency(fx.convert(instance.price.get(), {from: "USD", to: "KHR"}));
 
             } else if (instance.currencyId.get() == "THB") {
-                result = round2(fx.convert(instance.price.get(), {from: "THB", to: "KHR"}), -2);
+                result = roundKhrCurrency(fx.convert(instance.price.get(), {from: "THB", to: "KHR"}));
             } else {
                 result = roundKhrCurrency(instance.khrPrice.get());
             }
@@ -530,7 +542,7 @@ editTmpl.helpers({
         let amount, data = Template.currentData(), exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
 
         if (customerType == "Retail") {
-            amount = instance.qty.get() * instance.khrPrice.get();
+            amount = roundKhrCurrency(instance.qty.get() * instance.khrPrice.get());
         } else {
             fx.base = "USD";
             fx.rates = {
@@ -542,9 +554,9 @@ editTmpl.helpers({
             let tempAmount = instance.qty.get() * instance.price.get();
 
             if (instance.currencyId.get() == "USD") {
-                amount = round2(fx.convert(tempAmount, {from: "USD", to: "KHR"}), -2);
+                amount = roundKhrCurrency(fx.convert(tempAmount, {from: "USD", to: "KHR"}));
             } else if (instance.currencyId.get() == "THB") {
-                amount = round2(fx.convert(tempAmount, {from: "THB", to: "KHR"}), -2);
+                amount = roundKhrCurrency(fx.convert(tempAmount, {from: "THB", to: "KHR"}));
             } else if (instance.currencyId.get() == "KHR") {
                 amount = roundKhrCurrency(instance.qty.get() * instance.khrPrice.get()) || roundKhrCurrency(data.khrPrice);
             }
@@ -580,7 +592,7 @@ editTmpl.events({
 
         // Check item value
         if (itemId) {
-            $.blockUI();
+            // $.blockUI();
             lookupItem.callPromise({
                 itemId: itemId
             }).then((result) => {

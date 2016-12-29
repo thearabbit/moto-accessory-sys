@@ -56,22 +56,25 @@ indexTmpl.onCreated(function () {
     this.discountAmount = new ReactiveVar(0);
     this.discountAmountUsd = new ReactiveVar(0);
     this.discountAmountThb = new ReactiveVar(0);
-    this.subscribe('moto.items');
+    this.purchasePriceHideAndShow = new ReactiveVar();
+    // this.subscribe('moto.items');
 });
 
 indexTmpl.helpers({
     tableSettings: function () {
         let i18nPrefix = 'moto.order.schema';
+        let instance = Template.instance();
 
         let reactiveTableData = _.assignIn(_.clone(reactiveTableSettings), {
             showFilter: false,
             showNavigation: 'never',
             showColumnToggles: false,
+            rowsPerPage: 100,
             collection: itemsCollection,
             fields: [
                 {key: 'itemId', label: 'ID', hidden: false},
                 {key: 'itemName', label: 'Item'},
-                {key: 'memoItem', label: 'Memo Item'},
+                {key: 'memo', label: 'Memo'},
                 {
                     key: 'qty',
                     label: 'Qty',
@@ -79,24 +82,28 @@ indexTmpl.helpers({
                         return `${value} ${obj.unit}`;
                     }
                 },
-                {
-                    key: 'memo',
-                    label: 'Memo',
-                },
+                // {
+                //     key: 'memo',
+                //     label: 'Memo',
+                // },
                 {
                     key: 'purchasePrice',
                     label: 'Purchase Price',
                     fn(value, obj, key){
                         let currency;
                         if (obj.currencyId == "KHR") {
-                            currency = "៛";
+                            currency = "៛ " + value;
                         } else if (obj.currencyId == "USD") {
-                            currency = "$";
+                            currency = "$ " + value;
                         } else {
-                            currency = "B";
+                            currency = "B " + value;
                         }
 
-                        return `${currency} ${value}`;
+                        if (instance.purchasePriceHideAndShow.get() == "show") {
+                            return Spacebars.SafeString(`<span class="purchasePrice">${currency}</span>`);
+                        } else {
+                            return Spacebars.SafeString(`<span class="purchasePrice">*******************</span>`);
+                        }
                     }
                 },
                 {
@@ -296,6 +303,12 @@ indexTmpl.events({
     'keyup [name="discountAmountThb"]': function (event, instance) {
         let discountAmountThb = event.currentTarget.value;
         instance.discountAmountThb.set(discountAmountThb);
+    },
+    'click .purchasePrice': function (event, instance) {
+        instance.purchasePriceHideAndShow.set('show');
+    },
+    'dblclick .purchasePrice': function (event, instance) {
+        instance.purchasePriceHideAndShow.set('hide');
     }
 });
 
@@ -382,7 +395,7 @@ newTmpl.events({
 
         // Check item value
         if (itemId) {
-            $.blockUI();
+            // $.blockUI();
             lookupItem.callPromise({
                 itemId: itemId
             }).then((result) => {
@@ -614,7 +627,7 @@ editTmpl.events({
 
         // Check item value
         if (itemId) {
-            $.blockUI();
+            // $.blockUI();
             lookupItem.callPromise({
                 itemId: itemId
             }).then((result) => {

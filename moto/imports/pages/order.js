@@ -167,6 +167,8 @@ formTmpl.onCreated(function () {
             }).then((result) => {
                 // Add items to local collection
                 Session.set('customerType', result.type);
+                let exchange = Exchange.findOne({_id: result.exchangeId});
+                Session.set('exchangeDoc', exchange);
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
                 });

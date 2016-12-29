@@ -7,3 +7,15 @@
 .rpt-content-header th {
     background-color: #d0d2d0 !important;
 }
+
+.form-footer-customer {
+    background-color: #fff;
+    padding: 19px 0px 3px;
+    border-top: 1px solid #e5e5e5;
+    border-radius: 0 0 6px 6px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 15px;
+    min-height: 43px;
+    text-align: right;
+}
