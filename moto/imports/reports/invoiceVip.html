@@ -49,13 +49,13 @@
                     </div>
 
                     <!--Content-->
-                    <table class="rpt rpt-content">
+                    <table class="rpt rpt-2x rpt-content">
                         <thead class="rpt-content-header">
                         <tr>
                             <th>ល.រ</th>
                             <th>មុខទំនិញ</th>
-                            <th>ចំនួន</th>
                             <th>ពណ៍នា</th>
+                            <th>ចំនួន</th>
                             <th>តម្លៃ</th>
                             <th>ចុះតម្លៃ</th>
                             <th>សរុប</th>
@@ -65,10 +65,10 @@
                         <tbody class="rpt-content-body">
                         {{#each item in items}}
                             <tr>
-                                <td>{{increaseIndex @index}}</td>
+                                <td align="center">{{increaseIndex @index}}</td>
                                 <td>{{item.itemName}}</td>
+                                <td align="center">{{item.memo}}</td>
                                 <td>{{item.qty}} {{item.unit}}</td>
-                                <td class="text-right">{{item.memo}}</td>
                                 <td class="text-right">{{item.orderPrice}} {{item.itemCurrency}}</td>
                                 <td class="text-right">{{item.discount}} {{item.discountType}}</td>
                                 <td class="text-right">{{item.totalAmount}}​ {{item.itemCurrency}}</td>

@@ -71,15 +71,15 @@ export const SelectOpts = {
 
         return list;
     },
-    memoItem: function (selectOne, param) {
+    item: function (selectOne, param) {
         let list = [];
         if (selectOne) {
-            list.push({label: '(Select Or Type)', value: ''});
+            list.push({label: '(Select One)', value: ''});
         }
 
-        Item.find({_id: param})
+        Item.find({},{limit: 200})
             .forEach(function (obj) {
-                list.push({label: obj.memoItem, value: obj.memoItem});
+                list.push({label: obj._id + ' : ' + obj.name, value: obj._id})
             });
 
         return list;

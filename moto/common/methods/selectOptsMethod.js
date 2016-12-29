@@ -309,7 +309,7 @@ SelectOptsMethod.orderItem = new ValidatedMethod({
             }
             selector.type = 'I';
 
-            let data = Item.find(selector, {limit: 10});
+            let data = Item.find(selector, {limit: 200});
             data.forEach(function (value) {
                 let label = `${value.code} : ${value.name}`;
                 if (value.ancestors) {
