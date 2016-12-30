@@ -72,15 +72,16 @@ indexTmpl.helpers({
             rowsPerPage: 100,
             collection: itemsCollection,
             fields: [
-                {key: 'itemId', label: 'ID', hidden: false},
-                {key: 'itemName', label: 'Item'},
-                {key: 'memo', label: 'Memo'},
+                {key: 'itemId', label: 'ID', hidden: false,sortable: false},
+                {key: 'itemName', label: 'Item',sortable: false},
+                {key: 'memo', label: 'Memo',sortable: false},
                 {
                     key: 'qty',
                     label: 'Qty',
                     fn(value, obj, key){
                         return `${value} ${obj.unit}`;
-                    }
+                    },
+                    sortable: false
                 },
                 // {
                 //     key: 'memo',
@@ -104,14 +105,16 @@ indexTmpl.helpers({
                         } else {
                             return Spacebars.SafeString(`<span class="purchasePrice">*******************</span>`);
                         }
-                    }
+                    },
+                    sortable: false
                 },
                 {
                     key: 'orderPrice',
                     label: 'Order Price',
                     fn(value, obj, key){
                         return `${obj.itemCurrency} ${value}`;
-                    }
+                    },
+                    sortable: false
                 },
                 {
                     key: 'discount',
@@ -124,21 +127,24 @@ indexTmpl.helpers({
                             type = `${obj.discountType} ${value}`;
                         }
                         return type;
-                    }
+                    },
+                    sortable: false
                 },
                 {
                     key: 'amount',
                     label: 'Amount',
                     fn (value, obj, key) {
                         return `${obj.itemCurrency} ${value}`;
-                    }
+                    },
+                    sortable: false
                 },
                 {
                     key: 'totalAmount',
                     label: 'Total Amount',
                     fn (value, obj, key) {
                         return `${obj.itemCurrency} ${value}`;
-                    }
+                    },
+                    sortable: false
                 },
                 {
                     key: '_id',
