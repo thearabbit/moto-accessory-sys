@@ -36,7 +36,6 @@ indexTmpl.onCreated(function () {
         itemListReport.callPromise()
             .then((result)=> {
                 console.log(result);
-
                 this.rptData.set(result);
             }).catch((err)=> {
                 console.log(err.message);

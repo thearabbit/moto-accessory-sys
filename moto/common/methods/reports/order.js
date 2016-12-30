@@ -18,12 +18,12 @@ export const orderReport = new ValidatedMethod({
     validate: null,
     run(params) {
         if (!this.isSimulation) {
-            Meteor._sleepForMs(2000);
+            Meteor._sleepForMs(100);
 
             let rptTitle, rptHeader, rptContent, rptFooter;
 
-            let fDate = moment(params.repDate[0]).toDate();
-            let tDate = moment(params.repDate[1]).add(1, 'days').toDate();
+            let fDate = moment(params.repDate[0]).startOf('day').toDate();
+            let tDate = moment(params.repDate[1]).endOf('day').toDate();
 
             // --- Title ---
             rptTitle = Company.findOne();
@@ -36,33 +36,21 @@ export const orderReport = new ValidatedMethod({
             });
 
             // Exchange
-            let exchangeDoc = Exchange.findOne(params.exchangeId);
-            params.exchangeHeader = JSON.stringify(exchangeDoc.rates, null, ' ');
+            // let exchangeDoc = Exchange.findOne(params.exchangeId);
+            // params.exchangeHeader = JSON.stringify(exchangeDoc.rates, null, ' ');
+            params.exchangeHeader = "KHR";
 
             rptHeader = params;
 
             // --- Content ---
-            let selector = {};
-            selector.branchId = {$in: params.branchId};
-            selector.orderDate = {$gte: fDate, $lte: tDate};
+            let selector = {
+                branchId: {$in: params.branchId},
+                orderDate: {$gte: fDate, $lte: tDate},
+            };
 
             rptContent = Order.aggregate([
                 {
                     $match: selector
-                },
-                {
-                    $unwind: "$items"
-                },
-                {
-                    $lookup: {
-                        from: "moto_item",
-                        localField: "items.itemId",
-                        foreignField: "_id",
-                        as: "itemDoc"
-                    }
-                },
-                {
-                    $unwind: "$itemDoc"
                 },
                 {
                     $lookup: {
@@ -76,33 +64,63 @@ export const orderReport = new ValidatedMethod({
                     $unwind: "$customerDoc"
                 },
                 {
-                    $group: {
-                        _id: "$_id",
-                        customerId: {$last: "$customerId"},
-                        customerDoc: {$last: "$customerDoc"},
-                        orderDate: {$last: "$orderDate"},
-                        des: {$last: "$des"},
-                        branchId: {$last: "$branchId"},
-                        total: {$last: "$total"},
-                        items: {
-                            $addToSet: {
-                                itemId: "$items.itemId",
-                                itemName: "$itemDoc.name",
-                                qty: "$items.qty",
-                                price: "$items.price",
-                                amount: "$items.amount"
-                            }
-                        }
+                    $lookup: {
+                        from: "core_branch",
+                        localField: "branchId",
+                        foreignField: "_id",
+                        as: "branchDoc"
                     }
                 },
                 {
-                    $sort: {orderDate: -1}
+                    $unwind: "$branchDoc"
+                },
+                {$sort: {orderDate: -1}},
+                {
+                    $group: {
+                        _id: {
+                            day: {$dayOfMonth: "$orderDate"},
+                            month: {$month: "$orderDate"},
+                            year: {$year: "$orderDate"},
+                            branchId: "$branchId"
+                        },
+                        orderDate: {$last: "$orderDate"},
+                        branchDoc: {$last: "$branchDoc"},
+                        total: {$sum: "$total"},
+                        discountAmount: {$sum: "$discountAmount"},
+                        subTotal: {$sum: "$subTotal"},
+                        dataOrder: {$push: "$$ROOT"},
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        branchId: "$_id.branchId",
+                        branchDoc: 1,
+                        orderDate: 1,
+                        subTotal: 1,
+                        discountAmount: 1,
+                        total: 1,
+                        dataOrder: 1
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$branchId",
+                        orderDate: {$last: "$orderDate"},
+                        branchDoc: {$last: "$branchDoc"},
+                        subTotal: {$sum: "$subTotal"},
+                        total: {$sum: "$total"},
+                        discountAmount: {$sum: "$discountAmount"},
+                        dataDate: {$push: "$$ROOT"}
+                    }
                 },
                 {
                     $group: {
                         _id: null,
-                        data: {$addToSet: "$$ROOT"},
-                        sumTotal: {$sum: "$total"}
+                        subTotal: {$sum: "$subTotal"},
+                        discountAmount: {$sum: "$discountAmount"},
+                        total: {$sum: "$total"},
+                        dataBranch: {$push: "$$ROOT"}
                     }
                 }
             ])[0];
