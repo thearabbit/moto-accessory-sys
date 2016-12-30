@@ -42,6 +42,7 @@ export const OrderSchema = new SimpleSchema({
                 optionsPlaceholder: 'Please search... (limit 10)',
                 optionsMethod: 'moto.selectOptsMethod.exchange'
             }
-        }
+        },
+        optional: true
     }
 });

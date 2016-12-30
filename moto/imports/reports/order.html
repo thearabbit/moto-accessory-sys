@@ -7,11 +7,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         {{> afQuickField name="branchId"}}
-                        {{> afQuickField name="repDate"}}
                     </div>
                     <div class="col-md-6">
-                        {{> afQuickField name="exchangeId"}}
-
+                        {{> afQuickField name="repDate"}}
                         {{> reportFormFooterWithButton}}
                     </div>
                 </div>
@@ -31,11 +29,11 @@
                     <hr>
                     <div class="text-right">
                         <button type="button" class="btn btn-success btn-print-area">
-                            <i class="fa fa-print"></i> Print Area
+                            <i class="fa fa-print"></i> Print
                         </button>
-                        <button type="button" class="btn btn-info btn-print-this">
-                            <i class="fa fa-print"></i> Print This
-                        </button>
+                        <!--<button type="button" class="btn btn-info btn-print-this">-->
+                        <!--<i class="fa fa-print"></i> Print This-->
+                        <!--</button>-->
                     </div>
                     <!--Print Button-->
 
@@ -66,7 +64,7 @@
                                     </div>
 
                                     <div style="width: 50%; float: right">
-                                        <div><strong>Exchange:</strong> {{exchangeHeader}}</div>
+                                        <div><strong>Currency:</strong> {{exchangeHeader}}</div>
                                     </div>
                                 </div>
                             {{/with}}
@@ -75,56 +73,60 @@
                             <table class="rpt rpt-content">
                                 <thead class="rpt-content-header">
                                 <tr>
-                                    <th>No</th>
+                                    <th>N<sup>o</sup></th>
                                     <th>ID</th>
-                                    <th>Order Date</th>
                                     <th>Customer</th>
-                                    <th>Items</th>
-                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Sub Total</th>
+                                    <th>Discount Amount</th>
+                                    <th>Total</th>
                                 </tr>
                                 </thead>
 
                                 <tbody class="rpt-content-body">
-                                {{#each rptContent.data}}
-                                    <tr style="vertical-align: top">
-                                        <td>{{increaseIndex @index}}</td>
-                                        <td>{{_id}}</td>
-                                        <td>{{moFormat orderDate "DD/MM/YYYY"}}</td>
-                                        <td>{{customerDoc.name}}</td>
-                                        <td>
-                                            <table class="table">
-                                                <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Qty</th>
-                                                    <th>Price</th>
-                                                    <th>Amount</th>
-                                                </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                {{#each items}}
-                                                    <tr>
-                                                        <td>{{itemId}}:{{itemName}}</td>
-                                                        <td>{{qty}}</td>
-                                                        <td>{{numFormat price  "0,0.00"}}</td>
-                                                        <td>{{numFormat amount "0,0.00"}}</td>
-                                                    </tr>
-                                                {{/each}}
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                        <td class="text-right">{{numFormat total "0,0.00"}}</td>
+                                {{#with rptContent}}
+                                    <tr class="text-bold">
+                                        <td colspan="4">Grand Total :</td>
+                                        <td>{{subTotal}}</td>
+                                        <td>{{discountAmount}}</td>
+                                        <td><u>{{total}}</u></td>
                                     </tr>
-                                {{/each}}
+                                    {{#each objBranch  in dataBranch}}
+                                        <tr class="text-bold">
+                                            <td colspan="4">{{objBranch._id}} : {{objBranch.branchDoc.enName}}</td>
+                                            <td>{{objBranch.subTotal}}</td>
+                                            <td>{{objBranch.discountAmount}}</td>
+                                            <td><u>{{objBranch.total}}</u></td>
+                                        </tr>
+
+                                        {{#each objDate in objBranch.dataDate}}
+                                            <tr class="text-bold">
+                                                <td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat
+                                                        objDate.orderDate "DD/MM/YYYY"}}</td>
+                                                <td>{{objDate.subTotal}}</td>
+                                                <td>{{objDate.discountAmount}}</td>
+                                                <td><u>{{objDate.total}}</u></td>
+                                            </tr>
+
+                                            {{#each objOder in objDate.dataOrder}}
+                                                <tr>
+                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                            @index}}</td>
+                                                    <td>{{objOder._id}}</td>
+                                                    <td>{{objOder.customerDoc.name}}</td>
+                                                    <td>{{objOder.type}}</td>
+                                                    <td>{{objOder.subTotal}}</td>
+                                                    <td>{{objOder.discountAmount}}</td>
+                                                    <td>{{objOder.total}}</td>
+                                                </tr>
+                                            {{/each}}
+
+                                        {{/each}}
+
+                                    {{/each}}
+                                {{/with}}
                                 </tbody>
 
-                                <tfoot class="rpt-content-footer">
-                                <tr>
-                                    <td class="text-right" colspan="5">Total:</td>
-                                    <td class="text-right">{{numFormat rptContent.sumTotal "0,0.00"}}</td>
-                                </tr>
-                                </tfoot>
                             </table>
 
                         {{/with}}

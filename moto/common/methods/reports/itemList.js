@@ -23,7 +23,39 @@ export const itemListReport = new ValidatedMethod({
             rptTitle = Company.findOne();
 
             // --- Content ---
-            rptContent = Item.find({}, {sort: {parent: 1, _id: 1}}).fetch();
+            rptContent = Item.aggregate([
+                {
+                    $lookup: {
+                        from: "moto_unit",
+                        localField: "unitId",
+                        foreignField: "_id",
+                        as: "unitDoc"
+                    }
+                },
+                { $unwind: { path: "$unitDoc", preserveNullAndEmptyArrays: true } },
+                {
+                    $project: {
+                        code: 1,
+                        name: 1,
+                        currencyId: 1,
+                        currency: {
+                            $cond: {
+                                if: { $eq: ["$currencyId", "KHR"] },
+                                then: "៛",
+                                else: {
+                                    $cond: { if: { $eq: ["$currencyId", "USD"] }, then: " $", else: "B" }
+                                }
+                            }
+                        },
+                        price: 1,
+                        khrPrice: 1,
+                        type: 1,
+                        unitDoc: 1
+
+                    }
+                },
+                {$sort: {_id: 1}}
+            ]);
 
             return {rptTitle, rptHeader, rptContent};
         }
