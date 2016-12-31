@@ -129,7 +129,7 @@ export const orderByCustomerReport = new ValidatedMethod({
                     }
                 }
             ])[0];
-     
+
             return {rptTitle, rptHeader, rptContent};
         }
     }
