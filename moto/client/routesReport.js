@@ -113,3 +113,20 @@ MotoRoutes.route('/order-report', {
         parent: 'moto.home'
     }
 });
+
+// Order By Customer
+import '../imports/reports/orderByCustomer.js';
+MotoRoutes.route('/orderByCustomer-report', {
+    name: 'moto.orderByCustomerReport',
+    title: 'Order By Customer Report',
+    action: function (params, queryParams) {
+        Layout.main('Moto_orderByCustomerReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Order By Customer Report',
+        // icon: 'users',
+        parent: 'moto.home'
+    }
+});
