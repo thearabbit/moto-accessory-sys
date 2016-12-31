@@ -1,0 +1,153 @@
+<!--Report-->
+<template name="Moto_orderVipByCustomerReport">
+    <div class="box-body">
+        {{#if subsReady}}
+            <!--Form-->
+            {{#autoForm schema=schema id="Moto_orderVipByCustomerReport" resetOnSuccess=false type="normal"}}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{> afQuickField name="branchId"}}
+                        {{> afQuickField name="repDate"}}
+                    </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="customerId"}}
+                        {{> reportFormFooterWithButton}}
+                    </div>
+                </div>
+
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+
+
+        <!--Report Paper-->
+        <div class="rpt rpt-portrait-a4">
+            {{#if rptInit}}
+                {{#if rptData}}
+
+                    <!--Print Button-->
+                    <hr>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-success btn-print-area">
+                            <i class="fa fa-print"></i> Print
+                        </button>
+                        <!--<button type="button" class="btn btn-info btn-print-this">-->
+                        <!--<i class="fa fa-print"></i> Print This-->
+                        <!--</button>-->
+                    </div>
+                    <!--Print Button-->
+
+                    <div id="print-data">
+
+                        {{#with rptData}}
+
+                            <!--Title-->
+                            {{#with rptTitle}}
+                                <div class="rpt-title">
+                                    <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
+                                    <div class="rpt-title-3x">{{enName}}</div>
+                                    <div class="rpt-title-2x"><u>Order Vip By Customer Report</u></div>
+                                    <div>{{enAddress}}</div>
+                                </div>
+                            {{/with}}
+
+                            <!--Header-->
+                            {{#with rptHeader}}
+                                <div style="width: 100%">
+                                    <div style="width: 50%; float: left">
+                                        <div><strong>Branch:</strong> {{branchHeader}}</div>
+                                        <div><strong>Date:</strong>
+                                            {{moFormat repDate.[0] "DD/MM/YYYY"}}
+                                            -
+                                            {{moFormat repDate.[1] "DD/MM/YYYY"}}
+                                        </div>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <div><strong>Customer:</strong> {{customerHeader}}</div>
+                                    </div>
+                                </div>
+                            {{/with}}
+
+                            <!--Content-->
+                            <table class="rpt rpt-content">
+                                <thead class="rpt-content-header">
+                                <tr>
+                                    <th>N<sup>o</sup></th>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Sub Total</th>
+                                    <th>Discount Amount</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+
+                                <tbody class="rpt-content-body">
+                                {{#with rptContent}}
+                                    <tr class="text-bold">
+                                        <td colspan="3">Grand Total :</td>
+                                        <td>KHR: {{subTotal}} | USD: {{numFormat subTotalUsd "0,0.00"}} | THB: {{numFormat subTotalThb "0,0.00"}}</td>
+                                        <td>KHR: {{discountAmount}} | USD: {{numFormat discountAmountUsd "0,0.00"}} | THB: {{numFormat discountAmountThb "0,0.00"}}</td>
+                                        <td><u>KHR: {{total}} | USD: {{numFormat totalUsd "0,0.00"}} | THB: {{numFormat totalThb "0,0.00"}}</u></td>
+                                    </tr>
+                                    {{#each objBranch  in dataBranch}}
+                                        <tr class="text-bold">
+                                            <td colspan="3">{{objBranch._id}} : {{objBranch.branchDoc.enName}}</td>
+                                            <td>KHR: {{objBranch.subTotal}} | USD: {{numFormat objBranch.subTotalUsd "0,0.00"}} | THB: {{numFormat objBranch.subTotalThb "0,0.00"}}</td>
+                                            <td>KHR: {{objBranch.discountAmount}} | USD: {{numFormat objBranch.discountAmountUsd "0,0.00"}} | THB: {{numFormat objBranch.discountAmountThb "0,0.00"}}</td>
+                                            <td><u>KHR: {{objBranch.total}} | USD: {{numFormat objBranch.totalUsd "0,0.00"}} | THB: {{numFormat objBranch.totalThb "0,0.00"}}</u></td>
+                                        </tr>
+
+                                        {{#each objDate in objBranch.dataDate}}
+                                            <tr class="text-bold">
+                                                <td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat
+                                                        objDate.orderDate "DD/MM/YYYY"}}</td>
+                                                <td>KHR: {{objDate.subTotal}} | USD: {{numFormat objDate.subTotalUsd "0,0.00"}} | THB : {{numFormat objDate.subTotalThb "0,0.00"}}</td>
+                                                <td>KHR: {{objDate.discountAmount}} | USD: {{numFormat objDate.discountAmountUsd "0,0.00"}} | THB: {{numFormat objDate.discountAmountThb "0,0.00"}}</td>
+                                                <td><u>KHR: {{objDate.total}} | USD: {{numFormat objDate.totalUsd "0,0.00"}} | THB: {{numFormat objDate.totalThb "0,0.00"}}</u></td>
+                                            </tr>
+
+                                            {{#each objOder in objDate.dataOrder}}
+                                                <tr>
+                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                            @index}}</td>
+                                                    <td>{{objOder._id}}</td>
+                                                    <td>{{objOder.customerDoc.name}}</td>
+                                                    <td>KHR: {{objOder.subTotal}} | USD: {{numFormat objOder.subTotalUsd "0,0.00"}} | THB: {{numFormat objOder.subTotalThb "0,0.00"}}</td>
+                                                    <td>KHR: {{objOder.discountAmount}} | USD: {{numFormat objOder.discountAmountUsd "0,0.00"}} | THB: {{numFormat objOder.discountAmountThb "0,0.00"}}</td>
+                                                    <td>KHR: {{objOder.total}} | USD: {{numFormat objOder.totalUsd "0,0.00"}} | THB: {{numFormat objOder.totalThb "0,0.00"}}</td>
+                                                </tr>
+                                            {{/each}}
+
+                                        {{/each}}
+
+                                    {{/each}}
+                                {{/with}}
+                                </tbody>
+
+                            </table>
+
+                        {{/with}}
+
+                        <!--&lt;!&ndash;Sign&ndash;&gt;-->
+                        <!--{{> ReportSignFooter classSize="rpt-2x"}}-->
+                        {{> ReportSignFooter}}
+
+
+                        <!--Auto print-->
+                        <!--{{autoprint close="true"}}-->
+
+                    </div>
+                {{else}}
+                    <div class="text-center">
+                        {{> iconLoading size="fa-5x"}}
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
+        <!--/Report Paper-->
+
+    </div>
+    <!-- /.box-body -->
+</template>

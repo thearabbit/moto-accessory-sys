@@ -495,3 +495,41 @@ SelectOptsMethod.customerForReport = new ValidatedMethod({
         }
     }
 });
+
+SelectOptsMethod.customerVipForReport = new ValidatedMethod({
+    name: 'moto.selectOptsMethod.customerVipForReport',
+    validate: null,
+    run(options) {
+        if (!this.isSimulation) {
+            this.unblock();
+
+            let list = [], selector = {};
+            let searchText = options.searchText;
+            let values = options.values;
+            let params = options.params || {};
+
+            if (searchText && params.branchId) {
+                selector = {
+                    $or: [
+                        {_id: {$regex: searchText, $options: 'i'}},
+                        {name: {$regex: searchText, $options: 'i'}}
+                    ],
+                    branchId: params.branchId
+                };
+            } else if (values.length) {
+                selector = {_id: {$in: values}};
+            }else if (params.type) {
+                selector = {type: {$eq: params.type}};
+            }
+
+
+            let data = Customer.find(selector, {limit: 10});
+            data.forEach(function (value) {
+                let label = `${value._id}  :  ${value.name} (${value.type})`;
+                list.push({label: label, value: value._id});
+            });
+
+            return list;
+        }
+    }
+});
