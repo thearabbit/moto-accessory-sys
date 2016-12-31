@@ -147,3 +147,20 @@ MotoRoutes.route('/orderByCustomer-report', {
         parent: 'moto.home'
     }
 });
+
+// Order Vip By Customer
+import '../imports/reports/orderVipByCustomer.js';
+MotoRoutes.route('/orderVipByCustomer-report', {
+    name: 'moto.orderVipByCustomerReport',
+    title: 'Order Vip By Customer Report',
+    action: function (params, queryParams) {
+        Layout.main('Moto_orderVipByCustomerReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Order Vip By Customer Report',
+        // icon: 'users',
+        parent: 'moto.home'
+    }
+});
