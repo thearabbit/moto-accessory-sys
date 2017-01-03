@@ -293,6 +293,10 @@ Order.schema = new SimpleSchema({
         },
         optional: true
     },
+    status: {
+        type: String,
+        defaultValue: "Partial"
+    },
     branchId: {
         type: String
     }

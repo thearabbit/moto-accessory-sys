@@ -3,6 +3,7 @@ import {idGenerator} from 'meteor/theara:id-generator';
 
 // Collection
 import {OrderPayment} from '../../common/collections/orderPayment.js';
+import {Order} from '../../common/collections/order.js';
 
 OrderPayment.before.insert(function (userId, doc) {
     let prefix = `${doc.branchId}-`;
@@ -10,9 +11,15 @@ OrderPayment.before.insert(function (userId, doc) {
 
     if (doc.balance == 0) {
         doc.status = "Closed";
-    } else {
+    }
+    else if (doc.balance < 0) {
+        doc.status = "Overpaid"
+    }
+    else {
         doc.status = "Partial";
     }
+
+    Order.direct.update(doc.orderId, {$set: {status: doc.status}});
 });
 
 OrderPayment.before.update(function (userId, doc, fieldNames, modifier, options) {
@@ -20,7 +27,21 @@ OrderPayment.before.update(function (userId, doc, fieldNames, modifier, options)
 
     if (modifier.$set.balance == 0) {
         modifier.$set.status = "Closed";
-    } else {
+    } else if (modifier.$set.balance < 0) {
+        modifier.$set.status = "Overpaid"
+    }
+    else {
         modifier.$set.status = "Partial";
     }
+    Order.direct.update(modifier.$set.orderId, {$set: {status: modifier.$set.status}});
+});
+
+OrderPayment.after.remove(function (userId, doc) {
+    let lastOrderPaymentDoc = OrderPayment.findOne({orderId: doc.orderId}, {sort: {paidDate: 1}});
+
+    if (lastOrderPaymentDoc) {
+        Order.direct.update(lastOrderPaymentDoc.orderId, {$set: {status: lastOrderPaymentDoc.status}});
+    }
+
+    Order.direct.update(doc.orderId, {$set: {status: "Partial"}});
 });

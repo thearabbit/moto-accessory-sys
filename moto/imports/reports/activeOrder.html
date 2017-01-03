@@ -1,0 +1,166 @@
+<!--Report-->
+<template name="Moto_activeOrderReport">
+    <div class="box-body">
+        {{#if subsReady}}
+            <!--Form-->
+            {{#autoForm schema=schema id="Moto_activeOrderReport" resetOnSuccess=false type="normal"}}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{> afQuickField name="branchId"}}
+                        {{> afQuickField name="repDate"}}
+
+                    </div>
+                    <div class="col-md-6">
+                        {{> afQuickField name="customerId"}}
+                        {{> reportFormFooterWithButton}}
+                    </div>
+                </div>
+
+            {{/autoForm}}
+        {{else}}
+            {{> loading}}
+        {{/if}}
+
+
+        <!--Report Paper-->
+        <div class="rpt rpt-portrait-a4">
+            {{#if rptInit}}
+                {{#if rptData}}
+
+                    <!--Print Button-->
+                    <hr>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-success btn-print-area">
+                            <i class="fa fa-print"></i> Print
+                        </button>
+                        <!--<button type="button" class="btn btn-info btn-print-this">-->
+                        <!--<i class="fa fa-print"></i> Print This-->
+                        <!--</button>-->
+                    </div>
+                    <!--Print Button-->
+
+                    <div id="print-data">
+
+                        {{#with rptData}}
+
+                            <!--Title-->
+                            {{#with rptTitle}}
+                                <div class="rpt-title">
+                                    <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
+                                    <div class="rpt-title-3x">{{enName}}</div>
+                                    <div class="rpt-title-2x"><u>OS Active Order Report</u></div>
+                                    <div>{{enAddress}}</div>
+                                </div>
+                            {{/with}}
+
+                            <!--Header-->
+                            {{#with rptHeader}}
+                                <div style="width: 100%">
+                                    <div style="width: 50%; float: left">
+                                        <div><strong>Branch:</strong> {{branchHeader}}</div>
+                                    </div>
+
+                                    <div style="width: 50%; float: right">
+                                        <!--<div><strong>Currency:</strong> {{exchangeHeader}}</div>-->
+                                        <div><strong>Date:</strong>
+                                            {{moFormat repDate "DD/MM/YYYY"}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/with}}
+
+                            <!--Content-->
+                            <table class="rpt rpt-content">
+                                <thead class="rpt-content-header">
+                                <tr>
+                                    <th>N<sup>o</sup></th>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Contact</th>
+                                    <th>Type</th>
+                                    <th>Sub Total</th>
+                                    <th>Discount Amount</th>
+                                    <th>Total</th>
+                                    <th>Paid</th>
+                                    <th>Balance</th>
+                                </tr>
+                                </thead>
+
+                                <tbody class="rpt-content-body">
+                                {{#with rptContent}}
+                                    <tr class="text-bold">
+                                        <td colspan="5">Grand Total :</td>
+                                        <td>{{subTotal}}</td>
+                                        <td>{{discountAmount}}</td>
+                                        <td><u>{{total}}</u></td>
+                                        <td><u>{{paid}}</u></td>
+                                        <td><u>{{balance}}</u></td>
+                                    </tr>
+                                    {{#each objBranch  in dataBranch}}
+                                        <tr class="text-bold">
+                                            <td colspan="5">{{objBranch._id}} : {{objBranch.branchDoc.enName}}</td>
+                                            <td>{{objBranch.subTotal}}</td>
+                                            <td>{{objBranch.discountAmount}}</td>
+                                            <td><u>{{objBranch.total}}</u></td>
+                                            <td><u>{{objBranch.paid}}</u></td>
+                                            <td><u>{{objBranch.balance}}</u></td>
+                                        </tr>
+
+                                        {{#each objDate in objBranch.dataDate}}
+                                            <tr class="text-bold">
+                                                <td colspan="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat
+                                                        objDate.orderDate "DD/MM/YYYY"}}</td>
+                                                <td>{{objDate.subTotal}}</td>
+                                                <td>{{objDate.discountAmount}}</td>
+                                                <td><u>{{objDate.total}}</u></td>
+                                                <td><u>{{objDate.paid}}</u></td>
+                                                <td><u>{{objDate.balance}}</u></td>
+                                            </tr>
+
+                                            {{#each objOder in objDate.dataOrder}}
+                                                <tr>
+                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                            @index}}</td>
+                                                    <td>{{objOder._id}}</td>
+                                                    <td>{{objOder.customerDoc.name}}</td>
+                                                    <td>{{objOder.customerDoc.contact}}</td>
+                                                    <td>{{objOder.type}}</td>
+                                                    <td>{{objOder.subTotal}}</td>
+                                                    <td>{{objOder.discountAmount}}</td>
+                                                    <td>{{objOder.total}}</td>
+                                                    <td>{{objOder.paid}}</td>
+                                                    <td>{{objOder.balance}}</td>
+                                                </tr>
+                                            {{/each}}
+
+                                        {{/each}}
+
+                                    {{/each}}
+                                {{/with}}
+                                </tbody>
+
+                            </table>
+
+                        {{/with}}
+
+                        <!--&lt;!&ndash;Sign&ndash;&gt;-->
+                        <!--{{> ReportSignFooter classSize="rpt-2x"}}-->
+                        {{> ReportSignFooter}}
+
+
+                        <!--Auto print-->
+                        <!--{{autoprint close="true"}}-->
+
+                    </div>
+                {{else}}
+                    <div class="text-center">
+                        {{> iconLoading size="fa-5x"}}
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
+        <!--/Report Paper-->
+
+    </div>
+    <!-- /.box-body -->
+</template>

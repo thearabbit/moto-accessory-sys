@@ -164,3 +164,21 @@ MotoRoutes.route('/orderVipByCustomer-report', {
         parent: 'moto.home'
     }
 });
+
+// OS Active Order
+import '../imports/reports/activeOrder.js';
+MotoRoutes.route('/activeOrder-report', {
+    name: 'moto.activeOrderReport',
+    title: 'Active Order Report',
+    action: function (params, queryParams) {
+        Layout.main('Moto_activeOrderReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Active Order Report',
+        // icon: 'users',
+        parent: 'moto.home'
+    }
+});
+
