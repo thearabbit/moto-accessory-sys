@@ -182,3 +182,20 @@ MotoRoutes.route('/activeOrder-report', {
     }
 });
 
+// OS Active Order Vip
+import '../imports/reports/activeOrderVip.js';
+MotoRoutes.route('/activeOrderVip-report', {
+    name: 'moto.activeOrderVipReport',
+    title: 'Active Order Vip Report',
+    action: function (params, queryParams) {
+        Layout.main('Moto_activeOrderVipReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Active Order Vip Report',
+        // icon: 'users',
+        parent: 'moto.home'
+    }
+});
+
