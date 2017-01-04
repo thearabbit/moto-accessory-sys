@@ -199,3 +199,20 @@ MotoRoutes.route('/activeOrderVip-report', {
     }
 });
 
+// Customer Log
+import '../imports/reports/customerLog.js';
+MotoRoutes.route('/customerLog-report', {
+    name: 'moto.customerLogReport',
+    title: 'Customer Log Report',
+    action: function (params, queryParams) {
+        Layout.main('Moto_customerLogReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Customer Log Report',
+        // icon: 'users',
+        parent: 'moto.home'
+    }
+});
+
