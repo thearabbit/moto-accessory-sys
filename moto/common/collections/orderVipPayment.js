@@ -50,6 +50,7 @@ OrderVipPayment.schema = new SimpleSchema({
     employeeId: {
         type: String,
         label: 'Employee',
+        defaultValue: "001-001",
         autoform: {
             type: 'universe-select',
             afFieldInput: {

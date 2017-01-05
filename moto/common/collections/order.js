@@ -155,7 +155,7 @@ Order.schema = new SimpleSchema({
     type: {
         type: String,
         label: 'Type',
-        defaultValue: 'Retail',
+        defaultValue: 'Whole',
         autoform: {
             type: "select-radio-inline",
             options: function () {
@@ -177,6 +177,7 @@ Order.schema = new SimpleSchema({
     employeeId: {
         type: String,
         label: 'Employee',
+        defaultValue: "001-001",
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -195,6 +196,7 @@ Order.schema = new SimpleSchema({
         type: String,
         label: 'Exchange',
         optional: true,
+        defaultValue: "001",
         autoform: {
             type: 'universe-select',
             afFieldInput: {

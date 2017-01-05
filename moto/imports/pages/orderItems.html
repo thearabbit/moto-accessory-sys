@@ -49,14 +49,14 @@
 <template name="Moto_orderItemsNew">
     {{#autoForm schema=schema id="Moto_orderItemsNew"}}
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 {{> afQuickField name="itemId" placeholder="Item"}}
-            </div>
-            <div class="col-sm-6">
-                {{> afQuickField name="memo" placeholder="Memo"}}
             </div>
         </div>
         <div class="row">
+            <div class="col-sm-6">
+                {{> afQuickField name="memo" placeholder="Memo"}}
+            </div>
             <div class="col-sm-6">
                 <div class="form-group{{#if afFieldIsInvalid
                                             name='qty'}} has-error{{/if}}"
@@ -74,14 +74,12 @@
 
                 {{> afQuickField type="hidden" name="unit" value=itemDoc.unitDoc.name placeholder="Unit"}}
             </div>
-            <div class="col-sm-6">
-                {{> afQuickField name="purchasePrice" value=itemDoc.purchase placeholder="Purchase Price" readonly=true}}
-            </div>
         </div>
 
         <div class="row">
             <div class="col-sm-6">
                 {{> afQuickField name="orderPrice" value=orderPrice placeholder="Order Price"}}
+                {{> afQuickField name="purchasePrice" value=itemDoc.purchase placeholder="Purchase Price" label=false readonly=true }}
                 {{> afQuickField name="price" value=itemDoc.price label=false placeholder="Price" readonly=true}}
                 {{> afQuickField name="currencyId" value=itemDoc.currencyId label=false placeholder="Currency" readonly=true}}
                 {{> afQuickField name="khrPrice" value=itemDoc.khrPrice label=false placeholder="KHR Price" readonly=true}}
