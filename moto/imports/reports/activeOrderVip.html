@@ -77,7 +77,7 @@
                                     <th>ID</th>
                                     <th>Customer</th>
                                     <th>Contact</th>
-                                    <th>Sub Total Khr</th>
+                                    <th>Sub Total</th>
                                     <th>Discount Amount</th>
                                     <th>Total</th>
                                     <th>Paid</th>
@@ -89,31 +89,31 @@
                                 {{#with rptContent}}
                                     <tr class="text-bold">
                                         <td colspan="4">Grand Total :</td>
-                                        <td>KHR: {{subTotal}} | USD: {{numFormat subTotalUsd "0,0.00"}} | THB: {{numFormat subTotalThb "0,0.00"}}</td>
-                                        <td>KHR: {{discountAmount}} | USD: {{numFormat discountAmountUsd "0,0.00"}} | THB: {{numFormat discountAmountThb "0,0.00"}}</td>
-                                        <td><u>KHR: {{total}} | USD: {{numFormat totalUsd "0,0.00"}} | THB: {{numFormat totalThb "0,0.00"}}</u></td>
-                                        <td><u>KHR: {{paid}} | USD: {{numFormat paidUsd "0,0.00"}} | THB: {{numFormat paidThb "0,0.00"}}</u></td>
-                                        <td><u>KhR: {{balance}} | USD: {{numFormat balanceUsd "0,0.00"}} | THB: {{numFormat balanceThb "0,0.00"}}</u></td>
+                                        <td>KHR: {{subTotal}} <br> USD: {{numFormat subTotalUsd "0,0.00"}} <br> THB: {{numFormat subTotalThb "0,0.00"}}</td>
+                                        <td>KHR: {{discountAmount}} <br> USD: {{numFormat discountAmountUsd "0,0.00"}} <br> THB: {{numFormat discountAmountThb "0,0.00"}}</td>
+                                        <td><u>KHR: {{total}} <br> USD: {{numFormat totalUsd "0,0.00"}} <br> THB: {{numFormat totalThb "0,0.00"}}</u></td>
+                                        <td><u>KHR: {{paid}} <br> USD: {{numFormat paidUsd "0,0.00"}} <br> THB: {{numFormat paidThb "0,0.00"}}</u></td>
+                                        <td><u>KhR: {{balance}} <br> USD: {{numFormat balanceUsd "0,0.00"}} <br> THB: {{numFormat balanceThb "0,0.00"}}</u></td>
                                     </tr>
                                     {{#each objBranch  in dataVipBranch}}
                                         <tr class="text-bold">
                                             <td colspan="4">{{objBranch._id}} : {{objBranch.branchDoc.enName}}</td>
-                                            <td>KHR: {{objBranch.subTotal}} | USD: {{numFormat objBranch.subTotalUsd "0,0.00"}} | THB: {{numFormat objBranch.subTotalThb "0,0.00"}}</td>
-                                            <td>KHR: {{objBranch.discountAmount}} | USD: {{numFormat objBranch.discountAmountUsd "0,0.00"}} | THB: {{numFormat objBranch.discountAmountThb "0,0.00"}}</td>
-                                            <td><u>KHR: {{objBranch.total}} | USD: {{numFormat objBranch.totalUsd "0,0.00"}} | THB: {{numFormat objBranch.totalThb "0,0.00"}}</u></td>
-                                            <td><u>KHR: {{objBranch.paid}} | USD: {{numFormat objBranch.paidUsd "0,0.00"}} | THB: {{numFormat objBranch.paidThb "0,0.00"}}</u></td>
-                                            <td><u>KHR: {{objBranch.balance}} | USD: {{numFormat objBranch.balanceUsd "0,0.00"}} | THB: {{numFormat objBranch.balanceThb "0,0.00"}}</u></td>
+                                            <td>KHR: {{objBranch.subTotal}} <br> USD: {{numFormat objBranch.subTotalUsd "0,0.00"}} <br> THB: {{numFormat objBranch.subTotalThb "0,0.00"}}</td>
+                                            <td>KHR: {{objBranch.discountAmount}} <br> USD: {{numFormat objBranch.discountAmountUsd "0,0.00"}} <br> THB: {{numFormat objBranch.discountAmountThb "0,0.00"}}</td>
+                                            <td><u>KHR: {{objBranch.total}} <br> USD: {{numFormat objBranch.totalUsd "0,0.00"}} <br> THB: {{numFormat objBranch.totalThb "0,0.00"}}</u></td>
+                                            <td><u>KHR: {{objBranch.paid}} <br> USD: {{numFormat objBranch.paidUsd "0,0.00"}} <br> THB: {{numFormat objBranch.paidThb "0,0.00"}}</u></td>
+                                            <td><u>KHR: {{objBranch.balance}} <br> USD: {{numFormat objBranch.balanceUsd "0,0.00"}} <br> THB: {{numFormat objBranch.balanceThb "0,0.00"}}</u></td>
                                         </tr>
 
                                         {{#each objDate in objBranch.dataVipDate}}
                                             <tr class="text-bold">
                                                 <td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat
                                                         objDate.orderDate "DD/MM/YYYY"}}</td>
-                                                <td>KHR: {{objDate.subTotal}} | USD: {{numFormat objDate.subTotalUsd "0,0.00"}} | THB: {{numFormat objDate.subTotalThb "0,0.00"}}</td>
-                                                <td>KHR: {{objDate.discountAmount}} | USD: {{numFormat objDate.discountAmountUsd "0,0.00"}} | THB: {{numFormat objDate.discountAmountThb "0,0.00"}}</td>
-                                                <td><u>KHR: {{objDate.total}} | USD: {{numFormat objDate.totalUsd "0,0.00"}} | THB: {{numFormat objDate.totalThb "0,0.00"}}</u></td>
-                                                <td><u>KHR: {{objDate.paid}} | USD: {{numFormat objDate.paidUsd "0,0.00"}} | THB: {{numFormat objDate.paidThb "0,0.00"}}</u></td>
-                                                <td><u>KHR: {{objDate.balance}} | USD: {{numFormat objDate.balanceUsd "0,0.00"}} | THB: {{numFormat objDate.balanceThb "0,0.00"}}</u></td>
+                                                <td>KHR: {{objDate.subTotal}} <br> USD: {{numFormat objDate.subTotalUsd "0,0.00"}} <br> THB: {{numFormat objDate.subTotalThb "0,0.00"}}</td>
+                                                <td>KHR: {{objDate.discountAmount}} <br> USD: {{numFormat objDate.discountAmountUsd "0,0.00"}} <br> THB: {{numFormat objDate.discountAmountThb "0,0.00"}}</td>
+                                                <td><u>KHR: {{objDate.total}} <br> USD: {{numFormat objDate.totalUsd "0,0.00"}} <br> THB: {{numFormat objDate.totalThb "0,0.00"}}</u></td>
+                                                <td><u>KHR: {{objDate.paid}} <br> USD: {{numFormat objDate.paidUsd "0,0.00"}} <br> THB: {{numFormat objDate.paidThb "0,0.00"}}</u></td>
+                                                <td><u>KHR: {{objDate.balance}} <br> USD: {{numFormat objDate.balanceUsd "0,0.00"}} <br> THB: {{numFormat objDate.balanceThb "0,0.00"}}</u></td>
                                             </tr>
 
                                             {{#each objOder in objDate.dataOrderVip}}
@@ -123,11 +123,11 @@
                                                     <td>{{objOder._id}}</td>
                                                     <td>{{objOder.customerDoc.name}}</td>
                                                     <td>{{objOder.customerDoc.contact}}</td>
-                                                    <td>KHR: {{objOder.subTotal}} | USD: {{numFormat objOder.subTotalUsd "0,0.00"}} | THB: {{numFormat objOder.subTotalThb "0,0.00"}}</td>
-                                                    <td>KHR: {{objOder.discountAmount}} | USD: {{numFormat objOder.discountAmountUsd "0,0.00"}} | THB: {{numFormat objOder.discountAmountThb "0,0.00"}}</td>
-                                                    <td>KHR: {{objOder.total}} | USD: {{numFormat objOder.totalUsd "0,0.00"}} | THB : {{numFormat objOder.totalThb "0,0.00"}}</td>
-                                                    <td>KHR: {{objOder.paid}} | USD: {{numFormat objOder.paidUsd "0,0.00"}} | THB:  {{numFormat objOder.paidThb "0,0.00"}}</td>
-                                                    <td>KHR: {{objOder.balance}} | USD: {{numFormat objOder.balanceUsd "0,0.00"}} | THB: {{numFormat objOder.balanceThb "0,0.00"}}</td>
+                                                    <td>KHR: {{objOder.subTotal}} <br> USD: {{numFormat objOder.subTotalUsd "0,0.00"}} <br> THB: {{numFormat objOder.subTotalThb "0,0.00"}}</td>
+                                                    <td>KHR: {{objOder.discountAmount}} <br> USD: {{numFormat objOder.discountAmountUsd "0,0.00"}} <br> THB: {{numFormat objOder.discountAmountThb "0,0.00"}}</td>
+                                                    <td>KHR: {{objOder.total}} <br> USD: {{numFormat objOder.totalUsd "0,0.00"}} <br> THB : {{numFormat objOder.totalThb "0,0.00"}}</td>
+                                                    <td>KHR: {{objOder.paid}} <br> USD: {{numFormat objOder.paidUsd "0,0.00"}} <br> THB:  {{numFormat objOder.paidThb "0,0.00"}}</td>
+                                                    <td>KHR: {{objOder.balance}} <br> USD: {{numFormat objOder.balanceUsd "0,0.00"}} <br> THB: {{numFormat objOder.balanceThb "0,0.00"}}</td>
                                                 </tr>
                                             {{/each}}
 

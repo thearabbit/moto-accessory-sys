@@ -104,7 +104,7 @@ indexTmpl.helpers({
                         if (instance.purchasePriceHideAndShow.get() == "show") {
                             return Spacebars.SafeString(`<span class="purchasePrice">${currency}</span>`);
                         } else {
-                            return Spacebars.SafeString(`<span class="purchasePrice">*******************</span>`);
+                            return Spacebars.SafeString(`<span class="purchasePrice">****************</span>`);
                         }
                     },
                     sortable: false
@@ -259,6 +259,7 @@ newTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
     $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
+    $('[name="purchasePrice"]').hide();
 });
 
 newTmpl.helpers({

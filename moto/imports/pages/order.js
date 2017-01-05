@@ -55,6 +55,7 @@ indexTmpl.onCreated(function () {
     createNewAlertify('orderPayment', {size: 'sm'});
     createNewAlertify('orderShow');
     this.subscribe('moto.orderPayment');
+    this.subscribe('moto.exchange');
 });
 
 indexTmpl.helpers({
@@ -154,6 +155,13 @@ formTmpl.onCreated(function () {
         Session.set('discountType', 'Percentage');
     }
 
+    //default customer type
+    Session.set('customerType', 'Whole');
+
+    //default exchange rate
+    let exchange = Exchange.findOne({_id: "001"});
+    Session.set('exchangeDoc', exchange);
+
     self.autorun(() => {
         // Lookup value
         this.subscribe('moto.lookupValue', ['Order Type', 'Discount Type']);
@@ -167,8 +175,6 @@ formTmpl.onCreated(function () {
             }).then((result) => {
                 // Add items to local collection
                 Session.set('customerType', result.type);
-                let exchange = Exchange.findOne({_id: result.exchangeId});
-                Session.set('exchangeDoc', exchange);
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
                 });
@@ -204,6 +210,8 @@ formTmpl.helpers({
         if (currentData) {
             data.formType = 'update';
             data.doc = Template.instance().orderDoc.get();
+            let exchange = Exchange.findOne({_id: data.doc.exchangeId});
+            Session.set('exchangeDoc', exchange);
             Session.set('discountAmountUpdate', data.doc.discountAmount);
         }
 

@@ -6,6 +6,7 @@ import moment from 'moment';
 import  {Exchange} from '../../common/collections/exchange';
 
 Exchange.before.insert(function (userId, doc) {
+    doc._id = idGenerator.gen(Exchange, 3);
     doc.exDateText = moment(doc.exDate).format('DD/MM/YYYY');
 });
 
