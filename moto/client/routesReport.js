@@ -216,3 +216,20 @@ MotoRoutes.route('/customerLog-report', {
     }
 });
 
+// Customer Log
+import '../imports/reports/customerVipLog.js';
+MotoRoutes.route('/customerVipLog-report', {
+    name: 'moto.customerVipLogReport',
+    title: 'Customer Vip Log Report',
+    action: function (params, queryParams) {
+        Layout.main('Moto_customerVipLogReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Customer Vip Log Report',
+        // icon: 'users',
+        parent: 'moto.home'
+    }
+});
+
