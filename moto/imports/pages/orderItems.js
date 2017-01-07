@@ -27,6 +27,8 @@ import '../../../core/client/components/loading.js';
 import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
 
+import '../../imports/libs/select2ForOrderItem.js'
+
 
 // Method
 import {lookupItem} from '../../common/methods/lookupItem.js';
@@ -260,6 +262,8 @@ newTmpl.onRendered(function () {
     $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
     $('[name="purchasePrice"]').hide();
+
+     //select2Items($('[name="itemId"]'));
 });
 
 newTmpl.helpers({

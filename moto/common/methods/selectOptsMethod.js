@@ -295,21 +295,26 @@ SelectOptsMethod.orderItem = new ValidatedMethod({
 
             let list = [], selector = {};
             let searchText = options.searchText;
+            let regSearchTex=new RegExp(searchText);
             let values = options.values;
 
             if (searchText) {
+
+                let regTerm=new RegExp("^"+searchText,'m');
+                console.log(regTerm);
                 selector = {
                     $or: [
-                        {code: {$regex: searchText, $options: 'i'}},
-                        {name: {$regex: searchText, $options: 'i'}}
+                        {code: regTerm},
+                        {name: regSearchTex}
                     ]
                 };
             } else if (values.length) {
+                console.log("kk "+values);
                 selector = {_id: {$in: values}};
             }
             selector.type = 'I';
-
-            let data = Item.find(selector, {limit: 200});
+            console.log(selector);
+            let data = Item.find(selector, {limit: 200}).fetch();
             data.forEach(function (value) {
                 let label = `${value.code} : ${value.name}`;
                 if (value.ancestors) {

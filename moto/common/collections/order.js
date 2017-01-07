@@ -299,6 +299,10 @@ Order.schema = new SimpleSchema({
         type: String,
         defaultValue: "Partial"
     },
+    closedDate: {
+        type: Date,
+        optional: true
+    },
     branchId: {
         type: String
     }

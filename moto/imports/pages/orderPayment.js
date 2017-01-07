@@ -54,7 +54,7 @@ indexTmpl.helpers({
         return OrderPaymentTabular;
     },
     selector() {
-        return {branchId: Session.get('currentByBranch'), customerId: FlowRouter.getParam("customerId")};
+        return {branchId: Session.get('currentByBranch'), customerId: FlowRouter.getParam("customerId"), orderId: FlowRouter.getParam("orderId")};
     }
 });
 
