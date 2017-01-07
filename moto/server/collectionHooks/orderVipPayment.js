@@ -11,6 +11,7 @@ OrderVipPayment.before.insert(function (userId, doc) {
 
     if (doc.paymentBalanceKhr == 0 && doc.paymentBalanceUsd == 0 && doc.paymentBalanceThb == 0) {
         doc.status = "Closed";
+        OrderVip.direct.update(doc.orderVipId, {$set: {closedDate: doc.paidDate}});
     } else if (doc.paymentBalanceKhr < 0 && doc.paymentBalanceUsd < 0 && doc.paymentBalanceThb < 0) {
         doc.status = "Overpaid"
     }
@@ -22,9 +23,9 @@ OrderVipPayment.before.insert(function (userId, doc) {
 
 OrderVipPayment.before.update(function (userId, doc, fieldNames, modifier, options) {
     modifier.$set = modifier.$set || {};
-    console.log(modifier.$set);
     if (modifier.$set.paymentBalanceKhr == 0 && modifier.$set.paymentBalanceUsd == 0 && modifier.$set.paymentBalanceThb == 0) {
         modifier.$set.status = "Closed";
+        OrderVip.direct.update(modifier.$set.orderVipId, {$set: {closedDate: modifier.$set.paidDate}});
     } else if (modifier.$set.paymentBalanceKhr < 0 || modifier.$set.paymentBalanceUsd < 0 || modifier.$set.paymentBalanceThb < 0) {
         modifier.$set.status = "Overpaid"
     }
@@ -42,4 +43,5 @@ OrderVipPayment.after.remove(function (userId, doc) {
     }
 
     OrderVip.direct.update(doc.orderVipId, {$set: {status: "Partial"}});
+    OrderVip.direct.update(doc.orderVipId, {$set: {closedDate: ""}});
 });

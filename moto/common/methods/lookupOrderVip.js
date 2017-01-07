@@ -101,7 +101,7 @@ export const lookupOrderVip = new ValidatedMethod({
                             }
 
                         },
-
+                        closedDate: 1
                     }
                 },
                 {
@@ -150,7 +150,8 @@ export const lookupOrderVip = new ValidatedMethod({
                                 totalAmount: "$items.totalAmount",
                                 memo: "$items.memo"
                             }
-                        }
+                        },
+                        closedDate: {$last: "$closedDate"}
                     }
                 }
             ]);

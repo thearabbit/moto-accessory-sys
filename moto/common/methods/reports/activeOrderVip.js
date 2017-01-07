@@ -22,7 +22,8 @@ export const activeOrderVipReport = new ValidatedMethod({
 
             let rptTitle, rptHeader, rptContent, rptFooter;
 
-            let date = moment(params.repDate).add(1, 'days').toDate();
+            // let date = moment(params.repDate).add(1, 'days').toDate();
+            let date = moment(params.repDate).endOf('days').toDate();
 
             // --- Title ---
             rptTitle = Company.findOne();
@@ -46,11 +47,20 @@ export const activeOrderVipReport = new ValidatedMethod({
             rptHeader = params;
 
             // --- Content ---
-            let selector = {
-                branchId: {$in: params.branchId},
-                status: "Partial",
-                orderDate: {$lte: date}
-            };
+            let selector = {};
+            selector.branchId = {$in: params.branchId};
+            selector.orderDate = {$lte: date};
+            selector.$or = [{
+                closedDate: {
+                    $not: {
+                        $lte: date
+                    }
+                }
+            }, {
+                closedDate: {
+                    $eq: ""
+                }
+            }];
 
             if (!_.isUndefined(params.customerId)) selector.customerId = params.customerId;
 
@@ -107,6 +117,8 @@ export const activeOrderVipReport = new ValidatedMethod({
                         subTotal: {$last: "$subTotal"},
                         discountAmount: {$last: "$discountAmount"},
                         total: {$last: "$total"},
+                        lastOrderBalanceKhr: {$last: "$lastOrderBalanceKhr"},
+                        orderBalanceKhr: {$last: "$balanceKhr"},
                         paid: {
                             $sum: {
                                 $cond: [{
@@ -118,12 +130,11 @@ export const activeOrderVipReport = new ValidatedMethod({
                                     0]
                             }
                         },
-                        balance: {
-                            $last: {$sum: {$cond: [{$ne: ["$orderVipPaymentDoc", null]}, "$orderVipPaymentDoc.paymentBalanceKhr", 0]}}
-                        },
                         subTotalUsd: {$last: "$subTotalUsd"},
                         discountAmountUsd: {$last: "$discountAmountUsd"},
                         totalUsd: {$last: "$totalUsd"},
+                        lastOrderBalanceUsd: {$last: "$lastOrderBalanceUsd"},
+                        orderBalanceUsd: {$last: "$balanceUsd"},
                         paidUsd: {
                             $sum: {
                                 $cond: [{
@@ -135,12 +146,11 @@ export const activeOrderVipReport = new ValidatedMethod({
                                     0]
                             }
                         },
-                        balanceUsd: {
-                            $last: {$sum: {$cond: [{$ne: ["$orderVipPaymentDoc", null]}, "$orderVipPaymentDoc.paymentBalanceUsd", 0]}}
-                        },
                         subTotalThb: {$last: "$subTotalThb"},
                         discountAmountThb: {$last: "$discountAmountThb"},
                         totalThb: {$last: "$totalThb"},
+                        lastOrderBalanceThb: {$last: "$lastOrderBalanceThb"},
+                        orderBalanceThb: {$last: "$balanceThb"},
                         paidThb: {
                             $sum: {
                                 $cond: [{
@@ -151,10 +161,41 @@ export const activeOrderVipReport = new ValidatedMethod({
                                     "$orderVipPaymentDoc.paidAmountThb",
                                     0]
                             }
-                        },
-                        balanceThb: {
-                            $last: {$sum: {$cond: [{$ne: ["$orderVipPaymentDoc", null]}, "$orderVipPaymentDoc.paymentBalanceThb", 0]}}
                         }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        orderDate: 1,
+                        branchId: 1,
+                        branchDoc: 1,
+                        employeeId: 1,
+                        customerId: 1,
+                        customerDoc: 1,
+                        type: 1,
+                        items: 1,
+                        subTotal: 1,
+                        discountAmount: 1,
+                        total: 1,
+                        paid: 1,
+                        lastOrderBalanceKhr: 1,
+                        orderBalanceKhr: 1,
+                        balance: {$subtract: ["$orderBalanceKhr", "$paid"]},
+                        subTotalUsd: 1,
+                        discountAmountUsd: 1,
+                        totalUsd: 1,
+                        paidUsd: 1,
+                        lastOrderBalanceUsd: 1,
+                        orderBalanceUsd: 1,
+                        balanceUsd: {$subtract: ["$orderBalanceUsd", "$paidUsd"]},
+                        subTotalThb: 1,
+                        discountAmountThb: 1,
+                        totalThb: 1,
+                        paidThb: 1,
+                        lastOrderBalanceThb: 1,
+                        orderBalanceThb: 1,
+                        balanceThb: {$subtract: ["$orderBalanceThb", "$paidThb"]},
                     }
                 },
                 {
@@ -170,16 +211,19 @@ export const activeOrderVipReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalanceKhr: {$sum: "$lastOrderBalanceKhr"},
                         paid: {$sum: "$paid"},
                         balance: {$sum: "$balance"},
                         subTotalUsd: {$sum: "$subTotalUsd"},
                         discountAmountUsd: {$sum: "$discountAmountUsd"},
                         totalUsd: {$sum: "$totalUsd"},
+                        lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
                         paidUsd: {$sum: "$paidUsd"},
                         balanceUsd: {$sum: "$balanceUsd"},
                         subTotalThb: {$sum: "$subTotalThb"},
                         discountAmountThb: {$sum: "$discountAmountThb"},
                         totalThb: {$sum: "$totalThb"},
+                        lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
                         paidThb: {$sum: "$paidThb"},
                         balanceThb: {$sum: "$balanceThb"},
                         dataOrderVip: {$push: "$$ROOT"}
@@ -194,16 +238,19 @@ export const activeOrderVipReport = new ValidatedMethod({
                         subTotal: 1,
                         discountAmount: 1,
                         total: 1,
+                        lastOrderBalanceKhr: 1,
                         paid: 1,
                         balance: 1,
                         subTotalUsd: 1,
                         discountAmountUsd: 1,
                         totalUsd: 1,
+                        lastOrderBalanceUsd: 1,
                         paidUsd: 1,
                         balanceUsd: 1,
                         subTotalThb: 1,
                         discountAmountThb: 1,
                         totalThb: 1,
+                        lastOrderBalanceThb: 1,
                         paidThb: 1,
                         balanceThb: 1,
                         dataOrderVip: 1
@@ -217,16 +264,19 @@ export const activeOrderVipReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalanceKhr: {$sum: "$lastOrderBalanceKhr"},
                         paid: {$sum: "$paid"},
                         balance: {$sum: "$balance"},
                         subTotalUsd: {$sum: "$subTotalUsd"},
                         discountAmountUsd: {$sum: "$discountAmountUsd"},
                         totalUsd: {$sum: "$totalUsd"},
+                        lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
                         paidUsd: {$sum: "$paidUsd"},
                         balanceUsd: {$sum: "$balanceUsd"},
                         subTotalThb: {$sum: "$subTotalThb"},
                         discountAmountThb: {$sum: "$discountAmountThb"},
                         totalThb: {$sum: "$totalThb"},
+                        lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
                         paidThb: {$sum: "$paidThb"},
                         balanceThb: {$sum: "$balanceThb"},
                         dataVipDate: {$push: "$$ROOT"}
@@ -238,16 +288,19 @@ export const activeOrderVipReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalanceKhr: {$sum: "$lastOrderBalanceKhr"},
                         paid: {$sum: "$paid"},
                         balance: {$sum: "$balance"},
                         subTotalUsd: {$sum: "$subTotalUsd"},
                         discountAmountUsd: {$sum: "$discountAmountUsd"},
                         totalUsd: {$sum: "$totalUsd"},
+                        lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
                         paidUsd: {$sum: "$paidUsd"},
                         balanceUsd: {$sum: "$balanceUsd"},
                         subTotalThb: {$sum: "$subTotalThb"},
                         discountAmountThb: {$sum: "$discountAmountThb"},
                         totalThb: {$sum: "$totalThb"},
+                        lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
                         paidThb: {$sum: "$paidThb"},
                         balanceThb: {$sum: "$balanceThb"},
                         dataVipBranch: {$push: "$$ROOT"}

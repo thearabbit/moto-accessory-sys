@@ -136,7 +136,8 @@ indexTmpl.events({
     },
     'click .js-payment-form' (event, instance){
         let params = {
-            customerId: this.customerId
+            customerId: this.customerId,
+            orderId: this._id,
         };
         FlowRouter.go("moto.orderPayment", params);
     }
@@ -379,6 +380,12 @@ showTmpl.helpers({
             };
         }
 
+        return result;
+    },
+    checkClosedDate(){
+        let data = Template.instance().orderDoc.get();
+        let result;
+        data.closedDate == "" ? result = "Active" : result = moment(data.closedDate).format('DD/MM/YYYY hh:mm:ss A');
         return result;
     },
     jsonViewOpts(){

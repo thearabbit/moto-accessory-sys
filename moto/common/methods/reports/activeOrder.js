@@ -21,8 +21,8 @@ export const activeOrderReport = new ValidatedMethod({
             Meteor._sleepForMs(100);
 
             let rptTitle, rptHeader, rptContent, rptFooter;
-
-            let date = moment(params.repDate).add(1, 'days').toDate();
+            // let date = moment(params.repDate).add(1, 'days').toDate();
+            let date = moment(params.repDate).endOf('days').toDate();
 
             // --- Title ---
             rptTitle = Company.findOne();
@@ -46,11 +46,20 @@ export const activeOrderReport = new ValidatedMethod({
             rptHeader = params;
 
             // --- Content ---
-            let selector = {
-                branchId: {$in: params.branchId},
-                status: "Partial",
-                orderDate: {$lte: date}
-            };
+            let selector = {};
+            selector.branchId = {$in: params.branchId};
+            selector.orderDate = {$lte: date};
+            selector.$or = [{
+                closedDate: {
+                    $not: {
+                        $lte: date
+                    }
+                }
+            }, {
+                closedDate: {
+                    $eq: ""
+                }
+            }];
 
             if (!_.isUndefined(params.customerId)) selector.customerId = params.customerId;
 
@@ -107,6 +116,8 @@ export const activeOrderReport = new ValidatedMethod({
                         subTotal: {$last: "$subTotal"},
                         discountAmount: {$last: "$discountAmount"},
                         total: {$last: "$total"},
+                        lastOrderBalance:{$last:"$lastOrderBalance"},
+                        orderBalance: {$last:"$balance"},
                         paid: {
                             $sum: {
                                 $cond: [{
@@ -117,10 +128,27 @@ export const activeOrderReport = new ValidatedMethod({
                                     "$orderPaymentDoc.paidAmount",
                                     0]
                             }
-                        },
-                        balance: {
-                            $last: {$sum: {$cond: [{$ne: ["$orderPaymentDoc", null]}, "$orderPaymentDoc.balance", 0]}}
-                        },
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        _id:1,
+                        orderDate:1,
+                        branchId:1,
+                        branchDoc:1,
+                        employeeId:1,
+                        customerId:1,
+                        customerDoc:1,
+                        type:1,
+                        items:1,
+                        subTotal:1,
+                        discountAmount:1,
+                        total:1,
+                        lastOrderBalance:1,
+                        orderBalance:1,
+                        paid:1,
+                        balance : {$subtract:["$orderBalance", "$paid"]}
                     }
                 },
                 {
@@ -136,6 +164,7 @@ export const activeOrderReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalance: {$sum: "$lastOrderBalance"},
                         paid: {$sum: "$paid"},
                         balance: {$sum: "$balance"},
                         dataOrder: {$push: "$$ROOT"}
@@ -150,6 +179,7 @@ export const activeOrderReport = new ValidatedMethod({
                         subTotal: 1,
                         discountAmount: 1,
                         total: 1,
+                        lastOrderBalance: 1,
                         paid: 1,
                         balance: 1,
                         dataOrder: 1
@@ -163,6 +193,7 @@ export const activeOrderReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalance: {$sum: "$lastOrderBalance"},
                         paid: {$sum: "$paid"},
                         balance: {$sum: "$balance"},
                         dataDate: {$push: "$$ROOT"}
@@ -174,6 +205,7 @@ export const activeOrderReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalance: {$sum: "$lastOrderBalance"},
                         paid: {$sum: "$paid"},
                         balance: {$sum: "$balance"},
                         dataBranch: {$push: "$$ROOT"}
