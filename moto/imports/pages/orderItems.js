@@ -58,7 +58,7 @@ indexTmpl.onCreated(function () {
     itemsCollection = data.itemsCollection;
     this.discountAmount = new ReactiveVar(0);
     this.purchasePriceHideAndShow = new ReactiveVar();
-    // this.subscribe('moto.items');
+    this.subscribe('moto.items');
 });
 
 indexTmpl.helpers({
@@ -263,7 +263,7 @@ newTmpl.onRendered(function () {
     $('[name="khrPrice"]').hide();
     $('[name="purchasePrice"]').hide();
 
-     //select2Items($('[name="itemId"]'));
+     // select2Items($('[name="itemId"]'));
 });
 
 newTmpl.helpers({

@@ -57,7 +57,7 @@ indexTmpl.onCreated(function () {
     this.discountAmountUsd = new ReactiveVar(0);
     this.discountAmountThb = new ReactiveVar(0);
     this.purchasePriceHideAndShow = new ReactiveVar();
-    // this.subscribe('moto.items');
+    this.subscribe('moto.items');
 });
 
 indexTmpl.helpers({
