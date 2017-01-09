@@ -7,6 +7,7 @@ import {OrderPayment} from '../../common/collections/orderPayment.js';
 
 Order.before.insert(function (userId, doc) {
     let prefix = `${doc.branchId}-`;
+    doc.printId =  doc._id;
     doc._id = idGenerator.genWithPrefix(Order, prefix, 12);
     doc.balance = doc.total + doc.lastOrderBalance;
 });

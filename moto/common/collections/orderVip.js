@@ -179,7 +179,7 @@ OrderVip.schema = new SimpleSchema({
     employeeId: {
         type: String,
         label: 'Employee',
-        defaultValue:"001-001",
+        defaultValue: "001-001",
         autoform: {
             type: 'universe-select',
             afFieldInput: {
@@ -252,7 +252,8 @@ OrderVip.schema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.currency({prefix: "៛"});
             }
-        }
+        },
+        optional: true
     },
     subTotalUsd: {
         type: Number,
@@ -289,7 +290,8 @@ OrderVip.schema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.currency();
             }
-        }
+        },
+        optional: true
     },
     subTotalThb: {
         type: Number,
@@ -325,7 +327,8 @@ OrderVip.schema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.currency({prefix: "B"});
             }
-        }
+        },
+        optional: true
     },
     lastOrderBalanceKhr: {
         type: Number,
@@ -403,6 +406,10 @@ OrderVip.schema = new SimpleSchema({
     },
     closedDate: {
         type: Date,
+        optional: true
+    },
+    printId: {
+        type: String,
         optional: true
     },
     branchId: {

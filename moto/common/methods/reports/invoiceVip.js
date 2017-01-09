@@ -12,11 +12,11 @@ import {OrderVip} from '../../collections/orderVip.js';
 export const invoiceVipReport = new ValidatedMethod({
     name: 'moto.invoiceVipReport',
     mixins: [CallPromiseMixin],
-    // validate: null,
-    validate: new SimpleSchema({
-        orderVipId: {type: String}
-    }).validator(),
-    run({orderVipId}) {
+    validate: null,
+    // validate: new SimpleSchema({
+    //     orderVipId: {type: String}
+    // }).validator(),
+    run({orderVipId, printId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
             let rptTitle, rptContent, rptFooter;
@@ -27,7 +27,7 @@ export const invoiceVipReport = new ValidatedMethod({
             // --- Content ---
             rptContent = OrderVip.aggregate([
                 {
-                    $match: {_id: orderVipId}
+                    $match: {$or: [{_id: orderVipId}, {printId: printId}]}
                 },
                 {
                     $lookup: {
@@ -78,11 +78,11 @@ export const invoiceVipReport = new ValidatedMethod({
                                 currencyId: "$items.currencyId",
                                 itemCurrency: {
                                     $cond: {
-                                        if: { $eq: ["$itemDoc.currencyId", "KHR"] },
+                                        if: {$eq: ["$itemDoc.currencyId", "KHR"]},
                                         then: "៛",
                                         else: {
                                             $cond: {
-                                                if: { $eq: ["$itemDoc.currencyId", "USD"] },
+                                                if: {$eq: ["$itemDoc.currencyId", "USD"]},
                                                 then: " $",
                                                 else: "B"
                                             }

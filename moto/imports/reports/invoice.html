@@ -21,108 +21,117 @@
 <template name="Moto_invoiceReportGen">
     <div class="rpt rpt-2x rpt-portrait-a5">
         {{#if rptData}}
+            <!--Print Button-->
+            <hr>
+            <div class="text-right">
+                <button type="button" class="btn btn-success btn-print-area">
+                    <i class="fa fa-print"></i> Print
+                </button>
+            </div>
+            <!--Print Button-->
+            <div id="print-data">
+                {{#with rptData}}
 
-            {{#with rptData}}
+                    <!--Title-->
+                    {{#with rptTitle}}
+                        <div class="rpt-title">
+                            <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
+                            <div class="rpt-title-3x">{{enName}}</div>
+                            <div class="rpt-title-2x"><u>Order Invoice</u></div>
+                            <div>Address: {{enAddress}}, Tel: {{telephone}}</div>
+                        </div>
+                    {{/with}}
 
-                <!--Title-->
-                {{#with rptTitle}}
-                    <div class="rpt-title">
-                        <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
-                        <div class="rpt-title-3x">{{enName}}</div>
-                        <div class="rpt-title-2x"><u>Order Invoice</u></div>
-                        <div>Address: {{enAddress}}, Tel: {{telephone}}</div>
-                    </div>
-                {{/with}}
+                    <!--Header-->
+                    {{#with rptContent}}
+                        <div style="width: 100%">
+                            <div style="width: 50%; float: left">
+                                <div><strong>លេខវិក័យប័ត្រ:</strong> {{_id}}</div>
+                                <div><strong>កាលបរិចេ្ឆទ:</strong> {{moFormat orderDate "DD/MM/YYYY h:mm:ss A"}}</div>
+                            </div>
 
-                <!--Header-->
-                {{#with rptContent}}
-                    <div style="width: 100%">
-                        <div style="width: 50%; float: left">
-                            <div><strong>លេខវិក័យប័ត្រ:</strong> {{_id}}</div>
-                            <div><strong>កាលបរិចេ្ឆទ:</strong> {{moFormat orderDate "DD/MM/YYYY h:mm:ss A"}}</div>
+                            <div style="width: 50%; float: right">
+                                <div><strong>អតិថិជន:</strong> {{customerDoc.name}}</div>
+                                <div><strong>លេខទូរស័ព្ទ:</strong> {{customerDoc.contact}}</div>
+                            </div>
                         </div>
 
-                        <div style="width: 50%; float: right">
-                            <div><strong>អតិថិជន:</strong> {{customerDoc.name}}</div>
-                            <div><strong>លេខទូរស័ព្ទ:</strong> {{customerDoc.contact}}</div>
-                        </div>
-                    </div>
-
-                    <!--Content-->
-                    <table class="rpt rpt-2x rpt-content">
-                        <thead class="rpt-content-header">
-                        <tr>
-                            <th>ល.រ</th>
-                            <th>មុខទំនិញ</th>
-                            <th>ពណ៍នា</th>
-                            <th>ចំនួន</th>
-                            <th>តម្លៃ</th>
-                            <th>ចុះតម្លៃ</th>
-                            <th>សរុប</th>
-                        </tr>
-                        </thead>
-
-                        <tbody class="rpt-content-body">
-                        {{#each item in items}}
+                        <!--Content-->
+                        <table class="rpt rpt-2x rpt-content">
+                            <thead class="rpt-content-header">
                             <tr>
-                                <td align="center">{{increaseIndex @index}}</td>
-                                <td>{{item.itemName}}</td>
-                                <td align="center">{{item.memo}}</td>
-                                <td>{{item.qty}} {{item.unit}}</td>
-                                <td class="text-right">{{item.orderPrice}} ​៛</td>
-                                <td class="text-right">{{item.discount}} {{item.discountType}}</td>
-                                <td class="text-right">{{item.totalAmount}}​ ៛</td>
+                                <th>ល.រ</th>
+                                <th>មុខទំនិញ</th>
+                                <th>ពណ៍នា</th>
+                                <th>ចំនួន</th>
+                                <th>តម្លៃ</th>
+                                <th>ចុះតម្លៃ</th>
+                                <th>សរុប</th>
                             </tr>
-                        {{/each}}
-                        </tbody>
+                            </thead>
 
-                        <tfoot class="rpt-content-footer">
-                        <tr>
-                            <td colspan="6" class="text-right">សរុបវិក័យប័ត្រ :</td>
-                            <td class="text-right">{{total}} ៛</td>
-                        </tr>
-                        <tr>
-                            <td colspan="6" class="text-right">ខ្វះពីមុន :</td>
-                            <td class="text-right">{{lastOrderBalance}} ៛</td>
-                        </tr>
-                        <tr>
-                            <td colspan="6" class="text-right">សរុបទាំងអស់ :</td>
-                            <td class="text-right">{{balance}} ៛</td>
-                        </tr>
-                        <tr>
-                            <td colspan="6" class="text-right">បានបង់ :</td>
-                            <td class="text-right">{{totalPaidAmount}} ៛</td>
-                        </tr>
-                        <tr>
-                            <td colspan="6" class="text-right">ជំពាក់លើនេះ :</td>
-                            <td class="text-right">{{overDue}} ៛</td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                            <tbody class="rpt-content-body">
+                            {{#each item in items}}
+                                <tr>
+                                    <td align="center">{{increaseIndex @index}}</td>
+                                    <td>{{item.itemName}}</td>
+                                    <td align="center">{{item.memo}}</td>
+                                    <td>{{item.qty}} {{item.unit}}</td>
+                                    <td class="text-right">{{item.orderPrice}} ​៛</td>
+                                    <td class="text-right">{{item.discount}} {{item.discountType}}</td>
+                                    <td class="text-right">{{item.totalAmount}}​ ៛</td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+
+                            <tfoot class="rpt-content-footer">
+                            <tr>
+                                <td colspan="6" class="text-right">សរុបវិក័យប័ត្រ :</td>
+                                <td class="text-right">{{total}} ៛</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right">ខ្វះពីមុន :</td>
+                                <td class="text-right">{{lastOrderBalance}} ៛</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right">សរុបទាំងអស់ :</td>
+                                <td class="text-right">{{balance}} ៛</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right">បានបង់ :</td>
+                                <td class="text-right">{{totalPaidAmount}} ៛</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right">ជំពាក់លើនេះ :</td>
+                                <td class="text-right">{{overDue}} ៛</td>
+                            </tr>
+                            </tfoot>
+                        </table>
+
+                    {{/with}}
+                    <!--/Report data-->
 
                 {{/with}}
-                <!--/Report data-->
-
-            {{/with}}
+            </div>
             <!--/Report init-->
 
             <!--Sign-->
             <!--<div style="width: 100%">-->
-                <!--<div style="text-align:center; width: 50%; float: left">-->
-                    <!--<br>-->
-                    <!--<div style="margin-bottom: 5em">-->
-                        <!--<strong>អ្នកទិញ</strong>-->
-                    <!--</div>-->
-                    <!--__________________-->
-                <!--</div>-->
-                <!--<div style="text-align:center; width: 50%; float: right">-->
-                    <!--&lt;!&ndash;Date:................................&ndash;&gt;-->
-                    <!--<br>-->
-                    <!--<div style="margin-bottom: 5em">-->
-                        <!--<strong>អ្នកលក់</strong>-->
-                    <!--</div>-->
-                    <!--__________________-->
-                <!--</div>-->
+            <!--<div style="text-align:center; width: 50%; float: left">-->
+            <!--<br>-->
+            <!--<div style="margin-bottom: 5em">-->
+            <!--<strong>អ្នកទិញ</strong>-->
+            <!--</div>-->
+            <!--__________________-->
+            <!--</div>-->
+            <!--<div style="text-align:center; width: 50%; float: right">-->
+            <!--&lt;!&ndash;Date:................................&ndash;&gt;-->
+            <!--<br>-->
+            <!--<div style="margin-bottom: 5em">-->
+            <!--<strong>អ្នកលក់</strong>-->
+            <!--</div>-->
+            <!--__________________-->
+            <!--</div>-->
             <!--</div>-->
 
             <!--Auto print-->
@@ -131,5 +140,6 @@
         {{else}}
             {{> loading}}
         {{/if}}
+
     </div>
 </template>

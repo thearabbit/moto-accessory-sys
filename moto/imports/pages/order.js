@@ -44,6 +44,7 @@ import './orderItems.js';
 let indexTmpl = Template.Moto_order,
     actionTmpl = Template.Moto_orderAction,
     formTmpl = Template.Moto_orderForm,
+    formSaveAndPayment = Template.Moto_orderPaymentForm,
     showTmpl = Template.Moto_orderShow;
 
 // Local collection
@@ -52,6 +53,7 @@ let itemsCollection = new Mongo.Collection(null);
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('order', {size: 'lg'});
+    createNewAlertify('orderInvoice', {size: 'lg'});
     createNewAlertify('orderPayment', {size: 'sm'});
     createNewAlertify('orderShow');
     this.subscribe('moto.orderPayment');
@@ -305,6 +307,12 @@ formTmpl.events({
         }).catch((err) => {
             console.log(err);
         });
+    },
+    'click .js-save-and-payment': function (event, instance) {
+        Session.set('saveAndPayment', 'fire');
+    },
+    'click .js-save-and-print': function (event, instance) {
+        Session.set('saveAndPrint', 'fire');
     }
 });
 
@@ -318,6 +326,8 @@ formTmpl.onDestroyed(function () {
     Session.set('discountAmountUpdate', null);
     Session.set('image', null);
     Session.set('total', null);
+    Session.set('saveAndPayment', null);
+    Session.set('saveAndPrint', null);
 });
 
 // Show
@@ -409,7 +419,21 @@ let hooksObject = {
         }
     },
     onSuccess (formType, result) {
+
         if (formType == 'update') {
+            let saveAndPayment = Session.get('saveAndPayment');
+            if (saveAndPayment == "fire") {
+                alertify.orderPayment(fa('plus', 'Order Payment'), renderTemplate(formSaveAndPayment));
+            }
+
+            let saveAndPrint = Session.get('saveAndPrint');
+            if (saveAndPrint == "fire") {
+                let printId = $('[name="printId"]').val();
+                alertify.orderInvoice(fa('print', 'Order Invoice'), renderTemplate(Template.Moto_invoiceReportGen, {
+                    printId: printId
+                }));
+            }
+
             alertify.order().close();
         }
         // Remove items collection
@@ -421,7 +445,23 @@ let hooksObject = {
         $('[name="discountAmount"]').val(null);
         $('[name="total"]').val(null);
 
+        let saveAndPayment = Session.get('saveAndPayment');
+        if (saveAndPayment == "fire") {
+            alertify.orderPayment(fa('plus', 'Order Payment'), renderTemplate(formSaveAndPayment));
+        }
+
+        let saveAndPrint = Session.get('saveAndPrint');
+        if (saveAndPrint == "fire") {
+            alertify.orderInvoice(fa('print', 'Order Invoice'), renderTemplate(Template.Moto_invoiceReportGen, {
+                printId: result
+            }));
+        }
+
         displaySuccess();
+
+        // Clear session when success
+        Session.set('saveAndPayment',null);
+        Session.set('saveAndPrint',null);
     },
     onError (formType, error) {
         displayError(error.message);

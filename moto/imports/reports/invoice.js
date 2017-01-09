@@ -20,6 +20,9 @@ import '../../../core/client/components/form-footer.js';
 // Method
 import {invoiceReport} from '../../common/methods/reports/invoice.js';
 
+// Collection
+import {Order} from '../../common/collections/order.js';
+
 // Schema
 import {InvoiceSchema} from '../../common/collections/reports/invoice.js';
 
@@ -70,6 +73,7 @@ genTmpl.onCreated(function () {
 
     this.autorun(()=> {
         let queryParams = FlowRouter.current().queryParams;
+        queryParams.printId = Template.currentData().printId;
 
         invoiceReport.callPromise(queryParams)
             .then((result)=> {

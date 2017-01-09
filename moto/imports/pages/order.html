@@ -113,6 +113,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 {{> afQuickField name="type"}}
+                                {{> afFieldInput type="hidden" name="printId"}}
                             </div>
                             <div class="col-md-6">
                                 {{> afQuickField name="discountType"}}
@@ -142,6 +143,12 @@
                                 <div class="form-footer-customer">
                                     <button type="submit" class="btn btn-primary" {{disabledSubmitBtn}}>
                                         <i class="fa fa-floppy-o"></i> {{_ "form.btnSave"}}
+                                    </button>
+                                    <button type="submit" class="btn bg-olive js-save-and-payment" {{disabledSubmitBtn}}>
+                                        <i class="fa fa-star"></i> Save & Payment
+                                    </button>
+                                    <button type="submit" class="btn bg-orange js-save-and-print" {{disabledSubmitBtn}}>
+                                        <i class="fa fa-print"></i> Save & Print
                                     </button>
                                     <button type="reset" class="btn btn-default">
                                         <i class="fa fa-refresh"></i> {{_ "form.btnReset"}}
