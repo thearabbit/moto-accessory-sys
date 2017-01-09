@@ -80,6 +80,7 @@
                                     <th>Sub Total</th>
                                     <th>Discount Amount</th>
                                     <th>Total</th>
+                                    <th>Last Order Balance</th>
                                 </tr>
                                 </thead>
 
@@ -90,6 +91,7 @@
                                         <td>{{subTotal}}</td>
                                         <td>{{discountAmount}}</td>
                                         <td><u>{{total}}</u></td>
+                                        <td><u>{{lastOrderBalance}}</u></td>
                                     </tr>
                                     {{#each objBranch  in dataBranch}}
                                         <tr class="text-bold">
@@ -97,6 +99,7 @@
                                             <td>{{objBranch.subTotal}}</td>
                                             <td>{{objBranch.discountAmount}}</td>
                                             <td><u>{{objBranch.total}}</u></td>
+                                            <td><u>{{objBranch.lastOrderBalance}}</u></td>
                                         </tr>
 
                                         {{#each objDate in objBranch.dataDate}}
@@ -106,6 +109,7 @@
                                                 <td>{{objDate.subTotal}}</td>
                                                 <td>{{objDate.discountAmount}}</td>
                                                 <td><u>{{objDate.total}}</u></td>
+                                                <td><u>{{objDate.lastOrderBalance}}</u></td>
                                             </tr>
 
                                             {{#each objOder in objDate.dataOrder}}
@@ -118,6 +122,7 @@
                                                     <td>{{objOder.subTotal}}</td>
                                                     <td>{{objOder.discountAmount}}</td>
                                                     <td>{{objOder.total}}</td>
+                                                    <td>{{objOder.lastOrderBalance}}</td>
                                                 </tr>
                                             {{/each}}
 

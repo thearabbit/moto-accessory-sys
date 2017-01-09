@@ -49,7 +49,7 @@ export const orderVipByCustomerReport = new ValidatedMethod({
             // --- Content ---
             let selector = {
                 branchId: {$in: params.branchId},
-                customerId:  params.customerId,
+                customerId: params.customerId,
                 orderDate: {$gte: fDate, $lte: tDate},
             };
 
@@ -93,12 +93,15 @@ export const orderVipByCustomerReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalanceKhr: {$sum: "$lastOrderBalanceKhr"},
                         subTotalUsd: {$sum: "$subTotalUsd"},
                         discountAmountUsd: {$sum: "$discountAmountUsd"},
                         totalUsd: {$sum: "$totalUsd"},
+                        lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
                         subTotalThb: {$sum: "$subTotalThb"},
                         discountAmountThb: {$sum: "$discountAmountThb"},
                         totalThb: {$sum: "$totalThb"},
+                        lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
                         dataOrder: {$push: "$$ROOT"},
                     }
                 },
@@ -111,12 +114,15 @@ export const orderVipByCustomerReport = new ValidatedMethod({
                         subTotal: 1,
                         discountAmount: 1,
                         total: 1,
+                        lastOrderBalanceKhr: 1,
                         subTotalUsd: 1,
                         discountAmountUsd: 1,
                         totalUsd: 1,
+                        lastOrderBalanceUsd: 1,
                         subTotalThb: 1,
                         discountAmountThb: 1,
                         totalThb: 1,
+                        lastOrderBalanceThb: 1,
                         dataOrder: 1
                     }
                 },
@@ -128,12 +134,15 @@ export const orderVipByCustomerReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalanceKhr: {$sum: "$lastOrderBalanceKhr"},
                         subTotalUsd: {$sum: "$subTotalUsd"},
                         discountAmountUsd: {$sum: "$discountAmountUsd"},
                         totalUsd: {$sum: "$totalUsd"},
+                        lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
                         subTotalThb: {$sum: "$subTotalThb"},
                         discountAmountThb: {$sum: "$discountAmountThb"},
                         totalThb: {$sum: "$totalThb"},
+                        lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
                         dataDate: {$push: "$$ROOT"}
                     }
                 },
@@ -143,12 +152,15 @@ export const orderVipByCustomerReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalanceKhr: {$sum: "$lastOrderBalanceKhr"},
                         subTotalUsd: {$sum: "$subTotalUsd"},
                         discountAmountUsd: {$sum: "$discountAmountUsd"},
                         totalUsd: {$sum: "$totalUsd"},
+                        lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
                         subTotalThb: {$sum: "$subTotalThb"},
                         discountAmountThb: {$sum: "$discountAmountThb"},
                         totalThb: {$sum: "$totalThb"},
+                        lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
                         dataBranch: {$push: "$$ROOT"}
                     }
                 }

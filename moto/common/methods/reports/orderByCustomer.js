@@ -49,7 +49,7 @@ export const orderByCustomerReport = new ValidatedMethod({
             // --- Content ---
             let selector = {
                 branchId: {$in: params.branchId},
-                customerId:  params.customerId,
+                customerId: params.customerId,
                 orderDate: {$gte: fDate, $lte: tDate}
             };
 
@@ -90,9 +90,10 @@ export const orderByCustomerReport = new ValidatedMethod({
                         },
                         orderDate: {$last: "$orderDate"},
                         branchDoc: {$last: "$branchDoc"},
-                        total: {$sum: "$total"},
-                        discountAmount: {$sum: "$discountAmount"},
                         subTotal: {$sum: "$subTotal"},
+                        discountAmount: {$sum: "$discountAmount"},
+                        total: {$sum: "$total"},
+                        lastOrderBalance: {$sum: "$lastOrderBalance"},
                         dataOrder: {$push: "$$ROOT"},
                     }
                 },
@@ -105,6 +106,7 @@ export const orderByCustomerReport = new ValidatedMethod({
                         subTotal: 1,
                         discountAmount: 1,
                         total: 1,
+                        lastOrderBalance: 1,
                         dataOrder: 1
                     }
                 },
@@ -115,6 +117,7 @@ export const orderByCustomerReport = new ValidatedMethod({
                         branchDoc: {$last: "$branchDoc"},
                         subTotal: {$sum: "$subTotal"},
                         total: {$sum: "$total"},
+                        lastOrderBalance: {$sum: "$lastOrderBalance"},
                         discountAmount: {$sum: "$discountAmount"},
                         dataDate: {$push: "$$ROOT"}
                     }
@@ -125,6 +128,7 @@ export const orderByCustomerReport = new ValidatedMethod({
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
                         total: {$sum: "$total"},
+                        lastOrderBalance: {$sum: "$lastOrderBalance"},
                         dataBranch: {$push: "$$ROOT"}
                     }
                 }
