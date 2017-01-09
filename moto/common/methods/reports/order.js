@@ -74,21 +74,22 @@ export const orderReport = new ValidatedMethod({
                 {
                     $unwind: "$branchDoc"
                 },
-                {$sort: {orderDate: -1}},
+                { $sort: { orderDate: -1 } },
                 {
                     $group: {
                         _id: {
-                            day: {$dayOfMonth: "$orderDate"},
-                            month: {$month: "$orderDate"},
-                            year: {$year: "$orderDate"},
+                            day: { $dayOfMonth: "$orderDate" },
+                            month: { $month: "$orderDate" },
+                            year: { $year: "$orderDate" },
                             branchId: "$branchId"
                         },
-                        orderDate: {$last: "$orderDate"},
-                        branchDoc: {$last: "$branchDoc"},
-                        total: {$sum: "$total"},
-                        discountAmount: {$sum: "$discountAmount"},
-                        subTotal: {$sum: "$subTotal"},
-                        dataOrder: {$push: "$$ROOT"},
+                        orderDate: { $last: "$orderDate" },
+                        branchDoc: { $last: "$branchDoc" },
+                        subTotal: { $sum: "$subTotal" },
+                        discountAmount: { $sum: "$discountAmount" },
+                        total: { $sum: "$total" },
+                        lastOrderBalance: { $sum: "$lastOrderBalance" },
+                        dataOrder: { $push: "$$ROOT" },
                     }
                 },
                 {
@@ -100,27 +101,30 @@ export const orderReport = new ValidatedMethod({
                         subTotal: 1,
                         discountAmount: 1,
                         total: 1,
+                        lastOrderBalance: 1,
                         dataOrder: 1
                     }
                 },
                 {
                     $group: {
                         _id: "$branchId",
-                        orderDate: {$last: "$orderDate"},
-                        branchDoc: {$last: "$branchDoc"},
-                        subTotal: {$sum: "$subTotal"},
-                        total: {$sum: "$total"},
-                        discountAmount: {$sum: "$discountAmount"},
-                        dataDate: {$push: "$$ROOT"}
+                        orderDate: { $last: "$orderDate" },
+                        branchDoc: { $last: "$branchDoc" },
+                        subTotal: { $sum: "$subTotal" },
+                        total: { $sum: "$total" },
+                        lastOrderBalance: { $sum: "$lastOrderBalance" },
+                        discountAmount: { $sum: "$discountAmount" },
+                        dataDate: { $push: "$$ROOT" }
                     }
                 },
                 {
                     $group: {
                         _id: null,
-                        subTotal: {$sum: "$subTotal"},
-                        discountAmount: {$sum: "$discountAmount"},
-                        total: {$sum: "$total"},
-                        dataBranch: {$push: "$$ROOT"}
+                        subTotal: { $sum: "$subTotal" },
+                        discountAmount: { $sum: "$discountAmount" },
+                        total: { $sum: "$total" },
+                        lastOrderBalance: { $sum: "$lastOrderBalance" },
+                        dataBranch: { $push: "$$ROOT" }
                     }
                 }
             ])[0];
