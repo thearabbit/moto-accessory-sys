@@ -44,6 +44,7 @@ import './orderVipItems.js';
 let indexTmpl = Template.Moto_orderVip,
     actionTmpl = Template.Moto_orderVipAction,
     formTmpl = Template.Moto_orderVipForm,
+    formSaveAndPayment = Template.Moto_orderVipPaymentForm,
     showTmpl = Template.Moto_orderVipShow;
 
 // Local collection
@@ -53,6 +54,7 @@ indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('orderVip', {size: 'lg'});
     createNewAlertify('orderVipPayment', {size: 'lg'});
+    createNewAlertify('orderVipInvoice', {size: 'lg'});
     createNewAlertify('orderShow');
 
     this.subscribe('moto.orderVipPayment');
@@ -95,11 +97,11 @@ indexTmpl.events({
     },
     'click .js-destroy'(event, instance){
         if (checkLastOrderVip(this.customerId) == this._id && _.isUndefined(checkOrderVipPaymentExist(this._id))) {
-        destroyAction(
-            OrderVip,
-            {_id: this._id},
-            {title: 'Order Vip', itemTitle: this._id}
-        );
+            destroyAction(
+                OrderVip,
+                {_id: this._id},
+                {title: 'Order Vip', itemTitle: this._id}
+            );
         } else if (checkOrderVipPaymentExist(this._id) == this._id) {
             swal({
                 title: "Information",
@@ -297,6 +299,12 @@ formTmpl.events({
         }).catch((err) => {
             console.log(err);
         });
+    },
+    'click .js-save-and-payment': function (event, instance) {
+        Session.set('saveAndPayment', 'fire');
+    },
+    'click .js-save-and-print': function (event, instance) {
+        Session.set('saveAndPrint', 'fire');
     }
 });
 
@@ -311,6 +319,8 @@ formTmpl.onDestroyed(function () {
     Session.set('discountAmountUsdUpdate', null);
     Session.set('discountAmountThbUpdate', null);
     Session.set('image', null);
+    Session.set('saveAndPayment', null);
+    Session.set('saveAndPrint', null);
 });
 
 // Show
@@ -384,7 +394,20 @@ let hooksObject = {
     },
     onSuccess (formType, result) {
         if (formType == 'update') {
-            alertify.order().close();
+            let saveAndPayment = Session.get('saveAndPayment');
+            if (saveAndPayment == "fire") {
+                alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formSaveAndPayment));
+            }
+
+            let saveAndPrint = Session.get('saveAndPrint');
+            if (saveAndPrint == "fire") {
+                let printId = $('[name="printId"]').val();
+                alertify.orderVipInvoice(fa('print', 'Order Vip Invoice'), renderTemplate(Template.Moto_invoiceVipReportGen, {
+                    printId: printId
+                }));
+            }
+
+            alertify.orderVip().close();
         }
         // Remove items collection
         itemsCollection.remove({});
@@ -399,7 +422,23 @@ let hooksObject = {
         $('[name="discountAmountThb"]').val(null);
         $('[name="totalThb"]').val(null);
 
+        let saveAndPayment = Session.get('saveAndPayment');
+        if (saveAndPayment == "fire") {
+            alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formSaveAndPayment));
+        }
+
+        let saveAndPrint = Session.get('saveAndPrint');
+        if (saveAndPrint == "fire") {
+            alertify.orderVipInvoice(fa('print', 'Order Vip Invoice'), renderTemplate(Template.Moto_invoiceVipReportGen, {
+                printId: result
+            }));
+        }
+
         displaySuccess();
+
+        // Clear session when success
+        Session.set('saveAndPayment', null);
+        Session.set('saveAndPrint', null);
     },
     onError (formType, error) {
         displayError(error.message);

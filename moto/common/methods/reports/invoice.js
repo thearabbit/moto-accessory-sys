@@ -12,14 +12,15 @@ import {Order} from '../../collections/order.js';
 export const invoiceReport = new ValidatedMethod({
     name: 'moto.invoiceReport',
     mixins: [CallPromiseMixin],
-    // validate: null,
-    validate: new SimpleSchema({
-        orderId: {type: String}
-    }).validator(),
-    run({orderId}) {
+    validate: null,
+    // validate: new SimpleSchema({
+    // orderId: {type: String}
+    // }).validator(),
+    run({orderId, printId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
-
+            console.log(orderId);
+            console.log(printId);
             let rptTitle, rptContent, rptFooter;
 
             // --- Title ---
@@ -28,7 +29,7 @@ export const invoiceReport = new ValidatedMethod({
             // --- Content ---
             rptContent = Order.aggregate([
                 {
-                    $match: {_id: orderId}
+                    $match: {$or: [{_id: orderId}, {printId: printId}]}
                 },
                 {
                     $lookup: {
@@ -76,7 +77,7 @@ export const invoiceReport = new ValidatedMethod({
                                 discount: "$items.discount",
                                 discountType: "$items.discountType",
                                 totalAmount: "$items.totalAmount",
-                                memo:"$items.memo"
+                                memo: "$items.memo"
                             }
                         }
                     }

@@ -303,6 +303,10 @@ Order.schema = new SimpleSchema({
         type: Date,
         optional: true
     },
+    printId: {
+        type: String,
+        optional: true
+    },
     branchId: {
         type: String
     }

@@ -7,6 +7,7 @@ import {OrderVipPayment} from '../../common/collections/orderVipPayment.js';
 
 OrderVip.before.insert(function (userId, doc) {
     let prefix = `${doc.branchId}-`;
+    doc.printId =  doc._id;
     doc._id = idGenerator.genWithPrefix(OrderVip, prefix, 12);
 
     doc.balanceKhr = doc.total + doc.lastOrderBalanceKhr;

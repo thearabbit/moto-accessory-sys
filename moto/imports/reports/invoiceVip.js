@@ -69,6 +69,7 @@ genTmpl.onCreated(function () {
 
     this.autorun(()=> {
         let queryParams = FlowRouter.current().queryParams;
+        queryParams.printId = Template.currentData().printId;
         invoiceVipReport.callPromise(queryParams)
             .then((result)=> {
                 roundKhrCurrency(result.rptContent.total);

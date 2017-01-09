@@ -77,7 +77,8 @@ export const lookupOrder = new ValidatedMethod({
                         itemName: "$itemDoc.name",
                         type: 1,
                         discountType: 1,
-                        closedDate: 1
+                        closedDate: 1,
+                        printId: 1
                     }
                 },
                 {
@@ -118,7 +119,8 @@ export const lookupOrder = new ValidatedMethod({
                                 memo: "$items.memo"
                             }
                         },
-                        closedDate: {$last: "$closedDate"}
+                        closedDate: {$last: "$closedDate"},
+                        printId: {$last: "$printId"}
                     }
                 }]);
 
