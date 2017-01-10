@@ -57,7 +57,14 @@ indexTmpl.onCreated(function () {
     this.discountAmountUsd = new ReactiveVar(0);
     this.discountAmountThb = new ReactiveVar(0);
     this.purchasePriceHideAndShow = new ReactiveVar();
-    // this.subscribe('moto.items');
+
+    //get items from server
+    Meteor.call('findItems', {selectOne: true}, (err, result)=> {
+        if (result) {
+            Session.set('findItems', result);
+        }
+    });
+
 });
 
 indexTmpl.helpers({
@@ -72,9 +79,10 @@ indexTmpl.helpers({
             rowsPerPage: 100,
             collection: itemsCollection,
             fields: [
-                {key: 'itemId', label: 'ID', hidden: false,sortable: false},
-                {key: 'itemName', label: 'Item',sortable: false},
-                {key: 'memo', label: 'Memo',sortable: false},
+                {key: 'date', label: 'Date', hidden: true, sortable: 0, sortDirection: 'descending'},
+                {key: 'itemId', label: 'ID', hidden: false, sortable: false},
+                {key: 'itemName', label: 'Item', sortable: false},
+                {key: 'memo', label: 'Memo', sortable: false},
                 {
                     key: 'qty',
                     label: 'Qty',
@@ -392,6 +400,9 @@ newTmpl.helpers({
             result = itemDoc.unitDoc.name;
         }
         return result;
+    },
+    itemsOpt(){
+        return Session.get('findItems');
     }
 });
 
@@ -514,6 +525,7 @@ newTmpl.events({
         // } else {
         itemsCollection.insert({
             // _id: itemId,
+            date: moment().format('DD/MM/YYYY hh:mm:ss'),
             itemId: itemId,
             itemName: itemName,
             memoItem: memoItem,
@@ -625,6 +637,9 @@ editTmpl.helpers({
         }
 
         return result;
+    },
+    itemsOpt(){
+        return Session.get('findItems');
     }
 });
 
@@ -740,6 +755,7 @@ let hooksObject = {
                 let discountType = Session.get('discountType') == "Percentage" ? "%" : itemCurrency;
                 itemsCollection.insert({
                     _id: currentDoc._id,
+                    date: moment().format('DD/MM/YYYY hh:mm:ss'),
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     memoItem: insertDoc.memoItem,

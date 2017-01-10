@@ -77,7 +77,7 @@ export const SelectOpts = {
             list.push({label: '(Select One)', value: ''});
         }
 
-        Item.find({},{limit: 200})
+        Item.find()
             .forEach(function (obj) {
                 list.push({label: obj._id + ' : ' + obj.name, value: obj._id})
             });

@@ -21,18 +21,8 @@ export const OrderVipItemsSchema = new SimpleSchema({
     itemId: {
         type: String,
         label: 'Item',
-        // autoform: {
-        //     type: "select2",
-        //     options: function () {
-        //         return SelectOpts.item("selectOne", true);
-        //     }
-        // },
         autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Please search... (limit 200)',
-                optionsMethod: 'moto.selectOptsMethod.orderItem'
-            }
+            type: "select2"
         }
     },
     memoItem: {

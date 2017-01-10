@@ -40,7 +40,7 @@ let modelMatcher = function (params, data) {
     var original = (data.text).toUpperCase();
     var term = params.term.toUpperCase();
 
-    let originalSplit = original.split(":");
+    let originalSplit = original.split(" : ");
 
     /*// Check if the text contains the term
      if (original.indexOf(term) > -1) {
