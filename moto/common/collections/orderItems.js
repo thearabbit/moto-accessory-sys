@@ -8,6 +8,7 @@ import {moment} from 'meteor/momentjs:moment';
 // Lib
 import {__} from '../../../core/common/libs/tapi18n-callback-helper.js';
 import {SelectOpts} from '../../imports/libs/selectOpts';
+import {SelectOptsMethod} from '../../common/methods/selectOptsMethod';
 // Method
 import {lookupItem} from '../methods/lookupItem.js';
 
@@ -21,18 +22,8 @@ export const OrderItemsSchema = new SimpleSchema({
         type: String,
         label: 'Item',
         autoform: {
-            type: "select2",
-            options: function () {
-                return SelectOpts.item("selectOne", true);
-            }
-        },
-        // autoform: {
-        //     type: 'universe-select',
-        //     afFieldInput: {
-        //         uniPlaceholder: 'Please search... (limit 200)',
-        //         optionsMethod: 'moto.selectOptsMethod.orderItem'
-        //     }
-        // }
+            type: "select2"
+        }
     },
     memoItem: {
         type: String,

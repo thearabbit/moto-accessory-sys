@@ -328,6 +328,7 @@ formTmpl.onDestroyed(function () {
     Session.set('total', null);
     Session.set('saveAndPayment', null);
     Session.set('saveAndPrint', null);
+    Session.set('findItems', null);
 });
 
 // Show

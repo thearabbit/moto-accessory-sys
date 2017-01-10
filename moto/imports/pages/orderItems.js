@@ -26,7 +26,6 @@ import {roundKhrCurrency}  from '../../../moto/common/libs/roundKhrCurrency';
 import '../../../core/client/components/loading.js';
 import '../../../core/client/components/column-action.js';
 import '../../../core/client/components/form-footer.js';
-
 import '../../imports/libs/select2ForOrderItem.js'
 
 
@@ -58,7 +57,14 @@ indexTmpl.onCreated(function () {
     itemsCollection = data.itemsCollection;
     this.discountAmount = new ReactiveVar(0);
     this.purchasePriceHideAndShow = new ReactiveVar();
-    this.subscribe('moto.items');
+
+    //get items from server
+    Meteor.call('findItems', {selectOne: true}, (err, result)=> {
+        if (result) {
+            Session.set('findItems', result);
+        }
+    });
+
 });
 
 indexTmpl.helpers({
@@ -72,9 +78,10 @@ indexTmpl.helpers({
             rowsPerPage: 100,
             collection: itemsCollection,
             fields: [
+                {key: 'date', label: 'Date', hidden: true, sortable: 0, sortDirection: 'descending'},
                 {key: 'itemId', label: 'ID', hidden: false, sortable: false},
-                {key: 'itemName', label: 'Item',sortable: false},
-                {key: 'memo', label: 'Memo',sortable: false},
+                {key: 'itemName', label: 'Item', sortable: false},
+                {key: 'memo', label: 'Memo', sortable: false},
                 {
                     key: 'qty',
                     label: 'Qty',
@@ -262,8 +269,6 @@ newTmpl.onRendered(function () {
     $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
     $('[name="purchasePrice"]').hide();
-
-     // select2Items($('[name="itemId"]'));
 });
 
 newTmpl.helpers({
@@ -353,6 +358,9 @@ newTmpl.helpers({
             result = itemDoc.unitDoc.name;
         }
         return result;
+    },
+    itemsOpt(){
+        return Session.get('findItems');
     }
 });
 
@@ -459,6 +467,7 @@ newTmpl.events({
         // } else {
         itemsCollection.insert({
             // _id: itemId,
+            date: moment().format('DD/MM/YYYY hh:mm:ss'),
             itemId: itemId,
             itemName: itemName,
             memoItem: memoItem,
@@ -475,6 +484,7 @@ newTmpl.events({
             totalAmount: totalAmount,
             memo: memo
         });
+
         // }
     }
 });
@@ -502,6 +512,14 @@ editTmpl.onCreated(function () {
         this.khrPrice.set(data.khrPrice);
         this.discount.set(data.discount);
         this.discountType.set(data.discountType);
+    });
+
+    //get item list
+    this.findItems = new ReactiveVar();
+    Meteor.call('findItems', {selectOne: true}, (err, result)=> {
+        if (result) {
+            this.findItems.set(result);
+        }
     });
 });
 
@@ -594,6 +612,9 @@ editTmpl.helpers({
         }
 
         return result;
+    },
+    itemsOpt(){
+        return Session.get('findItems');
     }
 });
 
@@ -611,6 +632,7 @@ editTmpl.events({
                     result.purchase = 0;
                 }
                 instance.price.set(result.price);
+                sele
                 instance.khrPrice.set(result.khrPrice);
                 instance.currencyId.set(result.currencyId);
                 instance.itemDoc.set(result);
@@ -698,6 +720,7 @@ let hooksObject = {
 
                 itemsCollection.insert({
                     _id: currentDoc._id,
+                    date: moment().format('DD/MM/YYYY hh:mm:ss'),
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     qty: insertDoc.qty,

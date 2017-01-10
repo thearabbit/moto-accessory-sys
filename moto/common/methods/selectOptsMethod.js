@@ -196,7 +196,7 @@ SelectOptsMethod.customerForOrderPayment = new ValidatedMethod({
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
-            }else if (params.type) {
+            } else if (params.type) {
                 selector = {type: {$ne: params.type}};
             }
 
@@ -234,7 +234,7 @@ SelectOptsMethod.customerForOrderVipPayment = new ValidatedMethod({
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
-            }else if (params.type) {
+            } else if (params.type) {
                 selector = {type: {$eq: params.type}};
             }
 
@@ -295,12 +295,12 @@ SelectOptsMethod.orderItem = new ValidatedMethod({
 
             let list = [], selector = {};
             let searchText = options.searchText;
-            let regSearchTex=new RegExp(searchText);
+            let regSearchTex = new RegExp(searchText);
             let values = options.values;
 
             if (searchText) {
 
-                let regTerm=new RegExp("^"+searchText,'m');
+                let regTerm = new RegExp("^" + searchText, 'm');
                 console.log(regTerm);
                 selector = {
                     $or: [
@@ -309,7 +309,7 @@ SelectOptsMethod.orderItem = new ValidatedMethod({
                     ]
                 };
             } else if (values.length) {
-                console.log("kk "+values);
+                console.log("kk " + values);
                 selector = {_id: {$in: values}};
             }
             selector.type = 'I';
@@ -485,7 +485,7 @@ SelectOptsMethod.customerForReport = new ValidatedMethod({
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
-            }else if (params.type) {
+            } else if (params.type) {
                 selector = {type: {$ne: params.type}};
             }
 
@@ -523,7 +523,7 @@ SelectOptsMethod.customerVipForReport = new ValidatedMethod({
                 };
             } else if (values.length) {
                 selector = {_id: {$in: values}};
-            }else if (params.type) {
+            } else if (params.type) {
                 selector = {type: {$eq: params.type}};
             }
 

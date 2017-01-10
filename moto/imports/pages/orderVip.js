@@ -321,6 +321,7 @@ formTmpl.onDestroyed(function () {
     Session.set('image', null);
     Session.set('saveAndPayment', null);
     Session.set('saveAndPrint', null);
+    Session.set('findItems', null);
 });
 
 // Show
