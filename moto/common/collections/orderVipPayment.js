@@ -243,6 +243,214 @@ OrderVipPayment.schema = new SimpleSchema({
     }
 });
 
+OrderVipPayment.ForSaveAndPaymentSchema = new SimpleSchema({
+    paidDate: {
+        type: Date,
+        label: 'Paid date',
+        defaultValue: moment().toDate(),
+        autoform: {
+            afFieldInput: {
+                type: "bootstrap-datetimepicker",
+                dateTimePickerOptions: {
+                    format: 'DD/MM/YYYY hh:mm:ss',
+                    showTodayButton: true
+                }
+            }
+        }
+    },
+    customerId: {
+        type: String,
+        label: 'Customer',
+        autoform: {readonly: true}
+    },
+    orderVipId: {
+        type: String,
+        label: 'Order Id'
+    },
+    employeeId: {
+        type: String,
+        label: 'Employee',
+        defaultValue: "001-001",
+        autoform: {readonly: true}
+    },
+    dueAmountKhr: {
+        type: Number,
+        label: 'Due Amount Khr',
+        defaultValue: 0,
+        decimal: true,
+        optional: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "៛", placeholder: ""});
+            }
+        }
+    },
+    paidAmountKhr: {
+        type: Number,
+        label: 'Paid Amount Khr',
+        defaultValue: 0,
+        decimal: true,
+        optional: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "៛", placeholder: ""});
+            }
+        },
+        custom: function () {
+            if (this.dueAmountKhr > 0) {
+                return 'required';
+            }
+        }
+    },
+    paymentBalanceKhr: {
+        type: Number,
+        label: 'Balance Khr',
+        decimal: true,
+        optional: true,
+        defaultValue: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
+            }
+        },
+        custom: function () {
+            if (this.dueAmountKhr > 0) {
+                return 'required';
+            }
+        }
+    },
+    dueAmountUsd: {
+        type: Number,
+        label: 'Due Amount Usd',
+        decimal: true,
+        optional: true,
+        defaultValue: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({placeholder: ""});
+            }
+        }
+    },
+    paidAmountUsd: {
+        type: Number,
+        label: 'Paid Amount Usd',
+        defaultValue: 0,
+        decimal: true,
+        optional: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({placeholder: ""});
+            }
+        },
+        custom: function () {
+            if (this.dueAmountUsd > 0) {
+                return 'required';
+            }
+        }
+    },
+    paymentBalanceUsd: {
+        type: Number,
+        label: 'Balance Usd',
+        decimal: true,
+        optional: true,
+        defaultValue: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({placeholder: ""});
+            }
+        },
+        custom: function () {
+            if (this.dueAmountUsd > 0) {
+                return 'required';
+            }
+        }
+    },
+    dueAmountThb: {
+        type: Number,
+        label: 'Due Amount Thb',
+        decimal: true,
+        optional: true,
+        defaultValue: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "B ", placeholder: ""});
+            }
+        }
+    },
+    paidAmountThb: {
+        type: Number,
+        label: 'Paid Amount Thb',
+        defaultValue: 0,
+        decimal: true,
+        optional: true,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "B ", placeholder: ""});
+            }
+        },
+        custom: function () {
+            if (this.dueAmountThb > 0) {
+                return 'required';
+            }
+        }
+    },
+    paymentBalanceThb: {
+        type: Number,
+        label: 'Balance Thb',
+        decimal: true,
+        optional: true,
+        defaultValue: 0,
+        autoform: {
+            type: 'inputmask',
+            inputmaskOptions: function () {
+                return inputmaskOptions.currency({prefix: "B ", placeholder: ""});
+            }
+        },
+        custom: function () {
+            if (this.dueAmountThb > 0) {
+                return 'required';
+            }
+        }
+    },
+    status: {
+        type: String,
+        label: "Status",
+        optional: true
+    },
+    des: {
+        type: String,
+        label: 'Description',
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: 'summernote',
+                class: 'editor', // optional
+                settings: {
+                    height: 85,                 // set editor height
+                    minHeight: null,             // set minimum height of editor
+                    maxHeight: null,             // set maximum height of editor
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline', 'clear']], //['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol']] //['para', ['ul', 'ol', 'paragraph']],
+                        //['insert', ['link', 'picture']], //['insert', ['link', 'picture', 'hr']],
+                    ]
+                } // summernote options goes here
+            }
+        }
+    },
+    branchId: {
+        type: String
+    }
+});
+
 OrderVipPayment.attachSchema(OrderVipPayment.schema);
 
 SimpleSchema.messages({

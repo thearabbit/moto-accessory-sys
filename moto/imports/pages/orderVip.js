@@ -167,6 +167,8 @@ formTmpl.onCreated(function () {
             lookupOrderVip.callPromise({
                 orderVipId: currentData.orderVipId
             }).then((result) => {
+                Session.set('customerIdForSaveAndPayment', result.customerId);
+
                 // Add items to local collection
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
@@ -271,6 +273,8 @@ formTmpl.events({
         let customerId = event.currentTarget.value;
         let currentData = Template.currentData();
 
+        Session.set('customerIdForSaveAndPayment', customerId);
+
         lookupOrderVipLog.callPromise({
             customerId: customerId
         }).then((result) => {
@@ -300,6 +304,13 @@ formTmpl.events({
             console.log(err);
         });
     },
+    'change [name="employeeId"]': function (event, instance) {
+        let employeeId = event.currentTarget.value;
+        Session.set('employeeIdForSaveAndPayment', employeeId);
+    },
+    'click .js-save': function (event, instance) {
+        Session.set('save', 'fire');
+    },
     'click .js-save-and-payment': function (event, instance) {
         Session.set('saveAndPayment', 'fire');
     },
@@ -319,9 +330,12 @@ formTmpl.onDestroyed(function () {
     Session.set('discountAmountUsdUpdate', null);
     Session.set('discountAmountThbUpdate', null);
     Session.set('image', null);
+    Session.set('save', null);
     Session.set('saveAndPayment', null);
     Session.set('saveAndPrint', null);
     Session.set('findItems', null);
+    Session.set('customerIdForSaveAndPayment', null);
+    Session.set('employeeIdForSaveAndPayment', null);
 });
 
 // Show
@@ -394,22 +408,27 @@ let hooksObject = {
         }
     },
     onSuccess (formType, result) {
-        if (formType == 'update') {
-            let saveAndPayment = Session.get('saveAndPayment');
-            if (saveAndPayment == "fire") {
-                alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formSaveAndPayment));
-            }
+        let save = Session.get('save');
+        let saveAndPayment = Session.get('saveAndPayment');
+        let saveAndPrint = Session.get('saveAndPrint');
 
-            let saveAndPrint = Session.get('saveAndPrint');
-            if (saveAndPrint == "fire") {
-                let printId = $('[name="printId"]').val();
-                alertify.orderVipInvoice(fa('print', 'Order Vip Invoice'), renderTemplate(Template.Moto_invoiceVipReportGen, {
-                    printId: printId
-                }));
-            }
+        if (formType == 'update' && save == "fire") {
+            alertify.orderVip().close();
+        }
+
+        if (saveAndPayment == "fire" && formType == 'update' ) {
+                alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formSaveAndPayment)).maximize();
+        }
+
+        if (saveAndPrint == "fire" && formType == 'update') {
+            let printId = $('[name="printId"]').val();
+            alertify.orderVipInvoice(fa('print', 'Order Vip Invoice'), renderTemplate(Template.Moto_invoiceVipReportGen, {
+                printId: printId
+            })).maximize();
 
             alertify.orderVip().close();
         }
+
         // Remove items collection
         itemsCollection.remove({});
         $('[name="itemId"]').val(null).trigger('change');
@@ -423,21 +442,21 @@ let hooksObject = {
         $('[name="discountAmountThb"]').val(null);
         $('[name="totalThb"]').val(null);
 
-        let saveAndPayment = Session.get('saveAndPayment');
+        // For Insert
         if (saveAndPayment == "fire") {
-            alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formSaveAndPayment));
+            alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formSaveAndPayment)).maximize();
         }
 
-        let saveAndPrint = Session.get('saveAndPrint');
         if (saveAndPrint == "fire") {
             alertify.orderVipInvoice(fa('print', 'Order Vip Invoice'), renderTemplate(Template.Moto_invoiceVipReportGen, {
                 printId: result
-            }));
+            })).maximize();
         }
 
         displaySuccess();
 
         // Clear session when success
+        Session.set('save', null);
         Session.set('saveAndPayment', null);
         Session.set('saveAndPrint', null);
     },

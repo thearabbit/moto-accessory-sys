@@ -27,7 +27,7 @@
 <template name="Moto_orderVipPaymentForm">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm collection=collection id="Moto_orderVipPaymentForm" doc=data.doc type=data.formType}}
+            {{#autoForm collection=collection schema=schema id="Moto_orderVipPaymentForm" doc=data.doc type=data.formType}}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
@@ -35,11 +35,11 @@
                                 {{> afQuickField name="paidDate" }}
                             </div>
                             <div class="col-md-4">
-                                {{> afQuickField name="customerId"}}
+                                {{> afQuickField name="customerId" value=customerId}}
                             </div>
                             <div class="col-md-4">
                                 {{> afQuickField type="hidden" name="orderVipId" }}
-                                {{> afQuickField name="employeeId" }}
+                                {{> afQuickField name="employeeId" value=employeeId}}
                             </div>
                         </div>
                         <div class="row">
