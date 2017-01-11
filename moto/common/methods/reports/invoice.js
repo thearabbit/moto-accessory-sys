@@ -19,8 +19,6 @@ export const invoiceReport = new ValidatedMethod({
     run({orderId, printId}) {
         if (!this.isSimulation) {
             Meteor._sleepForMs(200);
-            console.log(orderId);
-            console.log(printId);
             let rptTitle, rptContent, rptFooter;
 
             // --- Title ---
