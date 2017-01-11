@@ -54,7 +54,11 @@ indexTmpl.helpers({
         return OrderPaymentTabular;
     },
     selector() {
-        return {branchId: Session.get('currentByBranch'), customerId: FlowRouter.getParam("customerId") , orderVipId: FlowRouter.getParam("orderVipId")};
+        return {
+            branchId: Session.get('currentByBranch'),
+            customerId: FlowRouter.getParam("customerId"),
+            orderVipId: FlowRouter.getParam("orderVipId")
+        };
     }
 });
 
@@ -119,8 +123,9 @@ formTmpl.onCreated(function () {
     self.paidAmountThb = new ReactiveVar(0);
     self.customerId = new ReactiveVar();
 
+    // note : we use $('[name="customerId"]').val() when update because Session not work well
     self.autorun(()=> {
-        let customerId = Template.instance().customerId.get();
+        let customerId = Template.instance().customerId.get() || Session.get('customerIdForSaveAndPayment') || $('[name="customerId"]').val();
 
         if (customerId) {
             lookupOrderVipPayment.callPromise({
@@ -149,6 +154,14 @@ formTmpl.onCreated(function () {
 formTmpl.helpers({
     collection(){
         return OrderVipPayment;
+    },
+    schema(){
+        // note : we use $('[name="customerId"]').val() when update because Session not work well
+        if (Session.get('customerIdForSaveAndPayment') || $('[name="customerId"]').val()) {
+            return OrderVipPayment.ForSaveAndPaymentSchema;
+        } else {
+            return OrderVipPayment.schema;
+        }
     },
     data () {
         let paymentVipDoc = Template.instance().paymentVipDoc.get();
@@ -233,6 +246,21 @@ formTmpl.helpers({
         let paidAmountThb = instance.paidAmountThb.get();
 
         return dueAmountThb - paidAmountThb;
+    },
+    customerId(){
+        // note : we use $('[name="customerId"]').val() when update because Session not work well
+        let customerId = Session.get('customerIdForSaveAndPayment') || $('[name="customerId"]').val();
+        if (customerId) {
+            return customerId;
+        }
+    },
+    employeeId(){
+        let employeeId = Session.get('employeeIdForSaveAndPayment');
+        if (employeeId) {
+            return employeeId;
+        } else {
+            return $('[name="employeeId"]').val();
+        }
     }
 });
 

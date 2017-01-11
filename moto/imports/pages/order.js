@@ -484,6 +484,7 @@ let hooksObject = {
         displaySuccess();
 
         // Clear session when success
+        Session.set('save', null);
         Session.set('saveAndPayment', null);
         Session.set('saveAndPrint', null);
     },
