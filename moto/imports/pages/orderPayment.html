@@ -1,9 +1,9 @@
 <!--Index-->
 <template name="Moto_orderPayment">
     <!--<div class="box-header with-border">-->
-        <!--<h3 class="box-title">-->
-            <!--{{> addNewButton}}-->
-        <!--</h3>-->
+    <!--<h3 class="box-title">-->
+    <!--{{> addNewButton}}-->
+    <!--</h3>-->
     <!--</div>-->
     <!-- /.box-header -->
 
@@ -27,17 +27,17 @@
 <template name="Moto_orderPaymentForm">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm collection=collection id="Moto_orderPaymentForm" doc=data.doc type=data.formType}}
+            {{#autoForm collection=collection schema=schema id="Moto_orderPaymentForm" doc=data.doc type=data.formType}}
                 <div class="row">
                     <div class="col-md-12">
                         {{> afQuickField name="paidDate" }}
 
                         <div class="row">
                             <div class="col-md-6">
-                                {{> afQuickField name="customerId"}}
+                                {{> afQuickField name="customerId" value=customerId }}
                             </div>
                             <div class="col-md-6">
-                                {{> afQuickField name="employeeId"}}
+                                {{> afQuickField name="employeeId" value=employeeId }}
                                 {{> afQuickField type="hidden" name="orderId" }}
                             </div>
                         </div>
