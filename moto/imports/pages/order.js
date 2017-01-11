@@ -178,7 +178,7 @@ formTmpl.onCreated(function () {
             }).then((result) => {
                 Session.set('customerType', result.type);
                 Session.set('customerIdForSaveAndPayment', result.customerId);
-                console.log(Session.get('customerIdForSaveAndPayment'));
+         
                 // Add items to local collection
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
