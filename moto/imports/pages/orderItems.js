@@ -210,6 +210,7 @@ indexTmpl.events({
         } else {
             Session.set("discountType", Session.get('discountType'));
         }
+
         alertify.item(fa('pencil', 'Items'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy-item': function (event, instance) {
@@ -253,7 +254,7 @@ newTmpl.onCreated(function () {
     // State
     this.itemId = new ReactiveVar();
     this.itemDoc = new ReactiveVar();
-    this.qty = new ReactiveVar(0);
+    this.qty = new ReactiveVar();
     this.orderPrice = new ReactiveVar(0);
     this.price = new ReactiveVar(0);
     this.khrPrice = new ReactiveVar(0);
@@ -262,6 +263,23 @@ newTmpl.onCreated(function () {
     this.discountType = new ReactiveVar();
     this.discount = new ReactiveVar(0);
     this.totalAmount = new ReactiveVar(0);
+
+    $(document).on('keyup', (e) => {
+        // keypress enter
+        if (e.keyCode == 13) {
+            $('.js-add-item').click();
+            event.stopPropagation();
+            return false;
+        }
+        // keypress tab
+        if (e.keyCode == 192) {
+            $('[name="qty"]').trigger("focus");
+            event.stopPropagation();
+            return false;
+        }
+    });
+
+
 });
 
 newTmpl.onRendered(function () {
@@ -399,8 +417,8 @@ newTmpl.events({
         }
 
         // Clear
-        instance.$('[name="qty"]').val(1);
-        instance.qty.set(1);
+        // instance.$('[name="qty"]').val(1);
+        // instance.qty.set(1);
 
         //animate for member
         $('#animation').removeClass().addClass('animated bounceIn').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
@@ -485,7 +503,10 @@ newTmpl.events({
             memo: memo
         });
 
-        // }
+        // clear all value because problem open form edit when key press enter it work on insert form
+        AutoForm.resetForm("Moto_orderItemsNew");
+        $('[name="itemId"]').val('').trigger('change');
+        instance.$('[name="amount"]').val('');
     }
 });
 
@@ -519,6 +540,21 @@ editTmpl.onCreated(function () {
     Meteor.call('findItems', {selectOne: true}, (err, result)=> {
         if (result) {
             this.findItems.set(result);
+        }
+    });
+
+    $(document).on('keyup', (e) => {
+        // keypress enter
+        if (e.keyCode == 13) {
+            $('.js-submit').click();
+            event.stopPropagation();
+            return false;
+        }
+        // keypress tab
+        if (e.keyCode == 192) {
+            $('[name="qty"]').trigger("focus");
+            event.stopPropagation();
+            return false;
         }
     });
 });
@@ -632,7 +668,6 @@ editTmpl.events({
                     result.purchase = 0;
                 }
                 instance.price.set(result.price);
-                sele
                 instance.khrPrice.set(result.khrPrice);
                 instance.currencyId.set(result.currencyId);
                 instance.itemDoc.set(result);

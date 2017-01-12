@@ -168,7 +168,11 @@
                 </div>
             </div>
 
-            {{> formFooterWithButton}}
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary js-submit"><i class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}
+                </button>
+                <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}</button>
+            </div>
         {{/autoForm}}
     </div>
 </template>
