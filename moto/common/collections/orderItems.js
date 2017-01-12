@@ -33,7 +33,6 @@ export const OrderItemsSchema = new SimpleSchema({
     qty: {
         type: Number,
         label: 'Qty',
-        defaultValue: 0,
         min: 1
     },
     unit: {

@@ -342,6 +342,7 @@ formTmpl.onDestroyed(function () {
     Session.set('findItems', null);
     Session.set('customerIdForSaveAndPayment', null);
     Session.set('employeeIdForSaveAndPayment', null);
+    $(document).off('keyup');
 });
 
 // Show
