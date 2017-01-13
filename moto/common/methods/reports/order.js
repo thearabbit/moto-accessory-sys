@@ -128,7 +128,6 @@ export const orderReport = new ValidatedMethod({
                     }
                 }
             ])[0];
-
             return {rptTitle, rptHeader, rptContent};
         }
     }

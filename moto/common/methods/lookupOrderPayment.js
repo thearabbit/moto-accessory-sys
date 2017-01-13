@@ -36,7 +36,8 @@ export const lookupOrderPayment = new ValidatedMethod({
                         orderDate: 1,
                         paymentDoc: 1,
                         balance: 1,
-                        paymentCount: { $size: '$paymentDoc' }
+                        paymentCount: {$size: '$paymentDoc'},
+                        printId: 1,
                     }
                 },
                 {
@@ -59,9 +60,10 @@ export const lookupOrderPayment = new ValidatedMethod({
                         orderDate: 1,
                         paymentDoc: {
                             $cond: [
-                                { $ne: ["$paymentCount", 0] }, '$paymentDoc', '$$ROOT'
+                                {$ne: ["$paymentCount", 0]}, '$paymentDoc', '$$ROOT'
                             ]
-                        }
+                        },
+                        printId: 1
                     }
                 },
                 {
@@ -72,10 +74,11 @@ export const lookupOrderPayment = new ValidatedMethod({
                 {
                     $group: {
                         _id: '$_id',
-                        customerId: { $last: '$customerId' },
+                        customerId: {$last: '$customerId'},
                         payment: {
                             $last: '$paymentDoc'
-                        }
+                        },
+                        printId: {$last: "$printId"}
                     }
                 }
             ]);

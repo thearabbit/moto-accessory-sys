@@ -46,7 +46,8 @@ let indexTmpl = Template.Moto_orderPayment,
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('orderPayment', {size: 'sm'});
-    createNewAlertify('orderPaymentShow',);
+    createNewAlertify('orderInvoice', {size: 'lg'});
+    createNewAlertify('orderPaymentShow');
 });
 
 indexTmpl.helpers({
@@ -132,13 +133,17 @@ formTmpl.onCreated(function () {
                 } else {
                     self.dueAmount.set(0);
                 }
+
+                if (result.printId) {
+                    Session.set('printId', result.printId);
+                }
+
                 self.paymentDoc.set(result);
             }).catch((err)=> {
                 console.log(err);
             });
         }
     });
-
 });
 
 formTmpl.helpers({
@@ -146,12 +151,12 @@ formTmpl.helpers({
         return OrderPayment;
     },
     schema(){
-        // note : we use $('[name="customerId"]').val() when update because Session not work well
-        if (Session.get('customerIdForSaveAndPayment') || $('[name="customerId"]').val()) {
+        // note : we use $('.customerId').val() when update because Session not work well
+        if (Session.get('customerIdForSaveAndPayment') || $('.customerId').val()) {
             return OrderPayment.ForSaveAndPaymentSchema;
-        } else {
-            return OrderPayment.schema;
         }
+
+        return OrderPayment.schema;
     },
     data () {
         let paymentDoc = Template.instance().paymentDoc.get();
@@ -162,14 +167,14 @@ formTmpl.helpers({
             doc: {
                 orderId: _.isUndefined(paymentDoc) ? 404 : paymentDoc._id,
                 dueAmount: roundKhrCurrency(dueAmount),
-                paidDate: moment().toDate()
+                paidDate: moment().toDate(),
+                printId: _.isUndefined(paymentDoc) ? 404 : paymentDoc.printId
             }
         };
         let currentData = Template.currentData();
         if (currentData) {
             data.formType = 'update';
             data.doc = OrderPayment.findOne(currentData.orderPaymentId);
-
             if (data.doc.dueAmount && _.isUndefined(dueAmount)) {
                 data.doc.dueAmount = data.doc.dueAmount;
 
@@ -181,6 +186,7 @@ formTmpl.helpers({
 
             Template.instance().dueAmount.set(roundKhrCurrency(data.doc.dueAmount));
             Template.instance().paidAmount.set(roundKhrCurrency(data.doc.paidAmount));
+            Session.set('printId', data.doc.printId);
         }
 
         return data;
@@ -193,8 +199,8 @@ formTmpl.helpers({
         return roundKhrCurrency(dueAmount - paidAmount);
     },
     customerId(){
-        // note : we use $('[name="customerId"]').val() when update because Session not work well
-        let customerId = Session.get('customerIdForSaveAndPayment') || $('[name="customerId"]').val();
+        // note : we use $('.customerId').val() when update because Session not work well
+        let customerId = Session.get('customerIdForSaveAndPayment') || $('.customerId').val();
         if (customerId) {
             return customerId;
         }
@@ -217,7 +223,14 @@ formTmpl.events({
     'change [name="customerId"]'(event, instance){
         let customerId = event.currentTarget.value;
         instance.customerId.set(customerId);
+    },
+    'click .js-save-and-print'(event, instance){
+        Session.set('saveAndPrint', 'fire');
     }
+});
+
+formTmpl.onDestroyed(function () {
+    Session.set('printId', null);
 });
 
 // Show
@@ -241,10 +254,22 @@ showTmpl.helpers({
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {
-        // if (formType == 'update') {
-        alertify.orderPayment().close();
-        // }
+        let saveAndPrint = Session.get('saveAndPrint');
+        if (saveAndPrint == null) {
+            alertify.orderPayment().close();
+        }
+
+        if (saveAndPrint == "fire") {
+            let printId = Session.get('printId');
+            alertify.orderInvoice(fa('print', 'Order Invoice'), renderTemplate(Template.Moto_invoiceReportGen, {
+                printId: printId
+            })).maximize();
+        }
+
         displaySuccess();
+
+        // clear
+        Session.set('saveAndPrint', null);
     },
     onError (formType, error) {
         displayError(error.message);

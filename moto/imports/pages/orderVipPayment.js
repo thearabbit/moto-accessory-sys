@@ -46,6 +46,7 @@ let indexTmpl = Template.Moto_orderVipPayment,
 indexTmpl.onCreated(function () {
     // Create new  alertify
     createNewAlertify('orderVipPayment', {size: 'lg'});
+    createNewAlertify('orderVipInvoice', {size: 'lg'});
     createNewAlertify('orderVipPaymentShow');
 });
 
@@ -142,6 +143,10 @@ formTmpl.onCreated(function () {
                     self.dueAmountThb.set(0);
                 }
 
+                if (result.printId) {
+                    Session.set('printId', result.printId);
+                }
+
                 self.paymentVipDoc.set(result);
             }).catch((err)=> {
                 console.log(err);
@@ -156,8 +161,8 @@ formTmpl.helpers({
         return OrderVipPayment;
     },
     schema(){
-        // note : we use $('[name="customerId"]').val() when update because Session not work well
-        if (Session.get('customerIdForSaveAndPayment') || $('[name="customerId"]').val()) {
+        // note : we use $(".customerId").val() when update because Session not work well
+        if (Session.get('customerIdForSaveAndPayment') || $(".customerId").val()) {
             return OrderVipPayment.ForSaveAndPaymentSchema;
         } else {
             return OrderVipPayment.schema;
@@ -177,7 +182,8 @@ formTmpl.helpers({
                 dueAmountKhr: roundKhrCurrency(dueAmountKhr),
                 dueAmountUsd: dueAmountUsd,
                 dueAmountThb: dueAmountThb,
-                paidDate: moment().toDate()
+                paidDate: moment().toDate(),
+                printId: _.isUndefined(paymentVipDoc) ? 404 : paymentVipDoc.printId
             }
         };
         let currentData = Template.currentData();
@@ -222,6 +228,7 @@ formTmpl.helpers({
             Template.instance().paidAmountUsd.set(data.doc.paidAmountUsd);
             Template.instance().dueAmountThb.set(data.doc.dueAmountThb || 0);
             Template.instance().paidAmountThb.set(data.doc.paidAmountThb);
+            Session.set('printId', data.doc.printId);
         }
 
         return data;
@@ -248,8 +255,8 @@ formTmpl.helpers({
         return dueAmountThb - paidAmountThb;
     },
     customerId(){
-        // note : we use $('[name="customerId"]').val() when update because Session not work well
-        let customerId = Session.get('customerIdForSaveAndPayment') || $('[name="customerId"]').val();
+        // note : we use $(".customerId").val() when update because Session not work well
+        let customerId = Session.get('customerIdForSaveAndPayment') || $(".customerId").val();
         if (customerId) {
             return customerId;
         }
@@ -280,7 +287,14 @@ formTmpl.events({
     'change [name="customerId"]'(event, instance){
         let customerId = event.currentTarget.value;
         instance.customerId.set(customerId);
+    },
+    'click .js-save-and-print'(event, instance){
+        Session.set('saveAndPrint', 'fire');
     }
+});
+
+formTmpl.onDestroyed(function () {
+    Session.set('printId', null);
 });
 
 // Show
@@ -304,10 +318,21 @@ showTmpl.helpers({
 // Hook
 let hooksObject = {
     onSuccess (formType, result) {
-        // if (formType == 'update') {
-        alertify.orderVipPayment().close();
-        // }
+        let saveAndPrint = Session.get('saveAndPrint');
+        if (saveAndPrint == null) {
+            alertify.orderVipPayment().close();
+        }
+
+        if (saveAndPrint == "fire") {
+            let printId = Session.get('printId');
+            alertify.orderVipInvoice(fa('print', 'Order Vip Invoice'), renderTemplate(Template.Moto_invoiceVipReportGen, {
+                printId: printId
+            })).maximize();
+        }
+
         displaySuccess();
+        // clear
+        Session.set('saveAndPrint', null);
     },
     onError (formType, error) {
         displayError(error.message);

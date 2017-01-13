@@ -47,6 +47,9 @@ OrderVipPayment.schema = new SimpleSchema({
         type: String,
         label: 'Order Id',
     },
+    printId: {
+        type: String
+    },
     employeeId: {
         type: String,
         label: 'Employee',
@@ -266,6 +269,9 @@ OrderVipPayment.ForSaveAndPaymentSchema = new SimpleSchema({
     orderVipId: {
         type: String,
         label: 'Order Id'
+    },
+    printId: {
+        type: String
     },
     employeeId: {
         type: String,

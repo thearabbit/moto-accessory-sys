@@ -58,14 +58,14 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             render(val, type, doc){
                 if (val == "Partial") {
                     return `<span class="badge bg-orange-active"><i class="fa fa-heart-o"></i> ${val} </span>`;
-                } else if(val == "Overpaid"){
+                } else if (val == "Overpaid") {
                     return `<span class="badge bg-green"><i class="fa fa-thumbs-up"></i> ${val} </span>`;
-                }else{
+                } else {
                     return `<span class="badge bg-teal-active"><i class="fa fa-heart"></i> ${val} </span>`;
                 }
             }
         }],
-    extraFields: ['employeeId']
+    extraFields: ['employeeId', 'printId']
 });
 
 export const OrderPaymentTabular = new Tabular.Table(tabularData);
