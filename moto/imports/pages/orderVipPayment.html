@@ -1,9 +1,9 @@
 <!--Index-->
 <template name="Moto_orderVipPayment">
     <!--<div class="box-header with-border">-->
-        <!--<h3 class="box-title">-->
-            <!--{{> addNewButton}}-->
-        <!--</h3>-->
+    <!--<h3 class="box-title">-->
+    <!--{{> addNewButton}}-->
+    <!--</h3>-->
     <!--</div>-->
     <!-- /.box-header -->
 
@@ -27,7 +27,8 @@
 <template name="Moto_orderVipPaymentForm">
     <div class="box-body">
         {{#if Template.subscriptionsReady}}
-            {{#autoForm collection=collection schema=schema id="Moto_orderVipPaymentForm" doc=data.doc type=data.formType}}
+            {{#autoForm collection=collection schema=schema id="Moto_orderVipPaymentForm" doc=data.doc
+                        type=data.formType}}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
@@ -39,6 +40,7 @@
                             </div>
                             <div class="col-md-4">
                                 {{> afQuickField type="hidden" name="orderVipId" }}
+                                {{> afQuickField type="hidden" name="printId"}}
                                 {{> afQuickField name="employeeId" value=employeeId}}
                             </div>
                         </div>
@@ -81,7 +83,14 @@
                     </div>
                 </div>
 
-                {{> formFooterWithButton}}
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}
+                    </button>
+                    <button type="submit" class="btn bg-orange js-save-and-print" {{disabledSubmitBtn}}>
+                        <i class="fa fa-print"></i> Save & Print
+                    </button>
+                    <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}</button>
+                </div>
             {{/autoForm}}
         {{else}}
             {{> loading}}
@@ -106,7 +115,8 @@
                     <dt>Paid Amount</dt>
                     <dd>Khr : {{paidAmountKhr}} ៛ | Thb : {{paidAmountThb}} B | Usd : {{paidAmountUsd}} $</dd>
                     <dt>Balance</dt>
-                    <dd>Khr : {{paymentBalanceKhr}} ៛ | Thb : {{paymentBalancethb}} B | Usd : {{paymentBalanceUsd}} $</dd>
+                    <dd>Khr : {{paymentBalanceKhr}} ៛ | Thb : {{paymentBalancethb}} B | Usd : {{paymentBalanceUsd}}$
+                    </dd>
                     <dt>Status</dt>
                     <dd>{{status}}</dd>
                 </dl>

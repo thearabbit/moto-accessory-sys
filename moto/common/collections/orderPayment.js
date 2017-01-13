@@ -49,6 +49,10 @@ export const OrderPayment = new Mongo.Collection("moto_orderPayment");
             type: String,
             label: 'Order Id',
         },
+        printId: {
+            type: String,
+            label: 'Print Id',
+        },
         employeeId: {
             type: String,
             label: 'Employee',
@@ -158,6 +162,10 @@ OrderPayment.ForSaveAndPaymentSchema = new SimpleSchema({
     orderId: {
         type: String,
         label: 'Order Id',
+    },
+    printId: {
+        type: String,
+        label: 'Print Id',
     },
     employeeId: {
         type: String,

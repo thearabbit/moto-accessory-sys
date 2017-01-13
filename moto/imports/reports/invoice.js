@@ -89,6 +89,7 @@ genTmpl.onCreated(function () {
         );
     });
 });
+
 genTmpl.helpers({
     rptData(){
         return Template.instance().rptData.get();

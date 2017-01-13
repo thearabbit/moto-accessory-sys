@@ -34,11 +34,12 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                {{> afQuickField name="customerId" value=customerId }}
+                                {{> afQuickField name="customerId" value=customerId}}
                             </div>
                             <div class="col-md-6">
                                 {{> afQuickField name="employeeId" value=employeeId }}
                                 {{> afQuickField type="hidden" name="orderId" }}
+                                {{> afQuickField type="hidden" name="printId" }}
                             </div>
                         </div>
 
@@ -57,7 +58,14 @@
                     </div>
                 </div>
 
-                {{> formFooterWithButton}}
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane-o"></i> {{_ "form.btnSubmit"}}
+                    </button>
+                    <button type="submit" class="btn bg-orange js-save-and-print" {{disabledSubmitBtn}}>
+                        <i class="fa fa-print"></i> Save & Print
+                    </button>
+                    <button type="reset" class="btn btn-default"><i class="fa fa-refresh"></i> {{_ "form.btnReset"}}</button>
+                </div>
             {{/autoForm}}
         {{else}}
             {{> loading}}

@@ -38,7 +38,8 @@ export const lookupOrderVipPayment = new ValidatedMethod({
                         balanceKhr: 1,
                         balanceUsd: 1,
                         balanceThb: 1,
-                        paymentVipCount: { $size: '$paymentVipDoc' }
+                        paymentVipCount: {$size: '$paymentVipDoc'},
+                        printId: 1
                     }
                 },
                 {
@@ -61,9 +62,10 @@ export const lookupOrderVipPayment = new ValidatedMethod({
                         orderDate: 1,
                         paymentVipDoc: {
                             $cond: [
-                                { $ne: ["$paymentVipCount", 0] }, '$paymentVipDoc', '$$ROOT'
+                                {$ne: ["$paymentVipCount", 0]}, '$paymentVipDoc', '$$ROOT'
                             ]
-                        }
+                        },
+                        printId: 1
                     }
                 },
                 {
@@ -74,10 +76,11 @@ export const lookupOrderVipPayment = new ValidatedMethod({
                 {
                     $group: {
                         _id: '$_id',
-                        customerId: { $last: '$customerId' },
+                        customerId: {$last: '$customerId'},
                         paymentVip: {
                             $last: '$paymentVipDoc'
-                        }
+                        },
+                        printId: {$last: '$printId'}
                     }
                 }
             ]);

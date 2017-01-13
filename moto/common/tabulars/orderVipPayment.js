@@ -71,7 +71,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 }
             }
         }],
-    extraFields: ['employeeId', 'dueAmountUsd', 'dueAmountThb', 'paidAmountUsd', 'paidAmountThb', 'paymentBalanceUsd', 'paymentBalanceThb']
+    extraFields: ['employeeId', 'printId', 'dueAmountUsd', 'dueAmountThb', 'paidAmountUsd', 'paidAmountThb', 'paymentBalanceUsd', 'paymentBalanceThb']
 });
 
 export const OrderPaymentTabular = new Tabular.Table(tabularData);
