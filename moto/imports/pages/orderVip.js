@@ -58,6 +58,17 @@ indexTmpl.onCreated(function () {
     createNewAlertify('orderShow');
 
     this.subscribe('moto.orderVipPayment');
+
+    //get customer from server
+    Meteor.call('findCustomer', {
+        selectOne: true,
+        customerType: "Vip",
+        branch: Session.get('currentBranch')
+    }, (err, result)=> {
+        if (result) {
+            Session.set('findCustomerVip', result);
+        }
+    });
 });
 
 indexTmpl.helpers({
@@ -251,6 +262,9 @@ formTmpl.helpers({
         let instance = Template.instance();
         let lastOrderBalanceThb = _.isUndefined(instance.lastOrderBalanceThb.get()) ? 0 : instance.lastOrderBalanceThb.get();
         return round2(lastOrderBalanceThb, 2);
+    },
+    customerVipOpt(){
+        return Session.get('findCustomerVip');
     }
 });
 
@@ -417,8 +431,8 @@ let hooksObject = {
             alertify.orderVip().close();
         }
 
-        if (saveAndPayment == "fire" && formType == 'update' ) {
-                alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formSaveAndPayment)).maximize();
+        if (saveAndPayment == "fire" && formType == 'update') {
+            alertify.orderVipPayment(fa('plus', 'Order Vip Payment'), renderTemplate(formSaveAndPayment)).maximize();
         }
 
         if (saveAndPrint == "fire" && formType == 'update') {

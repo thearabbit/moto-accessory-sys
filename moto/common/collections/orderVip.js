@@ -141,17 +141,7 @@ OrderVip.schema = new SimpleSchema({
         type: String,
         label: 'Customer',
         autoform: {
-            type: 'universe-select',
-            afFieldInput: {
-                uniPlaceholder: 'Select One',
-                optionsMethod: 'moto.selectOptsMethod.customer',
-                optionsMethodParams: function () {
-                    if (Meteor.isClient) {
-                        let currentBranch = Session.get('currentBranch'), customerType = Session.get('customerType');
-                        return {branchId: currentBranch, type: customerType};
-                    }
-                }
-            }
+            type: 'select2'
         }
     },
     type: {

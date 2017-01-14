@@ -160,7 +160,7 @@ SelectOptsMethod.customer = new ValidatedMethod({
                 selector = {_id: {$in: values}};
             }
             else if (params.type) {
-                selector = {type: params.type};
+                selector = {type: {$eq: params.type}};
             }
 
             let data = Customer.find(selector, {limit: 10});
