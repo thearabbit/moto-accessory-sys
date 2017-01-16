@@ -280,6 +280,7 @@ indexTmpl.events({
         } else {
             Session.set("discountType", Session.get('discountType'));
         }
+        Session.set('openForm', 'open');
         alertify.item(fa('pencil', 'Items'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy-item': function (event, instance) {
@@ -341,6 +342,7 @@ newTmpl.onCreated(function () {
     this.discount = new ReactiveVar(0);
     this.totalAmount = new ReactiveVar(0);
 
+    let count = 0;
     $(document).on('keyup', (e) => {
         // keypress enter
         if (e.keyCode == 13) {
@@ -348,11 +350,22 @@ newTmpl.onCreated(function () {
             event.stopPropagation();
             return false;
         }
-        // keypress tab
-        if (e.keyCode == 192) {
-            $('[name="qty"]').trigger("focus");
-            event.stopPropagation();
-            return false;
+        // keypress `
+        if (Session.get('openForm') == null) {
+            if (e.keyCode == 192) {
+                $('[name="qty"]').trigger("focus");
+                event.stopPropagation();
+                count++;
+                // return false;
+            }
+            // double keypress `
+            if (e.keyCode == 192 && count == 2) {
+                $("[name='itemId']").select2('open');
+            }
+
+            if (count >= 2) {
+                count = 0;
+            }
         }
     });
 });
@@ -591,6 +604,7 @@ editTmpl.onCreated(function () {
         this.discountType.set(data.discountType);
     });
 
+    let count = 0;
     $(document).on('keyup', (e) => {
         // keypress enter
         if (e.keyCode == 13) {
@@ -598,11 +612,23 @@ editTmpl.onCreated(function () {
             event.stopPropagation();
             return false;
         }
-        // keypress tab
-        if (e.keyCode == 192) {
-            $('[name="qty"]').trigger("focus");
-            event.stopPropagation();
-            return false;
+        // keypress `
+        if(Session.get('openForm') == "open") {
+            // keypress tab
+            if (e.keyCode == 192) {
+                $('[name="qty"]').trigger("focus");
+                event.stopPropagation();
+                count++;
+                // return false;
+            }
+            // double keypress `
+            if (e.keyCode == 192 && count == 2) {
+                $('.itemIdEdit').select2('open');
+            }
+
+            if(count >= 2 ){
+                count = 0;
+            }
         }
     });
 });
@@ -727,6 +753,10 @@ editTmpl.events({
         instance.orderPrice.set(orderPrice);
         instance.discount.set(discount);
     },
+});
+
+editTmpl.onDestroyed(function () {
+    Session.set('openForm', null);
 });
 
 let hooksObject = {

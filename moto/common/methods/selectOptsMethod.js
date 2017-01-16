@@ -203,7 +203,7 @@ SelectOptsMethod.customerForOrderPayment = new ValidatedMethod({
 
             let data = Customer.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = value._id + ' : ' + value.name;
+                let label = value.name + ' : ' + value.address;
                 list.push({label: label, value: value._id});
             });
 
@@ -241,7 +241,7 @@ SelectOptsMethod.customerForOrderVipPayment = new ValidatedMethod({
 
             let data = Customer.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = value._id + ' : ' + value.name;
+                let label = value.name + ' : ' + value.address;
                 list.push({label: label, value: value._id});
             });
 
@@ -451,7 +451,7 @@ SelectOptsMethod.supplier = new ValidatedMethod({
                 selector = {_id: {$in: values}};
             }
 
-            let data = Supplier.find(selector, {limit: 10});
+            let data = Supplier.find(selector);
             data.forEach(function (value) {
                 let label = value._id + ' : ' + value.name;
                 list.push({label: label, value: value._id});
@@ -492,7 +492,7 @@ SelectOptsMethod.customerForReport = new ValidatedMethod({
 
             let data = Customer.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = `${value._id}  :  ${value.name} (${value.type})`;
+                let label = `${value._id}  :  ${value.name} (${value.type}) | ${value.address}`;
                 list.push({label: label, value: value._id});
             });
 
@@ -530,7 +530,7 @@ SelectOptsMethod.customerVipForReport = new ValidatedMethod({
 
             let data = Customer.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = `${value._id}  :  ${value.name} (${value.type})`;
+                let label = `${value._id}  :  ${value.name} (${value.type}) | ${value.address}`;
                 list.push({label: label, value: value._id});
             });
 
