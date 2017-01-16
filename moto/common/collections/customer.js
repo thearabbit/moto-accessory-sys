@@ -13,7 +13,8 @@ export const Customer = new Mongo.Collection("moto_customer");
 Customer.generalSchema = new SimpleSchema({
     name: {
         type: String,
-        label: 'Name'
+        label: 'Name',
+        unique: true
     },
     gender: {
         type: String,
