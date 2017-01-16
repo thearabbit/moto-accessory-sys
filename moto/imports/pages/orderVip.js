@@ -235,15 +235,15 @@ formTmpl.helpers({
 
         return {};
     },
-    image(){
-        let result = "/no-image.png";
-        if (Session.get("image")) {
-            let photoUrl = Files.findOne({_id: Session.get("image")}).url();
-            result = photoUrl;
-
-        }
-        return result;
-    },
+    // image(){
+    //     let result = "/no-image.png";
+    //     if (Session.get("image")) {
+    //         let photoUrl = Files.findOne({_id: Session.get("image")}).url();
+    //         result = photoUrl;
+    //
+    //     }
+    //     return result;
+    // },
     orderVipLog(){
         let instance = Template.instance();
         return instance.orderVipLog.get();

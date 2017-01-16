@@ -249,15 +249,15 @@ formTmpl.helpers({
         }
         return result;
     },
-    image(){
-        let result = "/no-image.png";
-        if (Session.get("image")) {
-            let photoUrl = Files.findOne({_id: Session.get("image")}).url();
-            result = photoUrl;
-
-        }
-        return result;
-    },
+    // image(){
+    //     let result = "/no-image.png";
+    //     if (Session.get("image")) {
+    //         let photoUrl = Files.findOne({_id: Session.get("image")}).url();
+    //         result = photoUrl;
+    //
+    //     }
+    //     return result;
+    // },
     orderLog(){
         let instance = Template.instance();
         return instance.orderLog.get();

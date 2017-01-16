@@ -1,10 +1,10 @@
 module.exports = {
   servers: {
     one: {
-      host: '35.161.248.216',
-      username: 'ubuntu',
-      pem: "/home/asus/Downloads/moto-accessories.pem"
-      // password:
+      host: '139.59.246.68',
+      username: 'root',
+      // pem: "/home/asus/Downloads/moto-accessories.pem"
+      password:'moto2017'
       // or leave blank for authenticate from ssh-agent
     }
   },
@@ -19,7 +19,7 @@ module.exports = {
       serverOnly: true,
     },
     env: {
-      ROOT_URL: 'http://35.161.248.216',
+      ROOT_URL: 'http://139.59.246.68',
       MONGO_URL: 'mongodb://localhost/moto'
     },
     dockerImage: 'abernix/meteord:base',
