@@ -17,7 +17,7 @@ Meteor.methods({
 
         Customer.find({$and: [{type: customerType}, {branchId: branch}]})
             .forEach(function (obj) {
-                list.push({label: obj._id + ' : ' + obj.name, value: obj._id})
+                list.push({label: obj.name + ' : ' + obj.address, value: obj._id})
             });
 
         return list;

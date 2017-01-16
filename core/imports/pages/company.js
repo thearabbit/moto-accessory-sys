@@ -37,7 +37,8 @@ indexTmpl.helpers({
 });
 indexTmpl.events({
     'click .js-update' (event, instance) {
-        let data = Blaze.getData(event.target);
+        // let data = Blaze.getData(event.target);
+        let data = Company.findOne();
         alertify.company(fa("pencil", TAPi18n.__('core.company.title')), renderTemplate(editTmpl, {_id: data._id}));
     }
 });
@@ -50,6 +51,7 @@ editTmpl.helpers({
     data () {
         let data = {};
         let currentData = Template.currentData();
+        console.log(currentData);
         if (currentData) {
             data = Company.findOne(currentData._id);
         }

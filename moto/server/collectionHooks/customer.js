@@ -6,5 +6,5 @@ import {Customer} from '../../common/collections/customer.js';
 
 Customer.before.insert(function (userId, doc) {
     let prefix = doc.branchId + '-';
-    doc._id = idGenerator.genWithPrefix(Customer, prefix, 6);
+    doc._id = idGenerator.genWithPrefix(Customer, prefix, 4);
 });
