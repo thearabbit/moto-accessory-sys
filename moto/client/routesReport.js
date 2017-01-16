@@ -114,6 +114,23 @@ MotoRoutes.route('/order-report', {
     }
 });
 
+// Payment
+import '../imports/reports/payment.js';
+MotoRoutes.route('/payment-report', {
+    name: 'moto.paymentReport',
+    title: 'Payment Report',
+    action: function (params, queryParams) {
+        Layout.main('Moto_paymentReport');
+    },
+    breadcrumb: {
+        //params: ['id'],
+        //queryParams: ['show', 'color'],
+        title: 'Payment Report',
+        // icon: 'users',
+        parent: 'moto.home'
+    }
+});
+
 // Order Vip
 import '../imports/reports/orderVip.js';
 MotoRoutes.route('/order-vip-report', {
