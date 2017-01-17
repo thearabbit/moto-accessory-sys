@@ -25,7 +25,7 @@ OrderVip.itemsSchema = new SimpleSchema({
         type: Number,
         label: 'Qty',
         min: 1,
-        decimal: true
+        decimal:true
     },
     unit: {
         type: String,
