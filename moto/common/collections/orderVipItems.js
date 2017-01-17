@@ -37,9 +37,10 @@ export const OrderVipItemsSchema = new SimpleSchema({
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {
-                return inputmaskOptions.integer();
+                return inputmaskOptions.decimal();
             }
-        }
+        },
+        decimal: true
     },
     unit: {
         type: String,

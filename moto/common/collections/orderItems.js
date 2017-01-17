@@ -33,7 +33,8 @@ export const OrderItemsSchema = new SimpleSchema({
     qty: {
         type: Number,
         label: 'Qty',
-        min: 1
+        min: 1,
+        decimal: true
     },
     unit: {
         type: String,
@@ -84,7 +85,7 @@ export const OrderItemsSchema = new SimpleSchema({
                         prefix = 'B ';
                     }
 
-                    return inputmaskOptions.currency({prefix: prefix ,  placeholder: ""});
+                    return inputmaskOptions.currency({prefix: prefix, placeholder: ""});
                 }
             }
         }
@@ -133,7 +134,7 @@ export const OrderItemsSchema = new SimpleSchema({
                     let type, discountType = Session.get('discountType');
                     if (discountType == 'Percentage' || discountType == "%") {
                         type = inputmaskOptions.percentage();
-                    } else{
+                    } else {
                         type = inputmaskOptions.currency({prefix: '៛ '});
                     }
 
