@@ -468,6 +468,8 @@ let hooksObject = {
         $('[name="qty"]').val(null);
         $('[name="price"]').val(null);
         $('[name="amount"]').val(null);
+        $('[name="totalAmount"]').val(null);
+        $('[name="subTotal"]').val(null);
         $('[name="discountAmount"]').val(null);
         $('[name="total"]').val(null);
 

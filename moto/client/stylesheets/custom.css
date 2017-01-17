@@ -19,3 +19,48 @@
     min-height: 43px;
     text-align: right;
 }
+
+/*--thead--*/
+tr .hideThead{
+    border-left: hidden;
+    border-right: hidden;
+}
+
+/*--tbody--*/
+tr .hideTbodyContent{
+    border: hidden;
+}
+
+/*--footer--*/
+.hideTfoot{
+    border-right: hidden;
+    border-left: hidden;
+    border-bottom: hidden;
+}
+
+tr .hideTfootTitle{
+    border-bottom: hidden;
+    border-right: hidden;
+}
+
+tr .hideTfootValue{
+    border-bottom: hidden;
+}
+
+.rpt-title-custom {
+    font-size: 12px;
+    font-weight: bold;
+    border-bottom: 1px solid #000000;
+    margin-bottom: 10px;
+}
+
+/*--vip--*/
+tr .hideTbodyContentVip{
+    border-top: hidden;
+    border-right: hidden;
+}
+
+tr .hideTfootValueVip{
+    border-bottom: hidden;
+    border-right: hidden;
+}

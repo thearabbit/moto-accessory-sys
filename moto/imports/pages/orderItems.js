@@ -442,7 +442,7 @@ newTmpl.events({
         let qty = instance.$('[name="qty"]').val();
         let orderPrice = instance.$('[name="orderPrice"]').val();
         let discount = instance.$('[name="discount"]').val();
-        qty = _.isEmpty(qty) ? 0 : parseInt(qty);
+        qty = _.isEmpty(qty) ? 0 : parseFloat(qty);
         orderPrice = _.isEmpty(orderPrice) ? 0 : parseFloat(orderPrice);
         discount = _.isEmpty(discount) ? 0 : parseFloat(discount);
 
@@ -456,7 +456,7 @@ newTmpl.events({
         let itemName = _.trim(_.split(instance.$('[name="itemId"] option:selected').text(), " [")[0]);
 
         itemName = _.trim(_.split(itemName, " : ")[1]);
-        let qty = parseInt(instance.$('[name="qty"]').val());
+        let qty = parseFloat(instance.$('[name="qty"]').val());
         let unit = instance.$('[name="unit"]').val();
         let purchasePrice = parseFloat(instance.$('[name="purchasePrice"]').val());
         let price = round2(parseFloat(instance.$('[name="price"]').val()), 2);
@@ -496,30 +496,37 @@ newTmpl.events({
         //         }
         //     );
         // } else {
-        itemsCollection.insert({
-            // _id: itemId,
-            date: moment().format('DD/MM/YYYY hh:mm:ss'),
-            itemId: itemId,
-            itemName: itemName,
-            memoItem: memoItem,
-            qty: qty,
-            unit: unit,
-            currencyId: currency,
-            price: price,
-            purchasePrice: purchasePrice,
-            khrPrice: khrPrice,
-            orderPrice: orderPrice,
-            discount: discount,
-            discountType: discountType,
-            amount: amount,
-            totalAmount: totalAmount,
-            memo: memo
-        });
-
+        if(itemId != "" && qty != "" && orderPrice != 0) {
+            itemsCollection.insert({
+                // _id: itemId,
+                date: moment().format('DD/MM/YYYY hh:mm:ss'),
+                itemId: itemId,
+                itemName: itemName,
+                memoItem: memoItem,
+                qty: qty,
+                unit: unit,
+                currencyId: currency,
+                price: price,
+                purchasePrice: purchasePrice,
+                khrPrice: khrPrice,
+                orderPrice: orderPrice,
+                discount: discount,
+                discountType: discountType,
+                amount: amount,
+                totalAmount: totalAmount,
+                memo: memo
+            });
+        }
         // clear all value because problem open form edit when key press enter it work on insert form
         AutoForm.resetForm("Moto_orderItemsNew");
-        $('[name="itemId"]').val('').trigger('change');
-        instance.$('[name="amount"]').val('');
+        $('[name="itemId"]').val(null).trigger('change');
+        instance.$('[name="memo"]').val(null);
+        instance.$('[name="qty"]').val(null);
+        instance.$('[name="unit"]').val(null);
+        instance.$('[name="orderPrice"]').val(null);
+        instance.$('[name="discount"]').val(null);
+        instance.$('[name="amount"]').val(null);
+        instance.$('[name="totalAmount"]').val(null);
     }
 });
 
@@ -720,7 +727,7 @@ editTmpl.events({
         let qty = instance.$('[name="qty"]').val();
         let orderPrice = instance.$('[name="orderPrice"]').val();
         let discount = instance.$('[name="discount"]').val();
-        qty = _.isEmpty(qty) ? 0 : parseInt(qty);
+        qty = _.isEmpty(qty) ? 0 : parseFloat(qty);
         orderPrice = _.isEmpty(orderPrice) ? 0 : parseFloat(orderPrice);
         discount = _.isEmpty(discount) ? 0 : parseFloat(discount);
 

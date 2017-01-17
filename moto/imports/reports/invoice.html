@@ -34,11 +34,18 @@
 
                     <!--Title-->
                     {{#with rptTitle}}
-                        <div class="rpt-title">
-                            <div class="rpt-title-3x rpt-kh-muol">{{khName}}</div>
-                            <div class="rpt-title-3x">{{enName}}</div>
-                            <div class="rpt-title-2x"><u>Order Invoice</u></div>
-                            <div>Address: {{enAddress}}, Tel: {{telephone}}</div>
+                        <div class="rpt-title-custom">
+                            <div class="row">
+                                <div style="float: left; width: 20%; margin: 0px 0px 0px 14px;">
+                                    <div class="rpt-title-5x rpt-kh-muol">{{khName}}</div>
+                                </div>
+                                <div style="float: left; width: 50%;">
+                                    <div><i class="fa fa-phone"></i> Tel: {{telephone}} <br> <i class="fa fa-facebook-square"></i> Facebook : tann hakmony</div>
+                                </div>
+                            </div>
+                            <!--<div class="rpt-title-3x">{{enName}} </div>-->
+                            <!--<div class="rpt-title-2x"><u>Order Invoice</u></div>-->
+                            <!--<div>Address: {{enAddress}}, Tel: {{telephone}}</div>-->
                         </div>
                     {{/with}}
 
@@ -58,14 +65,14 @@
 
                         <!--Content-->
                         <table class="rpt rpt-2x rpt-content">
-                            <thead class="rpt-content-header">
+                            <thead class="rpt-content-header" style="display: table-row-group;">
                             <tr>
                                 <th>ល.រ</th>
-                                <th>មុខទំនិញ</th>
-                                <th>ពណ៍នា</th>
-                                <th>ចំនួន</th>
-                                <th>តម្លៃ</th>
-                                <th>ចុះតម្លៃ</th>
+                                <th class="hideThead">មុខទំនិញ</th>
+                                <th class="hideThead">ពណ៍នា</th>
+                                <th class="hideThead">ចំនួន</th>
+                                <th class="hideThead">តម្លៃ</th>
+                                <!--<th class="hideThead">ចុះតម្លៃ</th>-->
                                 <th>សរុប</th>
                             </tr>
                             </thead>
@@ -73,37 +80,37 @@
                             <tbody class="rpt-content-body">
                             {{#each item in items}}
                                 <tr>
-                                    <td align="center">{{increaseIndex @index}}</td>
-                                    <td>{{item.itemName}}</td>
-                                    <td align="center">{{item.memo}}</td>
-                                    <td>{{item.qty}} {{item.unit}}</td>
-                                    <td class="text-right">{{item.orderPrice}} ​៛</td>
-                                    <td class="text-right">{{item.discount}} {{item.discountType}}</td>
-                                    <td class="text-right">{{item.totalAmount}}​ ៛</td>
+                                    <td align="center" style="border-top: hidden;">{{increaseIndex @index}}</td>
+                                    <td class="hideTbodyContent">{{item.itemName}}</td>
+                                    <td align="center" class="hideTbodyContent">{{item.memo}}</td>
+                                    <td class="hideTbodyContent">{{item.qty}} {{item.unit}}</td>
+                                    <td class="text-right hideTbodyContent">{{item.orderPrice}} ​៛</td>
+                                    <!--<td class="text-right hideTbodyContent">{{item.discount}} {{item.discountType}}</td>-->
+                                    <td class="text-right" style="border-top: hidden;">{{item.totalAmount}}​ ៛</td>
                                 </tr>
                             {{/each}}
                             </tbody>
 
-                            <tfoot class="rpt-content-footer">
+                            <tfoot class="rpt-content-footer hideTfoot">
                             <tr>
-                                <td colspan="6" class="text-right">សរុបវិក័យប័ត្រ :</td>
-                                <td class="text-right">{{total}} ៛</td>
+                                <td colspan="5" class="text-right hideTfootTitle">សរុបវិក័យប័ត្រ :</td>
+                                <td class="text-right hideTfootValue">{{total}} ៛</td>
                             </tr>
                             <tr>
-                                <td colspan="6" class="text-right">ខ្វះពីមុន :</td>
-                                <td class="text-right">{{lastOrderBalance}} ៛</td>
+                                <td colspan="5" class="text-right hideTfootTitle">ខ្វះពីមុន :</td>
+                                <td class="text-right hideTfootValue">{{lastOrderBalance}} ៛</td>
                             </tr>
                             <tr>
-                                <td colspan="6" class="text-right">សរុបទាំងអស់ :</td>
-                                <td class="text-right">{{balance}} ៛</td>
+                                <td colspan="5" class="text-right hideTfootTitle">សរុបទាំងអស់ :</td>
+                                <td class="text-right hideTfootValue">{{balance}} ៛</td>
                             </tr>
                             <tr>
-                                <td colspan="6" class="text-right">បានបង់ :</td>
-                                <td class="text-right">{{totalPaidAmount}} ៛</td>
+                                <td colspan="5" class="text-right hideTfootTitle">បានបង់ :</td>
+                                <td class="text-right hideTfootValue">{{totalPaidAmount}} ៛</td>
                             </tr>
                             <tr>
-                                <td colspan="6" class="text-right">ជំពាក់លើនេះ :</td>
-                                <td class="text-right">{{overDue}} ៛</td>
+                                <td colspan="5" class="text-right hideTfootTitle">ជំពាក់លើនេះ :</td>
+                                <td class="text-right hideTfootValue">{{overDue}} ៛</td>
                             </tr>
                             </tfoot>
                         </table>
