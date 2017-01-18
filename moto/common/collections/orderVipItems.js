@@ -33,7 +33,7 @@ export const OrderVipItemsSchema = new SimpleSchema({
     qty: {
         type: Number,
         label: 'Qty',
-        min: 1,
+        // min: 1,
         autoform: {
             type: 'inputmask',
             inputmaskOptions: function () {

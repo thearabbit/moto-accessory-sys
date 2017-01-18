@@ -377,7 +377,8 @@ newTmpl.helpers({
     },
     disabledAddItemBtn: function () {
         const instance = Template.instance();
-        if (instance.itemId.get() && instance.qty.get() > 0) {
+        // if (instance.itemId.get() && instance.qty.get() > 0) {
+        if (instance.itemId.get() && instance.qty.get()) {
             return {};
         }
 
@@ -518,7 +519,6 @@ newTmpl.events({
             });
         }
         // clear all value because problem open form edit when key press enter it work on insert form
-        AutoForm.resetForm("Moto_orderItemsNew");
         $('[name="itemId"]').val(null).trigger('change');
         instance.$('[name="memo"]').val(null);
         instance.$('[name="qty"]').val(null);
@@ -527,6 +527,7 @@ newTmpl.events({
         instance.$('[name="discount"]').val(null);
         instance.$('[name="amount"]').val(null);
         instance.$('[name="totalAmount"]').val(null);
+        AutoForm.resetForm("Moto_orderItemsNew");
     }
 });
 
