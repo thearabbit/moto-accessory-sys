@@ -196,7 +196,7 @@ formTmpl.helpers({
         let dueAmount = instance.dueAmount.get();
         let paidAmount = instance.paidAmount.get();
 
-        return roundKhrCurrency(dueAmount - paidAmount);
+        return dueAmount - paidAmount;
     },
     customerId(){
         // note : we use $('.customerId').val() when update because Session not work well

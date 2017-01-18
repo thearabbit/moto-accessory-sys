@@ -90,7 +90,6 @@ export const activeOrderVipReport = new ValidatedMethod({
                 {
                     $unwind: "$branchDoc"
                 },
-                {$sort: {_id: -1}},
                 {
                     $lookup: {
                         from: "moto_orderVipPayment",
@@ -120,10 +119,10 @@ export const activeOrderVipReport = new ValidatedMethod({
                         lastOrderBalanceKhr: {$last: "$lastOrderBalanceKhr"},
                         orderBalanceKhr: {$last: "$balanceKhr"},
                         paid: {
-                            $sum: {
+                            $last: {
                                 $cond: [{
                                     $and: [{$ne: ["$orderVipPaymentDoc", null]},
-                                        {$eq: ["$orderVipPaymentDoc.status", "Partial"]}
+                                        {$or: [{$eq: ["$orderVipPaymentDoc.status", "Partial"]}, {$eq: ["$orderVipPaymentDoc.status", "Overpaid"]}]}
                                     ]
                                 },
                                     "$orderVipPaymentDoc.paidAmountKhr",
@@ -136,10 +135,10 @@ export const activeOrderVipReport = new ValidatedMethod({
                         lastOrderBalanceUsd: {$last: "$lastOrderBalanceUsd"},
                         orderBalanceUsd: {$last: "$balanceUsd"},
                         paidUsd: {
-                            $sum: {
+                            $last: {
                                 $cond: [{
                                     $and: [{$ne: ["$orderVipPaymentDoc", null]},
-                                        {$eq: ["$orderVipPaymentDoc.status", "Partial"]}
+                                        {$or: [{$eq: ["$orderVipPaymentDoc.status", "Partial"]}, {$eq: ["$orderVipPaymentDoc.status", "Overpaid"]}]}
                                     ]
                                 },
                                     "$orderVipPaymentDoc.paidAmountUsd",
@@ -152,10 +151,10 @@ export const activeOrderVipReport = new ValidatedMethod({
                         lastOrderBalanceThb: {$last: "$lastOrderBalanceThb"},
                         orderBalanceThb: {$last: "$balanceThb"},
                         paidThb: {
-                            $sum: {
+                            $last: {
                                 $cond: [{
                                     $and: [{$ne: ["$orderVipPaymentDoc", null]},
-                                        {$eq: ["$orderVipPaymentDoc.status", "Partial"]}
+                                        {$or: [{$eq: ["$orderVipPaymentDoc.status", "Partial"]}, {$eq: ["$orderVipPaymentDoc.status", "Overpaid"]}]}
                                     ]
                                 },
                                     "$orderVipPaymentDoc.paidAmountThb",
@@ -164,6 +163,7 @@ export const activeOrderVipReport = new ValidatedMethod({
                         }
                     }
                 },
+                {$sort: {orderDate: -1}},
                 {
                     $project: {
                         _id: 1,
@@ -198,64 +198,64 @@ export const activeOrderVipReport = new ValidatedMethod({
                         balanceThb: {$subtract: ["$orderBalanceThb", "$paidThb"]},
                     }
                 },
-                {
-                    $group: {
-                        _id: {
-                            day: {$dayOfMonth: "$orderDate"},
-                            month: {$month: "$orderDate"},
-                            year: {$year: "$orderDate"},
-                            branchId: "$branchId"
-                        },
-                        orderDate: {$last: "$orderDate"},
-                        branchDoc: {$last: "$branchDoc"},
-                        subTotal: {$sum: "$subTotal"},
-                        discountAmount: {$sum: "$discountAmount"},
-                        total: {$sum: "$total"},
-                        lastOrderBalanceKhr: {$sum: "$lastOrderBalanceKhr"},
-                        paid: {$sum: "$paid"},
-                        balance: {$sum: "$balance"},
-                        subTotalUsd: {$sum: "$subTotalUsd"},
-                        discountAmountUsd: {$sum: "$discountAmountUsd"},
-                        totalUsd: {$sum: "$totalUsd"},
-                        lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
-                        paidUsd: {$sum: "$paidUsd"},
-                        balanceUsd: {$sum: "$balanceUsd"},
-                        subTotalThb: {$sum: "$subTotalThb"},
-                        discountAmountThb: {$sum: "$discountAmountThb"},
-                        totalThb: {$sum: "$totalThb"},
-                        lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
-                        paidThb: {$sum: "$paidThb"},
-                        balanceThb: {$sum: "$balanceThb"},
-                        dataOrderVip: {$push: "$$ROOT"}
-                    }
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        branchId: "$_id.branchId",
-                        branchDoc: 1,
-                        orderDate: 1,
-                        subTotal: 1,
-                        discountAmount: 1,
-                        total: 1,
-                        lastOrderBalanceKhr: 1,
-                        paid: 1,
-                        balance: 1,
-                        subTotalUsd: 1,
-                        discountAmountUsd: 1,
-                        totalUsd: 1,
-                        lastOrderBalanceUsd: 1,
-                        paidUsd: 1,
-                        balanceUsd: 1,
-                        subTotalThb: 1,
-                        discountAmountThb: 1,
-                        totalThb: 1,
-                        lastOrderBalanceThb: 1,
-                        paidThb: 1,
-                        balanceThb: 1,
-                        dataOrderVip: 1
-                    }
-                },
+                // {
+                //     $group: {
+                //         _id: {
+                //             day: {$dayOfMonth: "$orderDate"},
+                //             month: {$month: "$orderDate"},
+                //             year: {$year: "$orderDate"},
+                //             branchId: "$branchId"
+                //         },
+                //         orderDate: {$last: "$orderDate"},
+                //         branchDoc: {$last: "$branchDoc"},
+                //         subTotal: {$sum: "$subTotal"},
+                //         discountAmount: {$sum: "$discountAmount"},
+                //         total: {$sum: "$total"},
+                //         lastOrderBalanceKhr: {$sum: "$lastOrderBalanceKhr"},
+                //         paid: {$sum: "$paid"},
+                //         balance: {$sum: "$balance"},
+                //         subTotalUsd: {$sum: "$subTotalUsd"},
+                //         discountAmountUsd: {$sum: "$discountAmountUsd"},
+                //         totalUsd: {$sum: "$totalUsd"},
+                //         lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
+                //         paidUsd: {$sum: "$paidUsd"},
+                //         balanceUsd: {$sum: "$balanceUsd"},
+                //         subTotalThb: {$sum: "$subTotalThb"},
+                //         discountAmountThb: {$sum: "$discountAmountThb"},
+                //         totalThb: {$sum: "$totalThb"},
+                //         lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
+                //         paidThb: {$sum: "$paidThb"},
+                //         balanceThb: {$sum: "$balanceThb"},
+                //         dataOrderVip: {$push: "$$ROOT"}
+                //     }
+                // },
+                // {
+                //     $project: {
+                //         _id: 0,
+                //         branchId: "$_id.branchId",
+                //         branchDoc: 1,
+                //         orderDate: 1,
+                //         subTotal: 1,
+                //         discountAmount: 1,
+                //         total: 1,
+                //         lastOrderBalanceKhr: 1,
+                //         paid: 1,
+                //         balance: 1,
+                //         subTotalUsd: 1,
+                //         discountAmountUsd: 1,
+                //         totalUsd: 1,
+                //         lastOrderBalanceUsd: 1,
+                //         paidUsd: 1,
+                //         balanceUsd: 1,
+                //         subTotalThb: 1,
+                //         discountAmountThb: 1,
+                //         totalThb: 1,
+                //         lastOrderBalanceThb: 1,
+                //         paidThb: 1,
+                //         balanceThb: 1,
+                //         dataOrderVip: 1
+                //     }
+                // },
                 {
                     $group: {
                         _id: "$branchId",
@@ -279,7 +279,7 @@ export const activeOrderVipReport = new ValidatedMethod({
                         lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
                         paidThb: {$sum: "$paidThb"},
                         balanceThb: {$sum: "$balanceThb"},
-                        dataVipDate: {$push: "$$ROOT"}
+                        dataOrderVip: {$push: "$$ROOT"}
                     }
                 },
                 {
