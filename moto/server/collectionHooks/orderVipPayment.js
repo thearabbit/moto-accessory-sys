@@ -28,9 +28,11 @@ OrderVipPayment.before.update(function (userId, doc, fieldNames, modifier, optio
         OrderVip.direct.update(modifier.$set.orderVipId, {$set: {closedDate: modifier.$set.paidDate}});
     } else if (modifier.$set.paymentBalanceKhr < 0 || modifier.$set.paymentBalanceUsd < 0 || modifier.$set.paymentBalanceThb < 0) {
         modifier.$set.status = "Overpaid"
+        OrderVip.direct.update(doc.orderVipId, {$set: {closedDate: ""}});
     }
     else {
         modifier.$set.status = "Partial";
+        OrderVip.direct.update(doc.orderVipId, {$set: {closedDate: ""}});
     }
     OrderVip.direct.update(modifier.$set.orderVipId, {$set: {status: modifier.$set.status}});
 });

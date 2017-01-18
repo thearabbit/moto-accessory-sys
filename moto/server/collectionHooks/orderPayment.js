@@ -31,9 +31,11 @@ OrderPayment.before.update(function (userId, doc, fieldNames, modifier, options)
         Order.direct.update(modifier.$set.orderId, {$set: {closedDate: modifier.$set.paidDate}});
     } else if (modifier.$set.balance < 0) {
         modifier.$set.status = "Overpaid"
+        Order.direct.update(doc.orderId, {$set: {closedDate: ""}});
     }
     else {
         modifier.$set.status = "Partial";
+        Order.direct.update(doc.orderId, {$set: {closedDate: ""}});
     }
 
     Order.direct.update(modifier.$set.orderId, {$set: {status: modifier.$set.status}});

@@ -75,11 +75,12 @@
                                 <tr>
                                     <th>N<sup>o</sup></th>
                                     <th>ID</th>
+                                    <th>Order Date</th>
                                     <th>Customer</th>
                                     <th>Contact</th>
                                     <th>Type</th>
                                     <th>Sub Total</th>
-                                    <th>Discount Amount</th>
+                                    <th>Dis-Amount</th>
                                     <th>Total</th>
                                     <th>Last Order Balance</th>
                                     <th>Paid</th>
@@ -90,7 +91,7 @@
                                 <tbody class="rpt-content-body">
                                 {{#with rptContent}}
                                     <tr class="text-bold">
-                                        <td colspan="5">Grand Total :</td>
+                                        <td colspan="6">Grand Total :</td>
                                         <td>{{subTotal}}</td>
                                         <td>{{discountAmount}}</td>
                                         <td><u>{{total}}</u></td>
@@ -100,7 +101,7 @@
                                     </tr>
                                     {{#each objBranch  in dataBranch}}
                                         <tr class="text-bold">
-                                            <td colspan="5">{{objBranch._id}} : {{objBranch.branchDoc.enName}}</td>
+                                            <td colspan="6">{{objBranch._id}} : {{objBranch.branchDoc.enName}}</td>
                                             <td>{{objBranch.subTotal}}</td>
                                             <td>{{objBranch.discountAmount}}</td>
                                             <td><u>{{objBranch.total}}</u></td>
@@ -109,23 +110,24 @@
                                             <td><u>{{objBranch.balance}}</u></td>
                                         </tr>
 
-                                        {{#each objDate in objBranch.dataDate}}
-                                            <tr class="text-bold">
-                                                <td colspan="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat
-                                                        objDate.orderDate "DD/MM/YYYY"}}</td>
-                                                <td>{{objDate.subTotal}}</td>
-                                                <td>{{objDate.discountAmount}}</td>
-                                                <td><u>{{objDate.total}}</u></td>
-                                                <td><u>{{objDate.lastOrderBalance}}</u></td>
-                                                <td><u>{{objDate.paid}}</u></td>
-                                                <td><u>{{objDate.balance}}</u></td>
-                                            </tr>
+                                        <!--{{#each objDate in objBranch.dataDate}}-->
+                                            <!--<tr class="text-bold">-->
+                                                <!--<td colspan="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat-->
+                                                        <!--objDate.orderDate "DD/MM/YYYY"}}</td>-->
+                                                <!--<td>{{objDate.subTotal}}</td>-->
+                                                <!--<td>{{objDate.discountAmount}}</td>-->
+                                                <!--<td><u>{{objDate.total}}</u></td>-->
+                                                <!--<td><u>{{objDate.lastOrderBalance}}</u></td>-->
+                                                <!--<td><u>{{objDate.paid}}</u></td>-->
+                                                <!--<td><u>{{objDate.balance}}</u></td>-->
+                                            <!--</tr>-->
 
-                                            {{#each objOder in objDate.dataOrder}}
+                                            {{#each objOder in objBranch.dataOrder}}
                                                 <tr>
                                                     <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
                                                             @index}}</td>
                                                     <td>{{objOder._id}}</td>
+                                                    <td>{{moFormat objOder.orderDate "DD/MM/YYYY"}}</td>
                                                     <td>{{objOder.customerDoc.name}}</td>
                                                     <td>{{objOder.customerDoc.contact}}</td>
                                                     <td>{{objOder.type}}</td>
@@ -138,7 +140,7 @@
                                                 </tr>
                                             {{/each}}
 
-                                        {{/each}}
+                                        <!--{{/each}}-->
 
                                     {{/each}}
                                 {{/with}}
