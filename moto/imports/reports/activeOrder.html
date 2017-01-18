@@ -79,8 +79,8 @@
                                     <th>Customer</th>
                                     <th>Contact</th>
                                     <th>Type</th>
-                                    <th>Sub Total</th>
-                                    <th>Dis-Amount</th>
+                                    <!--<th>Sub Total</th>-->
+                                    <!--<th>Dis-Amount</th>-->
                                     <th>Total</th>
                                     <th>Last Order Balance</th>
                                     <th>Paid</th>
@@ -92,8 +92,8 @@
                                 {{#with rptContent}}
                                     <tr class="text-bold">
                                         <td colspan="6">Grand Total :</td>
-                                        <td>{{subTotal}}</td>
-                                        <td>{{discountAmount}}</td>
+                                        <!--<td>{{subTotal}}</td>-->
+                                        <!--<td>{{discountAmount}}</td>-->
                                         <td><u>{{total}}</u></td>
                                         <td><u>{{lastOrderBalance}}</u></td>
                                         <td><u>{{paid}}</u></td>
@@ -102,8 +102,8 @@
                                     {{#each objBranch  in dataBranch}}
                                         <tr class="text-bold">
                                             <td colspan="6">{{objBranch._id}} : {{objBranch.branchDoc.enName}}</td>
-                                            <td>{{objBranch.subTotal}}</td>
-                                            <td>{{objBranch.discountAmount}}</td>
+                                            <!--<td>{{objBranch.subTotal}}</td>-->
+                                            <!--<td>{{objBranch.discountAmount}}</td>-->
                                             <td><u>{{objBranch.total}}</u></td>
                                             <td><u>{{objBranch.lastOrderBalance}}</u></td>
                                             <td><u>{{objBranch.paid}}</u></td>
@@ -131,8 +131,8 @@
                                                     <td>{{objOder.customerDoc.name}}</td>
                                                     <td>{{objOder.customerDoc.contact}}</td>
                                                     <td>{{objOder.type}}</td>
-                                                    <td>{{objOder.subTotal}}</td>
-                                                    <td>{{objOder.discountAmount}}</td>
+                                                    <!--<td>{{objOder.subTotal}}</td>-->
+                                                    <!--<td>{{objOder.discountAmount}}</td>-->
                                                     <td>{{objOder.total}}</td>
                                                     <td>{{objOder.lastOrderBalance}}</td>
                                                     <td>{{objOder.paid}}</td>
