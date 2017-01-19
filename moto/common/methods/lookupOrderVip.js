@@ -135,6 +135,7 @@ export const lookupOrderVip = new ValidatedMethod({
                         items: {
                             $addToSet: {
                                 _id: "$items._id",
+                                date:"$items.date",
                                 itemId: "$items.itemId",
                                 itemName: "$itemName",
                                 currencyId: "$items.currencyId",
