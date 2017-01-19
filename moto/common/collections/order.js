@@ -17,6 +17,9 @@ Order.itemsSchema = new SimpleSchema({
         type: String,
         label: 'Id'
     },
+    date: {
+        type: Date
+    },
     itemId: {
         type: String,
         label: 'Item'

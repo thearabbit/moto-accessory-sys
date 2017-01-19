@@ -102,6 +102,7 @@ export const lookupOrder = new ValidatedMethod({
                         items: {
                             $addToSet: {
                                 _id: "$items._id",
+                                date:"$items.date",
                                 itemId: "$items.itemId",
                                 itemName: "$itemName",
                                 memoItem: "$items.memoItem",

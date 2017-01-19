@@ -18,6 +18,9 @@ export const OrderVipItemsSchema = new SimpleSchema({
         label: 'Id',
         optional: true
     },
+    date: {
+        type: Date
+    },
     itemId: {
         type: String,
         label: 'Item',

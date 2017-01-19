@@ -500,7 +500,7 @@ newTmpl.events({
         if(itemId != "" && qty != "" && orderPrice != 0) {
             itemsCollection.insert({
                 // _id: itemId,
-                date: moment().format('DD/MM/YYYY hh:mm:ss'),
+                date: Date(),
                 itemId: itemId,
                 itemName: itemName,
                 memoItem: memoItem,
@@ -792,7 +792,7 @@ let hooksObject = {
 
                 itemsCollection.insert({
                     _id: currentDoc._id,
-                    date: moment().format('DD/MM/YYYY hh:mm:ss'),
+                    date: Date(),
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     qty: insertDoc.qty,
