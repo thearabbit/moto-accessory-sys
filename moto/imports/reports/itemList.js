@@ -3,13 +3,15 @@ import {Template} from 'meteor/templating';
 import {ReactiveVar} from 'meteor/reactive-var';
 import {FlowRouter} from 'meteor/kadira:flow-router';
 import {AutoForm} from 'meteor/aldeed:autoform';
-import {sAlert} from 'meteor/juliancwirko:s-alert';
+// import {sAlert} from 'meteor/juliancwirko:s-alert';
+import {Bert} from 'meteor/themeteorchef:bert';
 import 'meteor/theara:autoprint';
 import 'printthis';
 import {_} from 'meteor/erasaur:meteor-lodash';
 
 // Lib
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
+import {selectElementContents}  from '../../../moto/common/libs/selectAndCopy';
 
 // Component
 import '../../../core/imports/layouts/report/content.html';
@@ -35,12 +37,26 @@ indexTmpl.onCreated(function () {
         // Report Data
         itemListReport.callPromise()
             .then((result)=> {
-                console.log(result);
                 this.rptData.set(result);
             }).catch((err)=> {
                 console.log(err.message);
             }
         );
+    });
+
+    $(document).on('keyup', (e) => {
+        if (e.keyCode == 67) {
+            selectElementContents(document.getElementById('item-list-tbl'));
+
+            document.execCommand('copy');
+            Bert.alert({
+                type: 'custom-success',
+                style: 'fixed-bottom',
+                title: 'Copy',
+                message: 'Completed',
+                icon: 'fa-files-o'
+            });
+        }
     });
 });
 
@@ -87,5 +103,19 @@ indexTmpl.events({
         };
 
         $('#print-data').printArea(opts);
+    },
+    'click .btn-tip'(event, instance){
+        Bert.alert({
+            type: 'info',
+            style: 'fixed-bottom',
+            title: 'Tip',
+            message: 'Press "C" For Copy',
+            icon: 'fa-lightbulb-o'
+        });
     }
+});
+
+
+indexTmpl.onDestroyed(function () {
+    $(document).off('keyup');
 });
