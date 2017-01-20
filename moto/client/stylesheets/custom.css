@@ -64,3 +64,12 @@ tr .hideTfootValueVip{
     border-bottom: hidden;
     border-right: hidden;
 }
+
+.disable-tHead-repeat{
+    display: table-row-group;
+}
+
+.bert-alert.custom-success {
+    background: #00a65a;
+    color: #fff;
+}
