@@ -19,7 +19,8 @@ export const OrderItemsSchema = new SimpleSchema({
         optional: true
     },
     date: {
-        type: Date
+        type: Date,
+        optional: true
     },
     itemId: {
         type: String,

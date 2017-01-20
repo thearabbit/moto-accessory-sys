@@ -18,7 +18,8 @@ OrderVip.itemsSchema = new SimpleSchema({
         label: 'Id'
     },
     date: {
-        type: Date
+        type: Date,
+        optional: true
     },
     itemId: {
         type: String,
