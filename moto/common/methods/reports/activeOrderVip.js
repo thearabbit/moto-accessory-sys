@@ -104,7 +104,8 @@ export const activeOrderVipReport = new ValidatedMethod({
                 },
                 {
                     $group: {
-                        _id: "$_id",
+                        _id: "$customerId",
+                        orderVipId :{$last: "$_id"},
                         orderDate: {$last: "$orderDate"},
                         branchId: {$last: "$branchId"},
                         branchDoc: {$last: "$branchDoc"},
@@ -167,6 +168,7 @@ export const activeOrderVipReport = new ValidatedMethod({
                 {
                     $project: {
                         _id: 1,
+                        orderVipId:1,
                         orderDate: 1,
                         branchId: 1,
                         branchDoc: 1,

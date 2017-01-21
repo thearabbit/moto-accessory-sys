@@ -11,7 +11,7 @@ OrderVipPayment.before.insert(function (userId, doc) {
 
     if (doc.paymentBalanceKhr == 0 && doc.paymentBalanceUsd == 0 && doc.paymentBalanceThb == 0) {
         doc.status = "Closed";
-        OrderVip.direct.update(doc.orderVipId, {$set: {closedDate: doc.paidDate}});
+        OrderVip.direct.update({customerId: doc.customerId}, {$set: {closedDate: doc.paidDate}}, {multi: true});
     } else if (doc.paymentBalanceKhr < 0 && doc.paymentBalanceUsd < 0 && doc.paymentBalanceThb < 0) {
         doc.status = "Overpaid"
     }
@@ -25,14 +25,14 @@ OrderVipPayment.before.update(function (userId, doc, fieldNames, modifier, optio
     modifier.$set = modifier.$set || {};
     if (modifier.$set.paymentBalanceKhr == 0 && modifier.$set.paymentBalanceUsd == 0 && modifier.$set.paymentBalanceThb == 0) {
         modifier.$set.status = "Closed";
-        OrderVip.direct.update(modifier.$set.orderVipId, {$set: {closedDate: modifier.$set.paidDate}});
+        OrderVip.direct.update({customerId: modifier.$set.customerId}, {$set: {closedDate: modifier.$set.paidDate}}, {multi: true});
     } else if (modifier.$set.paymentBalanceKhr < 0 || modifier.$set.paymentBalanceUsd < 0 || modifier.$set.paymentBalanceThb < 0) {
         modifier.$set.status = "Overpaid"
-        OrderVip.direct.update(doc.orderVipId, {$set: {closedDate: ""}});
+        OrderVip.direct.update({customerId: modifier.$set.customerId}, {$set: {closedDate: ""}}, {multi: true});
     }
     else {
         modifier.$set.status = "Partial";
-        OrderVip.direct.update(doc.orderVipId, {$set: {closedDate: ""}});
+        OrderVip.direct.update({customerId: modifier.$set.customerId}, {$set: {closedDate: ""}}, {multi: true});
     }
     OrderVip.direct.update(modifier.$set.orderVipId, {$set: {status: modifier.$set.status}});
 });
@@ -45,5 +45,5 @@ OrderVipPayment.after.remove(function (userId, doc) {
     }
 
     OrderVip.direct.update(doc.orderVipId, {$set: {status: "Partial"}});
-    OrderVip.direct.update(doc.orderVipId, {$set: {closedDate: ""}});
+    OrderVip.direct.update({customerId: doc.customerId}, {$set: {closedDate: ""}}, {multi: true});
 });

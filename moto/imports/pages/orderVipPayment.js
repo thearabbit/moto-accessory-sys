@@ -58,7 +58,7 @@ indexTmpl.helpers({
         return {
             branchId: Session.get('currentByBranch'),
             customerId: FlowRouter.getParam("customerId"),
-            orderVipId: FlowRouter.getParam("orderVipId")
+            // orderVipId: FlowRouter.getParam("orderVipId")
         };
     }
 });
