@@ -11,7 +11,7 @@ OrderPayment.before.insert(function (userId, doc) {
 
     if (doc.balance == 0) {
         doc.status = "Closed";
-        Order.direct.update(doc.orderId, {$set: {closedDate: doc.paidDate}});
+        Order.direct.update({customerId: doc.customerId}, {$set: {closedDate: doc.paidDate}}, {multi: true});
     }
     else if (doc.balance < 0) {
         doc.status = "Overpaid"
@@ -28,14 +28,14 @@ OrderPayment.before.update(function (userId, doc, fieldNames, modifier, options)
 
     if (modifier.$set.balance == 0) {
         modifier.$set.status = "Closed";
-        Order.direct.update(modifier.$set.orderId, {$set: {closedDate: modifier.$set.paidDate}});
+        Order.direct.update({customerId: modifier.$set.customerId}, {$set: {closedDate: modifier.$set.paidDate}}, {multi: true});
     } else if (modifier.$set.balance < 0) {
         modifier.$set.status = "Overpaid"
-        Order.direct.update(doc.orderId, {$set: {closedDate: ""}});
+        Order.direct.update({customerId: modifier.$set.customerId}, {$set: {closedDate: ""}}, {multi: true});
     }
     else {
         modifier.$set.status = "Partial";
-        Order.direct.update(doc.orderId, {$set: {closedDate: ""}});
+        Order.direct.update({customerId: modifier.$set.customerId}, {$set: {closedDate: ""}}, {multi: true});
     }
 
     Order.direct.update(modifier.$set.orderId, {$set: {status: modifier.$set.status}});
@@ -49,5 +49,5 @@ OrderPayment.after.remove(function (userId, doc) {
     }
 
     Order.direct.update(doc.orderId, {$set: {status: "Partial"}});
-    Order.direct.update(doc.orderId, {$set: {closedDate: ""}});
+    Order.direct.update({customerId: doc.customerId}, {$set: {closedDate: ""}},{multi: true});
 });

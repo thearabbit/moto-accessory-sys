@@ -58,7 +58,7 @@ indexTmpl.helpers({
         return {
             branchId: Session.get('currentByBranch'),
             customerId: FlowRouter.getParam("customerId"),
-            orderId: FlowRouter.getParam("orderId")
+            // orderId: FlowRouter.getParam("orderId")
         };
     }
 });
@@ -278,8 +278,9 @@ let hooksObject = {
 
 AutoForm.addHooks(['Moto_orderPaymentForm'], hooksObject);
 
-function checkLastOrderPayment(customer) {
+function checkLastOrderPayment(customer, orderId) {
     let data = OrderPayment.findOne({customerId: customer}, {sort: {_id: -1}});
+
     if (data) {
         return data._id;
     }

@@ -133,10 +133,10 @@ export const activeOrderReport = new ValidatedMethod({
                         }
                     }
                 },
-                { $sort: { orderDate: -1 } },
                 {
                     $project: {
                         _id:1,
+                        orderId:1,
                         orderDate:1,
                         branchId:1,
                         branchDoc:1,
@@ -154,6 +154,7 @@ export const activeOrderReport = new ValidatedMethod({
                         balance : {$subtract:["$orderBalance", "$paid"]}
                     }
                 },
+                { $sort: { orderDate: -1 } },
                 // {
                 //     $group: {
                 //         _id: {
