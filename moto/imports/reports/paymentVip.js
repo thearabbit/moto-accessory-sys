@@ -18,16 +18,16 @@ import '../../../core/client/components/loading.js';
 import '../../../core/client/components/form-footer.js';
 
 // Method
-import {paymentReport} from '../../common/methods/reports/payment.js';
+import {paymentVipReport} from '../../common/methods/reports/paymentVip.js';
 
 // Schema
-import {PaymentSchema} from '../../common/collections/reports/payment.js';
+import {PaymentVipSchema} from '../../common/collections/reports/paymentVip.js';
 
 // Page
-import './payment.html';
+import './paymentVip.html';
 
 // Declare template
-let indexTmpl = Template.Moto_paymentReport;
+let indexTmpl = Template.Moto_paymentVipReport;
 
 // State
 let formDataState = new ReactiveVar(null);
@@ -43,7 +43,7 @@ indexTmpl.onCreated(function () {
             this.rptInit.set(true);
             this.rptData.set(false);
 
-            paymentReport.callPromise(formDataState.get())
+            paymentVipReport.callPromise(formDataState.get())
                 .then((result)=> {
                     this.rptData.set(result);
                 }).catch((err)=> {
@@ -72,7 +72,7 @@ indexTmpl.onCreated(function () {
 
 indexTmpl.helpers({
     schema(){
-        return PaymentSchema;
+        return PaymentVipSchema;
     },
     rptInit(){
         let instance = Template.instance();
@@ -144,4 +144,4 @@ let hooksObject = {
     }
 };
 
-AutoForm.addHooks('Moto_paymentReport', hooksObject);
+AutoForm.addHooks('Moto_paymentVipReport', hooksObject);
