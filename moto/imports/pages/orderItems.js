@@ -330,6 +330,7 @@ newTmpl.helpers({
             }
         }
 
+        instance.orderPrice.set(result);
         return result;
     },
     itemDoc: function () {
@@ -347,9 +348,9 @@ newTmpl.helpers({
                 "KHR": exchangeDoc.rates.KHR,
                 "USD": exchangeDoc.rates.USD,
                 "THB": exchangeDoc.rates.THB
-            }
+            };
 
-            let tempAmount = instance.qty.get() * instance.price.get();
+            let tempAmount = instance.qty.get() * orderPrice;
 
             if (instance.currencyId.get() == "USD") {
                 amount = roundKhrCurrency((fx.convert(tempAmount, {from: "USD", to: "KHR"})));
@@ -630,6 +631,7 @@ editTmpl.helpers({
             }
         }
 
+        instance.orderPrice.set(result);
         return result;
     },
     itemDoc: function () {
@@ -637,10 +639,11 @@ editTmpl.helpers({
     },
     amount: function () {
         const instance = Template.instance();
-        let amount, data = Template.currentData(), exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
+
+        let amount , exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
 
         if (customerType == "Retail") {
-            amount = roundKhrCurrency(instance.qty.get() * instance.khrPrice.get());
+            amount = instance.qty.get() * orderPrice;
         } else {
             fx.base = "USD";
             fx.rates = {
@@ -649,25 +652,26 @@ editTmpl.helpers({
                 "THB": exchangeDoc.rates.THB
             };
 
-            let tempAmount = instance.qty.get() * instance.price.get();
+            let tempAmount = instance.qty.get() * orderPrice;
 
             if (instance.currencyId.get() == "USD") {
                 amount = roundKhrCurrency(fx.convert(tempAmount, {from: "USD", to: "KHR"}));
             } else if (instance.currencyId.get() == "THB") {
                 amount = roundKhrCurrency(fx.convert(tempAmount, {from: "THB", to: "KHR"}));
             } else if (instance.currencyId.get() == "KHR") {
-                amount = roundKhrCurrency(instance.qty.get() * instance.khrPrice.get()) || roundKhrCurrency(data.khrPrice);
+                amount = roundKhrCurrency(instance.qty.get() * orderPrice);
             }
         }
 
-        instance.amount.set(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
-        return orderPrice > 0 ? roundKhrCurrency(instance.qty.get() * orderPrice) : amount;
+        instance.amount.set(orderPrice > 0 ? roundKhrCurrency(instance.qty.get() * orderPrice) : amount);
+        return orderPrice > 0 ? roundKhrCurrency(instance.qty.get() * orderPrice) :  amount;
     },
     totalAmount: function () {
         const instance = Template.instance();
-        let totalAmount, amount = instance.amount.get(), discount = instance.discount.get(), discountType = Session.get('discountType');
 
-        if (discountType == "Percentage" || discountType == "%") {
+        let totalAmount , amount = instance.amount.get(), discount = instance.discount.get(), discountType = Session.get('discountType');
+
+        if ( discountType == "Percentage" || discountType == "%") {
             totalAmount = roundKhrCurrency(amount - (amount * discount / 100));
         } else {
             totalAmount = roundKhrCurrency((amount - discount));
