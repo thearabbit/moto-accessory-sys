@@ -55,17 +55,24 @@ export const lookupOrderVipPayment = new ValidatedMethod({
                         path: '$customerDoc', preserveNullAndEmptyArrays: true
                     }
                 },
+                {$sort: {_id: 1}},
+                {
+                    $group: {
+                        _id: "$customerId",
+                        order: {$last: "$$ROOT"},
+                    }
+                },
                 {
                     $project: {
-                        _id: 1,
-                        customerId: 1,
-                        orderDate: 1,
+                        _id: "$order._id",
+                        customerId: "$_id",
+                        orderDate: "$order.orderDate",
                         paymentVipDoc: {
                             $cond: [
-                                {$ne: ["$paymentVipCount", 0]}, '$paymentVipDoc', '$$ROOT'
+                                {$ne: ["$order.paymentVipCount", 0]}, '$order.paymentVipDoc', '$order'
                             ]
                         },
-                        printId: 1
+                        printId: "$order.printId"
                     }
                 },
                 {

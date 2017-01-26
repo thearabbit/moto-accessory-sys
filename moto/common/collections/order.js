@@ -249,8 +249,7 @@ Order.schema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.currency({prefix: "៛ ", placeholder: ""});
             }
-        },
-        optional: true
+        }
     },
     subTotal: {
         type: Number,

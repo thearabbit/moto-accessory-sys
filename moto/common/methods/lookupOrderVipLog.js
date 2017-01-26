@@ -78,7 +78,6 @@ export const lookupOrderVipLog = new ValidatedMethod({
                         paymentBalanceThb: 1,
                         des: 1
                     }
-
                 },
                 {
                     $group: {
@@ -114,6 +113,7 @@ export const lookupOrderVipLog = new ValidatedMethod({
                         path: '$orderVipLog', preserveNullAndEmptyArrays: true
                     }
                 },
+                {$sort: {_id : 1}},
                 {
                     $project: {
                         _id: 1,

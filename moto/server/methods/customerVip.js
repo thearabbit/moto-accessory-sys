@@ -9,7 +9,7 @@ import {Customer} from '../../common/collections/customer.js';
 
 // select2
 Meteor.methods({
-    findCustomer({selectOne, customerType, branch}) {
+    findCustomerVip({selectOne, customerType, branch}) {
         let list = [];
         if (selectOne) {
             list.push({label: '(Select One)', value: ''});
@@ -17,7 +17,7 @@ Meteor.methods({
 
         Customer.find({$and: [{type: customerType}, {branchId: branch}]})
             .forEach(function (obj) {
-                list.push({label: obj.name + ' : ' + obj.address, value: obj._id})
+                list.push({label: obj._id + " : " + obj.name + ' (' + obj.address + ")", value: obj._id})
             });
 
         return list;

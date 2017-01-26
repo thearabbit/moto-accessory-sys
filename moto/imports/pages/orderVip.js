@@ -59,8 +59,8 @@ indexTmpl.onCreated(function () {
 
     this.subscribe('moto.orderVipPayment');
 
-    //get customer from server
-    Meteor.call('findCustomer', {
+    //get customer vip from server
+    Meteor.call('findCustomerVip', {
         selectOne: true,
         customerType: "Vip",
         branch: Session.get('currentBranch')
@@ -456,6 +456,10 @@ let hooksObject = {
         $('[name="totalUsd"]').val(null);
         $('[name="discountAmountThb"]').val(null);
         $('[name="totalThb"]').val(null);
+        $('[name="lastOrderBalanceKhr"]').val(null);
+        $('[name="lastOrderBalanceUsd"]').val(null);
+        $('[name="lastOrderBalanceThb"]').val(null);
+        $('[name="customerId"]').val(null);
 
         // For Insert
         if (saveAndPayment == "fire") {

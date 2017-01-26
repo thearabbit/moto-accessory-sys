@@ -58,6 +58,8 @@ indexTmpl.onCreated(function () {
     createNewAlertify('orderShow');
     this.subscribe('moto.orderPayment');
     this.subscribe('moto.exchange');
+
+
 });
 
 indexTmpl.helpers({
@@ -178,7 +180,7 @@ formTmpl.onCreated(function () {
             }).then((result) => {
                 Session.set('customerType', result.type);
                 Session.set('customerIdForSaveAndPayment', result.customerId);
-         
+
                 // Add items to local collection
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
@@ -472,6 +474,7 @@ let hooksObject = {
         $('[name="subTotal"]').val(null);
         $('[name="discountAmount"]').val(null);
         $('[name="total"]').val(null);
+        $('[name="lastOrderBalance"]').val(null);
 
         // For Insert
         if (saveAndPayment == "fire") {
