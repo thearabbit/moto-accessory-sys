@@ -70,11 +70,16 @@ export const lookupOrderLog = new ValidatedMethod({
                         paymentBalance: 1,
                         des: 1
                     }
-
                 },
+                //   {
+                //     $group: {
+                //         _id: "$customerId",
+                //         order: {$last: "$$ROOT"}
+                //     }
+                //   },
                 {
                     $group: {
-                        _id: "$customerId",
+                        _id: "$_id",
                         customerId: { $last: "$customerId" },
                         customerDoc: { $last: "$customerDoc" },
                         orderLog: {
@@ -96,6 +101,7 @@ export const lookupOrderLog = new ValidatedMethod({
                         path: '$orderLog', preserveNullAndEmptyArrays: true
                     }
                 },
+                {$sort: {_id : 1}},
                 {
                     $project: {
                         _id: 1,
@@ -126,6 +132,7 @@ export const lookupOrderLog = new ValidatedMethod({
                         totalOrderLog: { $last: "$totalOrderLog" }
                     }
                 }
+
             ]);
 
             return data[0];

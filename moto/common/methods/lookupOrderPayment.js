@@ -53,17 +53,24 @@ export const lookupOrderPayment = new ValidatedMethod({
                         path: '$customerDoc', preserveNullAndEmptyArrays: true
                     }
                 },
+                {$sort: {_id: 1}},
+                {
+                    $group: {
+                        _id: "$customerId",
+                        order: {$last: "$$ROOT"},
+                    }
+                },
                 {
                     $project: {
-                        _id: 1,
-                        customerId: 1,
-                        orderDate: 1,
+                        _id: "$order._id",
+                        customerId: "$_id",
+                        orderDate: "$order.orderDate",
                         paymentDoc: {
                             $cond: [
-                                {$ne: ["$paymentCount", 0]}, '$paymentDoc', '$$ROOT'
+                                {$ne: ["$order.paymentCount", 0]}, '$order.paymentDoc', '$order'
                             ]
                         },
-                        printId: 1
+                        printId: "$order.printId"
                     }
                 },
                 {

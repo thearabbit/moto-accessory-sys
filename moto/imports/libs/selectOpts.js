@@ -66,7 +66,7 @@ export const SelectOpts = {
         let currentBranch = Session.get('currentBranch'), customerType = Session.get('customerType');
         Customer.find({branchId: currentBranch, type: customerType})
             .forEach(function (obj) {
-                list.push({label: obj.name + ' : ' + obj.address, value: obj._id})
+                list.push({label: obj._id + " : " + obj.name + ' (' + obj.address + ")", value: obj._id})
             });
 
         return list;
