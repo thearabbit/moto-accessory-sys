@@ -79,7 +79,7 @@
                                 <tr>
                                     <th>N<sup>o</sup></th>
                                     <th>ID</th>
-                                    <th>Customer</th>
+                                    <th>Order Date</th>
                                     <th>Sub Total</th>
                                     <th>Discount Amount</th>
                                     <th>Total</th>
@@ -111,18 +111,7 @@
                                             <td><u>{{objBranch.balance}}</u></td>
                                         </tr>
 
-                                        {{#each objDate in objBranch.dataDate}}
-                                            <tr class="text-bold">
-                                                <td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat
-                                                        objDate.orderDate "DD/MM/YYYY"}}</td>
-                                                <td>{{objDate.subTotal}}</td>
-                                                <td>{{objDate.discountAmount}}</td>
-                                                <td><u>{{objDate.total}}</u></td>
-                                                <td><u>{{objDate.lastOrderBalance}}</u></td>
-                                                <td><u>{{objDate.paid}}</u></td>
-                                                <td><u>{{objDate.balance}}</u></td>
-                                            </tr>
-                                            {{#each objOder in objDate.dataOrder}}
+                                            {{#each objOder in objBranch.dataOrder}}
                                                 <tr class="text-bold">
                                                     <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order Log :</td>
                                                 </tr>
@@ -130,7 +119,8 @@
                                                     <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
                                                             @index}}</td>
                                                     <td>{{objOder._id}}</td>
-                                                    <td>{{objOder.customerDoc.name}} ({{objOder.customerDoc.type}})</td>
+                                                    <td>{{moFormat objOder.orderDate "DD/MM/YYYY hh:mm:ss A"}}</td>
+                                                    <!--<td>{{objOder.customerDoc.name}} ({{objOder.customerDoc.type}})</td>-->
                                                     <td>{{objOder.subTotal}}</td>
                                                     <td>{{objOder.discountAmount}}</td>
                                                     <td>{{objOder.total}}</td>
@@ -181,8 +171,6 @@
                                                 {{/if}}
 
                                             {{/each}}
-
-                                        {{/each}}
 
                                     {{/each}}
                                 {{/with}}

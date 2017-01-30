@@ -317,6 +317,11 @@ formTmpl.events({
         }).catch((err) => {
             console.log(err);
         });
+
+        // Clear session when success
+        Session.set('save', null);
+        Session.set('saveAndPayment', null);
+        Session.set('saveAndPrint', null);
     },
     'change [name="employeeId"]': function (event, instance) {
         let employeeId = event.currentTarget.value;
