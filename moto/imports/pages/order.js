@@ -230,6 +230,7 @@ formTmpl.helpers({
     },
     disabledSubmitBtn: function () {
         let count = itemsCollection.find().count();
+
         if (count == 0) {
             return {disabled: true};
         }
@@ -312,6 +313,11 @@ formTmpl.events({
         }).catch((err) => {
             console.log(err);
         });
+
+        // Clear session when success
+        Session.set('save', null);
+        Session.set('saveAndPayment', null);
+        Session.set('saveAndPrint', null);
     },
     'change [name="employeeId"]': function (event, instance) {
         let employeeId = event.currentTarget.value;
@@ -457,7 +463,7 @@ let hooksObject = {
         }
 
         if (formType == 'update' && saveAndPayment == "fire") {
-            let saveAndPayment = Session.get('saveAndPayment');
+            // let saveAndPayment = Session.get('saveAndPayment');
             if (saveAndPayment == "fire") {
                 alertify.orderPayment(fa('plus', 'Order Payment'), renderTemplate(formSaveAndPayment));
             }

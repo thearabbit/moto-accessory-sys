@@ -107,6 +107,7 @@ export const customerLogReport = new ValidatedMethod({
                         discountAmount: {$last: "$discountAmount"},
                         total: {$last: "$total"},
                         lastOrderBalance: {$last: "$lastOrderBalance"},
+                        realTotal: {$last: "$balance"},
                         paid: {
                             $sum: {
                                 $cond: [{
@@ -118,21 +119,38 @@ export const customerLogReport = new ValidatedMethod({
                                     0]
                             }
                         },
-                        balance: {
-                            $last: {$sum: {$cond: [{$ne: ["$orderPaymentDoc", null]}, "$orderPaymentDoc.balance", 0]}}
-                        },
                         orderPaymentDoc: {$push: "$orderPaymentDoc"}
+                    }
+                },
+                {$sort: {_id : -1}},
+                {
+                    $project: {
+                        _id: 1,
+                        orderDate: 1,
+                        branchId: 1,
+                        branchDoc: 1,
+                        employeeId: 1,
+                        customerId: 1,
+                        customerDoc: 1,
+                        type: 1,
+                        items: 1,
+                        subTotal: 1,
+                        discountAmount: 1,
+                        total: 1,
+                        lastOrderBalance: 1,
+                        realTotal: 1,
+                        paid: 1,
+                        orderPaymentDoc: 1,
+                        balance: {
+                            $subtract: ["$realTotal", "$paid"]
+                        },
                     }
                 },
                 {
                     $group: {
                         _id: {
-                            day: {$dayOfMonth: "$orderDate"},
-                            month: {$month: "$orderDate"},
-                            year: {$year: "$orderDate"},
                             branchId: "$branchId"
                         },
-                        orderDate: {$last: "$orderDate"},
                         branchDoc: {$last: "$branchDoc"},
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
@@ -161,7 +179,6 @@ export const customerLogReport = new ValidatedMethod({
                 {
                     $group: {
                         _id: "$branchId",
-                        orderDate: {$last: "$orderDate"},
                         branchDoc: {$last: "$branchDoc"},
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
@@ -169,7 +186,7 @@ export const customerLogReport = new ValidatedMethod({
                         lastOrderBalance: {$sum: "$lastOrderBalance"},
                         paid: {$sum: "$paid"},
                         balance: {$sum: "$balance"},
-                        dataDate: {$push: "$$ROOT"}
+                        dataOrder: {$last: "$dataOrder"}
                     }
                 },
                 {

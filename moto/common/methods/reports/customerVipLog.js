@@ -107,6 +107,7 @@ export const customerVipLogReport = new ValidatedMethod({
                         discountAmount: {$last: "$discountAmount"},
                         total: {$last: "$total"},
                         lastOrderBalance: {$last: "$lastOrderBalanceKhr"},
+                        realTotalKhr: {$last: "$balanceKhr"},
                         paid: {
                             $sum: {
                                 $cond: [{
@@ -118,13 +119,11 @@ export const customerVipLogReport = new ValidatedMethod({
                                     0]
                             }
                         },
-                        balance: {
-                            $last: {$sum: {$cond: [{$ne: ["$orderVipPaymentDoc", null]}, "$orderVipPaymentDoc.paymentBalanceKhr", 0]}}
-                        },
                         subTotalUsd: {$last: "$subTotalUsd"},
                         discountAmountUsd: {$last: "$discountAmountUsd"},
                         totalUsd: {$last: "$totalUsd"},
                         lastOrderBalanceUsd: {$last: "$lastOrderBalanceUsd"},
+                        realTotalUsd: {$last: "$balanceUsd"},
                         paidUsd: {
                             $sum: {
                                 $cond: [{
@@ -136,13 +135,11 @@ export const customerVipLogReport = new ValidatedMethod({
                                     0]
                             }
                         },
-                        balanceUsd: {
-                            $last: {$sum: {$cond: [{$ne: ["$orderVipPaymentDoc", null]}, "$orderVipPaymentDoc.paymentBalanceUsd", 0]}}
-                        },
                         subTotalThb: {$last: "$subTotalThb"},
                         discountAmountThb: {$last: "$discountAmountThb"},
                         totalThb: {$last: "$totalThb"},
                         lastOrderBalanceThb: {$last: "$lastOrderBalanceThb"},
+                        realTotalThb: {$last: "$balanceThb"},
                         paidThb: {
                             $sum: {
                                 $cond: [{
@@ -154,21 +151,56 @@ export const customerVipLogReport = new ValidatedMethod({
                                     0]
                             }
                         },
-                        balanceThb: {
-                            $last: {$sum: {$cond: [{$ne: ["$orderVipPaymentDoc", null]}, "$orderVipPaymentDoc.paymentBalanceThb", 0]}}
-                        },
                         orderVipPaymentDoc: {$push: "$orderVipPaymentDoc"}
+                    }
+                },
+                {$sort: {_id : -1}},
+                {
+                    $project: {
+                        _id: 1,
+                        orderDate: 1,
+                        branchId: 1,
+                        branchDoc: 1,
+                        employeeId: 1,
+                        customerId: 1,
+                        customerDoc: 1,
+                        type: 1,
+                        items: 1,
+                        subTotal: 1,
+                        discountAmount: 1,
+                        total: 1,
+                        lastOrderBalance: 1,
+                        realTotalKhr: 1,
+                        paid: 1,
+                        balance: {
+                            $subtract: ["$realTotalKhr", "$paid"]
+                        },
+                        subTotalUsd: 1,
+                        discountAmountUsd: 1,
+                        totalUsd: 1,
+                        lastOrderBalanceUsd: 1,
+                        realTotalUsd: 1,
+                        paidUsd: 1,
+                        balanceUsd: {
+                            $subtract: ["$realTotalUsd", "$paidUsd"]
+                        },
+                        subTotalThb: 1,
+                        discountAmountThb: 1,
+                        totalThb: 1,
+                        lastOrderBalanceThb: 1,
+                        realTotalThb: 1,
+                        paidThb: 1,
+                        balanceThb: {
+                            $subtract: ["$realTotalThb", "$paidThb"]
+                        },
+                        orderVipPaymentDoc: 1
                     }
                 },
                 {
                     $group: {
                         _id: {
-                            day: {$dayOfMonth: "$orderDate"},
-                            month: {$month: "$orderDate"},
-                            year: {$year: "$orderDate"},
                             branchId: "$branchId"
                         },
-                        orderDate: {$last: "$orderDate"},
                         branchDoc: {$last: "$branchDoc"},
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
@@ -221,7 +253,6 @@ export const customerVipLogReport = new ValidatedMethod({
                 {
                     $group: {
                         _id: "$branchId",
-                        orderDate: {$last: "$orderDate"},
                         branchDoc: {$last: "$branchDoc"},
                         subTotal: {$sum: "$subTotal"},
                         discountAmount: {$sum: "$discountAmount"},
@@ -241,7 +272,7 @@ export const customerVipLogReport = new ValidatedMethod({
                         lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
                         paidThb: {$sum: "$paidThb"},
                         balanceThb: {$sum: "$balanceThb"},
-                        dataVipDate: {$push: "$$ROOT"}
+                        dataOrderVip: {$last: "$dataOrderVip"}
                     }
                 },
                 {
