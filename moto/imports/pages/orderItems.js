@@ -352,7 +352,7 @@ newTmpl.helpers({
     },
     disabledAddItemBtn: function () {
         const instance = Template.instance();
-        console.log(instance.qty.get());
+      
         if (instance.itemId.get() && instance.qty.get()) {
             return {};
         }
