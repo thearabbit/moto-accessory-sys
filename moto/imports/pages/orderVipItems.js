@@ -471,7 +471,7 @@ newTmpl.events({
 
         // Clear
         // instance.$('[name="qty"]').val(1);
-        // instance.qty.set(1);
+        instance.qty.set(null);
 
         //animate for member
         $('#animation').removeClass().addClass('animated bounceIn').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {

@@ -313,21 +313,8 @@ newTmpl.helpers({
         if (customerType == "Retail") {
             result = roundKhrCurrency(instance.khrPrice.get());
         } else {
-            fx.base = "USD";
-            fx.rates = {
-                "KHR": exchangeDoc.rates.KHR,
-                "USD": exchangeDoc.rates.USD,
-                "THB": exchangeDoc.rates.THB
-            }
-
-            if (instance.currencyId.get() == "USD") {
-                result = roundKhrCurrency(fx.convert(instance.price.get(), {from: "USD", to: "KHR"}));
-
-            } else if (instance.currencyId.get() == "THB") {
-                result = roundKhrCurrency(fx.convert(instance.price.get(), {from: "THB", to: "KHR"}));
-            } else {
-                result = roundKhrCurrency(instance.khrPrice.get());
-            }
+            fx.rates = exchangeDoc.rates;
+            result = roundKhrCurrency(fx.convert(instance.price.get(), {from: instance.currencyId.get() , to: exchangeDoc.base}));
         }
 
         instance.orderPrice.set(result);
@@ -343,23 +330,10 @@ newTmpl.helpers({
         if (customerType == "Retail") {
             amount = roundKhrCurrency(instance.qty.get() * instance.khrPrice.get());
         } else {
-            fx.base = "USD";
-            fx.rates = {
-                "KHR": exchangeDoc.rates.KHR,
-                "USD": exchangeDoc.rates.USD,
-                "THB": exchangeDoc.rates.THB
-            };
+            fx.rates = exchangeDoc.rates;
 
             let tempAmount = instance.qty.get() * orderPrice;
-
-            if (instance.currencyId.get() == "USD") {
-                amount = roundKhrCurrency((fx.convert(tempAmount, {from: "USD", to: "KHR"})));
-
-            } else if (instance.currencyId.get() == "THB") {
-                amount = roundKhrCurrency((fx.convert(tempAmount, {from: "THB", to: "KHR"})));
-            } else if (instance.currencyId.get() == "KHR") {
-                amount = roundKhrCurrency(instance.qty.get() * instance.khrPrice.get());
-            }
+            amount = roundKhrCurrency((fx.convert(tempAmount, {from: instance.currencyId.get(), to: exchangeDoc.base})));
         }
 
         instance.amount.set(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
@@ -378,7 +352,7 @@ newTmpl.helpers({
     },
     disabledAddItemBtn: function () {
         const instance = Template.instance();
-        // if (instance.itemId.get() && instance.qty.get() > 0) {
+        console.log(instance.qty.get());
         if (instance.itemId.get() && instance.qty.get()) {
             return {};
         }
@@ -433,7 +407,7 @@ newTmpl.events({
 
         // Clear
         // instance.$('[name="qty"]').val(1);
-        // instance.qty.set(1);
+        instance.qty.set(null);
 
         //animate for member
         $('#animation').removeClass().addClass('animated bounceIn').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
@@ -614,21 +588,8 @@ editTmpl.helpers({
         if (customerType == "Retail") {
             result = roundKhrCurrency(instance.khrPrice.get());
         } else {
-            fx.base = "USD";
-            fx.rates = {
-                "KHR": exchangeDoc.rates.KHR,
-                "USD": exchangeDoc.rates.USD,
-                "THB": exchangeDoc.rates.THB
-            }
-
-            if (instance.currencyId.get() == "USD") {
-                result = roundKhrCurrency(fx.convert(instance.price.get(), {from: "USD", to: "KHR"}));
-
-            } else if (instance.currencyId.get() == "THB") {
-                result = roundKhrCurrency(fx.convert(instance.price.get(), {from: "THB", to: "KHR"}));
-            } else {
-                result = roundKhrCurrency(instance.khrPrice.get());
-            }
+            fx.rates = exchangeDoc.rates;
+            result = roundKhrCurrency(fx.convert(instance.price.get(), {from: instance.currencyId.get() , to: exchangeDoc.base}));
         }
 
         instance.orderPrice.set(result);
@@ -645,22 +606,9 @@ editTmpl.helpers({
         if (customerType == "Retail") {
             amount = instance.qty.get() * orderPrice;
         } else {
-            fx.base = "USD";
-            fx.rates = {
-                "KHR": exchangeDoc.rates.KHR,
-                "USD": exchangeDoc.rates.USD,
-                "THB": exchangeDoc.rates.THB
-            };
-
+            fx.rates = exchangeDoc.rates;
             let tempAmount = instance.qty.get() * orderPrice;
-
-            if (instance.currencyId.get() == "USD") {
-                amount = roundKhrCurrency(fx.convert(tempAmount, {from: "USD", to: "KHR"}));
-            } else if (instance.currencyId.get() == "THB") {
-                amount = roundKhrCurrency(fx.convert(tempAmount, {from: "THB", to: "KHR"}));
-            } else if (instance.currencyId.get() == "KHR") {
-                amount = roundKhrCurrency(instance.qty.get() * orderPrice);
-            }
+            amount = roundKhrCurrency((fx.convert(tempAmount, {from: instance.currencyId.get(), to: exchangeDoc.base})));
         }
 
         instance.amount.set(orderPrice > 0 ? roundKhrCurrency(instance.qty.get() * orderPrice) : amount);
