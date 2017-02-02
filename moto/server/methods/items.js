@@ -15,7 +15,7 @@ Meteor.methods({
             list.push({label: '(Select One)', value: ''});
         }
 
-        Item.find()
+        Item.find({}, {sort: {name: 1}})
             .forEach(function (obj) {
                 list.push({label: obj._id + ' : ' + obj.name, value: obj._id})
             });
