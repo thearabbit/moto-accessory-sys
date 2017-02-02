@@ -56,6 +56,8 @@ indexTmpl.onCreated(function () {
     createNewAlertify('orderInvoice', {size: 'lg'});
     createNewAlertify('orderPayment', {size: 'sm'});
     createNewAlertify('orderShow');
+    createNewAlertify('customerAddOn', {size: 'sm'});
+    createNewAlertify('employeeAddOn', {size: 'sm'});
     this.subscribe('moto.orderPayment');
     this.subscribe('moto.exchange');
 
@@ -331,6 +333,12 @@ formTmpl.events({
     },
     'click .js-save-and-print': function (event, instance) {
         Session.set('saveAndPrint', 'fire');
+    },
+    'click .customerAddOn': function (e, t) {
+        alertify.customerAddOn(fa("plus", "Customer"), renderTemplate(Template.Moto_customerForm));
+    },
+    'click .employeeAddOn': function (e, t) {
+        alertify.employeeAddOn(fa("plus", "Employee"), renderTemplate(Template.Moto_employeeForm));
     }
 });
 

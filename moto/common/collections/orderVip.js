@@ -149,7 +149,7 @@ OrderVip.schema = new SimpleSchema({
             type: 'select2'
         }
     },
-    type: {
+    customerType: {
         type: String,
         label: 'Type',
         defaultValue: 'Vip',

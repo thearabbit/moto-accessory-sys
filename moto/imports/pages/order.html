@@ -65,7 +65,9 @@
                                     <label class="control-label" for="employeeId">Employee</label>
                                     <div class="input-group select2-bootstrap-append">
                                         <span class="input-group-btn">
-                                            {{> employeeDropDown}}
+                                            <a href="#" class="employeeAddOn btn btn-flat btn-default" style="margin-top: -4px;">
+                                                {{fa "plus-square"}}
+                                            </a>
                                         </span>
                                         {{> afFieldInput name='employeeId'}}
                                     </div>
@@ -82,7 +84,9 @@
                                     <label class="control-label" for="customerId">Customer</label>
                                     <div class="input-group select2-bootstrap-append">
                                         <span class="input-group-btn">
-                                            {{> customerDropDown}}
+                                             <a href="#" class="customerAddOn btn btn-flat btn-default">
+                                                 {{fa "plus-square"}}
+                                             </a>
                                         </span>
                                         {{> afFieldInput name='customerId' class="customerId"}}
                                     </div>
@@ -334,35 +338,5 @@
                 <!-- /.row -->
             </section>
         {{/with}}
-    </div>
-</template>
-
-<!--Employee-->
-<template name="employeeDropDown">
-    <div class="input-group-btn" style="z-index: 999">
-        <div class="btn-group" style="margin-bottom: 4px;" role="group">
-            <div class="dropdown dropdown-lg">
-                <a class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown"
-                   aria-expanded="false"><span>{{fa "plus-square"}}</span></a>
-                <div class="dropdown-menu dropdown-menu-left dropdown-form-shadow" role="menu">
-                    {{>Moto_employeeForm}}
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
-<!--Customer-->
-<template name="customerDropDown">
-    <div class="input-group-btn" style="z-index: 999">
-        <div class="btn-group" style="margin-bottom: 4px;" role="group">
-            <div class="dropdown dropdown-lg">
-                <a class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown"
-                   aria-expanded="false"><span>{{fa "plus-square"}}</span></a>
-                <div class="dropdown-menu dropdown-menu-left dropdown-form-shadow" role="menu">
-                    {{>Moto_customerForm}}
-                </div>
-            </div>
-        </div>
     </div>
 </template>

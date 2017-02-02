@@ -71,13 +71,6 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         },
         {
-            data: "type",
-            title: "Type",
-            render(val, type, doc){
-                return `<span class="badge bg-navy-active"><i class="fa fa-trophy"></i> ${val} </span>`;
-            }
-        },
-        {
             title: "Payment",
             tmpl: Meteor.isClient && Template.Moto_paymentVipLinkAction
         }
