@@ -55,6 +55,8 @@ indexTmpl.onCreated(function () {
     createNewAlertify('orderVip', {size: 'lg'});
     createNewAlertify('orderVipPayment', {size: 'lg'});
     createNewAlertify('orderVipInvoice', {size: 'lg'});
+    createNewAlertify('customerAddOn', {size: 'sm'});
+    createNewAlertify('employeeAddOn', {size: 'sm'});
     createNewAlertify('orderShow');
 
     this.subscribe('moto.orderVipPayment');
@@ -269,7 +271,7 @@ formTmpl.helpers({
 });
 
 formTmpl.events({
-    'click [name="type"]': function (event, instance) {
+    'click [name="cusotmerType"]': function (event, instance) {
         let type = event.currentTarget.value;
         Session.set('customerType', type);
         Session.set('exchangeDoc', null);
@@ -335,6 +337,12 @@ formTmpl.events({
     },
     'click .js-save-and-print': function (event, instance) {
         Session.set('saveAndPrint', 'fire');
+    },
+    'click .customerAddOn': function (e, t) {
+        alertify.customerAddOn(fa("plus", "Customer"), renderTemplate(Template.Moto_customerForm));
+    },
+    'click .employeeAddOn': function (e, t) {
+        alertify.employeeAddOn(fa("plus", "Employee"), renderTemplate(Template.Moto_employeeForm));
     }
 });
 
