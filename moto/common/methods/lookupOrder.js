@@ -45,6 +45,7 @@ export const lookupOrder = new ValidatedMethod({
                 {
                     $unwind: "$items"
                 },
+                {$sort: {"items.orderIndex": -1}},
                 {
                     $lookup: {
                         from: "moto_item",
@@ -100,9 +101,9 @@ export const lookupOrder = new ValidatedMethod({
                         type: {$last: "$type"},
                         discountType: {$last: "$discountType"},
                         items: {
-                            $addToSet: {
+                            $push: {
                                 _id: "$items._id",
-                                date:"$items.date",
+                                orderIndex: "$items.orderIndex",
                                 itemId: "$items.itemId",
                                 itemName: "$itemName",
                                 memoItem: "$items.memoItem",

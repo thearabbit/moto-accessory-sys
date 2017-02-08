@@ -188,6 +188,9 @@ formTmpl.onCreated(function () {
                     itemsCollection.insert(value);
                 });
 
+                let lastIndex = itemsCollection.find().count();
+                Session.set('lastIndex', lastIndex);
+
                 self.lastOrderBalance.set(result.lastOrderBalance);
                 self.orderDoc.set(result);
                 self.isLoading.set(false);
@@ -223,6 +226,7 @@ formTmpl.helpers({
             let exchange = Exchange.findOne({_id: data.doc.exchangeId});
             Session.set('exchangeDoc', exchange);
             Session.set('discountAmountUpdate', data.doc.discountAmount);
+            Session.set('updateType', "work");
         }
 
         return data;
@@ -358,6 +362,8 @@ formTmpl.onDestroyed(function () {
     Session.set('findItems', null);
     Session.set('customerIdForSaveAndPayment', null);
     Session.set('employeeIdForSaveAndPayment', null);
+    Session.set('lastIndex', null);
+    Session.set('updateType', null);
     $(document).off('keyup');
 });
 

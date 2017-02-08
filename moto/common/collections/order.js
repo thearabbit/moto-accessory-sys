@@ -17,9 +17,9 @@ Order.itemsSchema = new SimpleSchema({
         type: String,
         label: 'Id'
     },
-    date: {
-        type: Date,
-        optional: true
+    orderIndex: {
+        type: Number,
+        label: 'Order Index'
     },
     itemId: {
         type: String,
@@ -108,10 +108,12 @@ Order.itemsSchema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.percentage();
             }
-        }
+        },
+        optional: true
     },
     discountType: {
-        type: String
+        type: String,
+        optional: true
     },
     totalAmount: {
         type: Number,

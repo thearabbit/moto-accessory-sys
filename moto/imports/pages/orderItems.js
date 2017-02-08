@@ -78,7 +78,7 @@ indexTmpl.helpers({
             rowsPerPage: 100,
             collection: itemsCollection,
             fields: [
-                {key: 'date', label: 'Date', hidden: true, sortable: 0, sortDirection: 'descending'},
+                {key: 'orderIndex', label: 'Order Index', hidden: true, sortable: 0, sortDirection: 'descending'},
                 {key: 'itemId', label: 'ID', hidden: false, sortable: false},
                 {key: 'itemName', label: 'Item', sortable: false},
                 {key: 'memo', label: 'Memo', sortable: false},
@@ -129,6 +129,7 @@ indexTmpl.helpers({
                 {
                     key: 'discount',
                     label: 'Discount',
+                    hidden: true,
                     fn(value, obj, key){
                         let type;
                         if (obj.discountType == "%") {
@@ -142,6 +143,7 @@ indexTmpl.helpers({
                 },
                 {
                     key: 'amount',
+                    hidden: true,
                     label: 'Amount',
                     fn (value, object, key) {
                         return `៛ ${value}`;
@@ -158,6 +160,7 @@ indexTmpl.helpers({
                 },
                 {
                     key: '_id',
+                    sortable: false,
                     label(){
                         return fa('bars', '', true);
                     },
@@ -249,9 +252,16 @@ indexTmpl.events({
         instance.purchasePriceHideAndShow.set('hide');
     }
 });
-
+let index;
 // New
 newTmpl.onCreated(function () {
+
+    if (Session.get('updateType') == "work") {
+        index = Session.get('lastIndex') + 1;
+    } else {
+        index = 1;
+    }
+
     // State
     this.itemId = new ReactiveVar();
     this.itemDoc = new ReactiveVar();
@@ -286,7 +296,7 @@ newTmpl.onCreated(function () {
                 $("[name='itemId']").select2('open');
             }
 
-            if(count >= 2 ){
+            if (count >= 2) {
                 count = 0;
             }
         }
@@ -300,6 +310,7 @@ newTmpl.onRendered(function () {
     $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
     $('[name="purchasePrice"]').hide();
+    $('[name="amount"]').hide();
 });
 
 newTmpl.helpers({
@@ -314,7 +325,10 @@ newTmpl.helpers({
             result = roundKhrCurrency(instance.khrPrice.get());
         } else {
             fx.rates = exchangeDoc.rates;
-            result = roundKhrCurrency(fx.convert(instance.price.get(), {from: instance.currencyId.get() , to: exchangeDoc.base}));
+            result = roundKhrCurrency(fx.convert(instance.price.get(), {
+                from: instance.currencyId.get(),
+                to: exchangeDoc.base
+            }));
         }
 
         instance.orderPrice.set(result);
@@ -333,7 +347,10 @@ newTmpl.helpers({
             fx.rates = exchangeDoc.rates;
 
             let tempAmount = instance.qty.get() * orderPrice;
-            amount = roundKhrCurrency((fx.convert(tempAmount, {from: instance.currencyId.get(), to: exchangeDoc.base})));
+            amount = roundKhrCurrency((fx.convert(tempAmount, {
+                from: instance.currencyId.get(),
+                to: exchangeDoc.base
+            })));
         }
 
         instance.amount.set(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
@@ -352,7 +369,7 @@ newTmpl.helpers({
     },
     disabledAddItemBtn: function () {
         const instance = Template.instance();
-      
+
         if (instance.itemId.get() && instance.qty.get()) {
             return {};
         }
@@ -370,6 +387,7 @@ newTmpl.helpers({
         return Session.get('findItems');
     }
 });
+
 
 newTmpl.events({
     'change [name="itemId"]': function (event, instance) {
@@ -427,6 +445,8 @@ newTmpl.events({
         instance.discount.set(discount);
     },
     'click .js-add-item': function (event, instance) {
+
+
         let itemId = instance.$('[name="itemId"]').val();
         let memoItem = instance.$('[name="memoItem"]').val();
         let itemName = _.trim(_.split(instance.$('[name="itemId"] option:selected').text(), " [")[0]);
@@ -472,10 +492,10 @@ newTmpl.events({
         //         }
         //     );
         // } else {
-        if(itemId != "" && qty != "" && orderPrice != 0) {
+        if (itemId != "" && qty != "" && orderPrice != 0) {
             itemsCollection.insert({
                 // _id: itemId,
-                date: Date(),
+                orderIndex: index,
                 itemId: itemId,
                 itemName: itemName,
                 memoItem: memoItem,
@@ -493,6 +513,9 @@ newTmpl.events({
                 memo: memo
             });
         }
+        index++;
+
+
         // clear all value because problem open form edit when key press enter it work on insert form
         $('[name="itemId"]').val(null).trigger('change');
         instance.$('[name="memo"]').val(null);
@@ -547,7 +570,7 @@ editTmpl.onCreated(function () {
             event.stopPropagation();
             return false;
         }
-        if(Session.get('openForm') == "open") {
+        if (Session.get('openForm') == "open") {
             // keypress `
             if (e.keyCode == 192) {
                 $('[name="qty"]').trigger("focus");
@@ -560,7 +583,7 @@ editTmpl.onCreated(function () {
                 $('.itemIdEdit').select2('open');
             }
 
-            if(count >= 2 ){
+            if (count >= 2) {
                 count = 0;
             }
         }
@@ -571,6 +594,8 @@ editTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
     $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
+    $('[name="amount"]').hide();
+    $('[name="discount"]').hide();
 });
 
 editTmpl.helpers({
@@ -589,7 +614,10 @@ editTmpl.helpers({
             result = roundKhrCurrency(instance.khrPrice.get());
         } else {
             fx.rates = exchangeDoc.rates;
-            result = roundKhrCurrency(fx.convert(instance.price.get(), {from: instance.currencyId.get() , to: exchangeDoc.base}));
+            result = roundKhrCurrency(fx.convert(instance.price.get(), {
+                from: instance.currencyId.get(),
+                to: exchangeDoc.base
+            }));
         }
 
         instance.orderPrice.set(result);
@@ -601,25 +629,28 @@ editTmpl.helpers({
     amount: function () {
         const instance = Template.instance();
 
-        let amount , exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
+        let amount, exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
 
         if (customerType == "Retail") {
             amount = instance.qty.get() * orderPrice;
         } else {
             fx.rates = exchangeDoc.rates;
             let tempAmount = instance.qty.get() * orderPrice;
-            amount = roundKhrCurrency((fx.convert(tempAmount, {from: instance.currencyId.get(), to: exchangeDoc.base})));
+            amount = roundKhrCurrency((fx.convert(tempAmount, {
+                from: instance.currencyId.get(),
+                to: exchangeDoc.base
+            })));
         }
 
         instance.amount.set(orderPrice > 0 ? roundKhrCurrency(instance.qty.get() * orderPrice) : amount);
-        return orderPrice > 0 ? roundKhrCurrency(instance.qty.get() * orderPrice) :  amount;
+        return orderPrice > 0 ? roundKhrCurrency(instance.qty.get() * orderPrice) : amount;
     },
     totalAmount: function () {
         const instance = Template.instance();
 
-        let totalAmount , amount = instance.amount.get(), discount = instance.discount.get(), discountType = Session.get('discountType');
+        let totalAmount, amount = instance.amount.get(), discount = instance.discount.get(), discountType = Session.get('discountType');
 
-        if ( discountType == "Percentage" || discountType == "%") {
+        if (discountType == "Percentage" || discountType == "%") {
             totalAmount = roundKhrCurrency(amount - (amount * discount / 100));
         } else {
             totalAmount = roundKhrCurrency((amount - discount));
@@ -744,7 +775,8 @@ let hooksObject = {
 
                 itemsCollection.insert({
                     _id: currentDoc._id,
-                    date: Date(),
+                    // date: Date(),
+                    orderIndex: currentDoc.orderIndex,
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     qty: insertDoc.qty,

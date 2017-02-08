@@ -43,6 +43,7 @@ export const invoiceReport = new ValidatedMethod({
                 {
                     $unwind: "$items"
                 },
+                {$sort:{"items.orderIndex": -1}},
                 {
                     $lookup: {
                         from: "moto_item",
@@ -64,8 +65,9 @@ export const invoiceReport = new ValidatedMethod({
                         lastOrderBalance: {$last: "$lastOrderBalance"},
                         balance: {$last: "$balance"},
                         items: {
-                            $addToSet: {
+                            $push: {
                                 _id: "$items._id",
+                                orderIndex :"$items.orderIndex",
                                 itemId: "$items.itemId",
                                 itemName: "$itemDoc.name",
                                 memoItem: "$items.memoItem",
@@ -79,7 +81,8 @@ export const invoiceReport = new ValidatedMethod({
                             }
                         }
                     }
-                },
+                }
+                ,
                 {
                     $lookup: {
                         from: "moto_orderPayment",
