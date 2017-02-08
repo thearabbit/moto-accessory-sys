@@ -18,8 +18,8 @@ export const OrderItemsSchema = new SimpleSchema({
         label: 'Id',
         optional: true
     },
-    date: {
-        type: Date,
+    orderIndex: {
+        type: Number,
         optional: true
     },
     itemId: {
@@ -145,10 +145,12 @@ export const OrderItemsSchema = new SimpleSchema({
                     return type;
                 }
             }
-        }
+        },
+        optional: true
     },
     discountType: {
         type: String,
+        optional: true
     },
     totalAmount: {
         type: Number,

@@ -120,7 +120,7 @@
                                 {{> afFieldInput type="hidden" name="printId"}}
                             </div>
                             <div class="col-md-6">
-                                {{> afQuickField name="discountType"}}
+                                {{> afQuickField type="hidden" name="discountType"}}
                             </div>
                         </div>
                     </div>
@@ -244,9 +244,9 @@
                     <div class="col-sm-4 invoice-col">
                         <b>Order #{{_id}} (Closed Date: {{checkClosedDate}})</b><br>
                         <br>
-                        <b>Discount Type:</b>
-                        <small class="{{checkDiscountType.class}}">{{{checkDiscountType.icon}}}</small>
-                        <br>
+                        <!--<b>Discount Type:</b>-->
+                        <!--<small class="{{checkDiscountType.class}}">{{{checkDiscountType.icon}}}</small>-->
+                        <!--<br>-->
                         <b>Type:</b>
                         <small class="{{checkType.class}}">{{{checkType.icon}}}</small>
                     </div>
@@ -266,8 +266,8 @@
                                 <th>Qty</th>
                                 <th>Purchase Price</th>
                                 <th>Order Price</th>
-                                <th>Discount</th>
-                                <th>Amount</th>
+                                <!--<th>Discount</th>-->
+                                <!--<th>Amount</th>-->
                                 <th>Total Amount</th>
                             </tr>
                             </thead>
@@ -280,8 +280,8 @@
                                     <td>{{qty}} {{unit}}</td>
                                     <td>{{purchasePrice}}</td>
                                     <td>{{orderPrice}} ៛</td>
-                                    <td>{{discount}} {{discountType}}</td>
-                                    <td>{{amount}} ៛</td>
+                                    <!--<td>{{discount}} {{discountType}}</td>-->
+                                    <!--<td>{{amount}} ៛</td>-->
                                     <td>{{totalAmount}} ៛</td>
                                 </tr>
                             {{/each}}
