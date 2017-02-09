@@ -186,11 +186,17 @@ formTmpl.onCreated(function () {
                 _.forEach(result.items, (value) => {
                     itemsCollection.insert(value);
                 });
+
+                //get last index
+                let lastIndex = itemsCollection.find().count();
+                Session.set('lastIndex', lastIndex);
+
                 self.lastOrderBalanceKhr.set(result.lastOrderBalanceKhr);
                 self.lastOrderBalanceUsd.set(result.lastOrderBalanceUsd);
                 self.lastOrderBalanceThb.set(result.lastOrderBalanceThb);
                 self.orderVipDoc.set(result);
                 self.isLoading.set(false);
+                Session.set('updateType', "work");
             }).catch((err) => {
                 console.log(err);
             });
@@ -363,6 +369,8 @@ formTmpl.onDestroyed(function () {
     Session.set('findItems', null);
     Session.set('customerIdForSaveAndPayment', null);
     Session.set('employeeIdForSaveAndPayment', null);
+    Session.set('lastIndex', null);
+    Session.set('updateType', null);
     $(document).off('keyup');
 });
 

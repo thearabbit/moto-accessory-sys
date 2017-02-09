@@ -21,6 +21,10 @@ OrderVip.itemsSchema = new SimpleSchema({
         type: Date,
         optional: true
     },
+    orderIndex: {
+        type: Number,
+        label: 'Order Index'
+    },
     itemId: {
         type: String,
         label: 'Item'
@@ -103,10 +107,12 @@ OrderVip.itemsSchema = new SimpleSchema({
             inputmaskOptions: function () {
                 return inputmaskOptions.percentage();
             }
-        }
+        },
+        optional: true
     },
     discountType: {
         type: String,
+        optional: true
     },
     totalAmount: {
         type: Number,

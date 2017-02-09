@@ -79,7 +79,7 @@ indexTmpl.helpers({
             rowsPerPage: 100,
             collection: itemsCollection,
             fields: [
-                {key: 'date', label: 'Date', hidden: true, sortable: 0, sortDirection: 'descending'},
+                {key: 'orderIndex', label: 'Order Index', hidden: true, sortable: 0, sortDirection: 'descending'},
                 {key: 'itemId', label: 'ID', hidden: false, sortable: false},
                 {key: 'itemName', label: 'Item', sortable: false},
                 {key: 'memo', label: 'Memo', sortable: false},
@@ -124,28 +124,28 @@ indexTmpl.helpers({
                     },
                     sortable: false
                 },
-                {
-                    key: 'discount',
-                    label: 'Discount',
-                    fn(value, obj, key){
-                        let type;
-                        if (obj.discountType == "%") {
-                            type = `${value} ${obj.discountType}`;
-                        } else {
-                            type = `${obj.discountType} ${value}`;
-                        }
-                        return type;
-                    },
-                    sortable: false
-                },
-                {
-                    key: 'amount',
-                    label: 'Amount',
-                    fn (value, obj, key) {
-                        return `${obj.itemCurrency} ${value}`;
-                    },
-                    sortable: false
-                },
+                // {
+                //     key: 'discount',
+                //     label: 'Discount',
+                //     fn(value, obj, key){
+                //         let type;
+                //         if (obj.discountType == "%") {
+                //             type = `${value} ${obj.discountType}`;
+                //         } else {
+                //             type = `${obj.discountType} ${value}`;
+                //         }
+                //         return type;
+                //     },
+                //     sortable: false
+                // },
+                // {
+                //     key: 'amount',
+                //     label: 'Amount',
+                //     fn (value, obj, key) {
+                //         return `${obj.itemCurrency} ${value}`;
+                //     },
+                //     sortable: false
+                // },
                 {
                     key: 'totalAmount',
                     label: 'Total Amount',
@@ -156,6 +156,7 @@ indexTmpl.helpers({
                 },
                 {
                     key: '_id',
+                    sortable: false,
                     label(){
                         return fa('bars', '', true);
                     },
@@ -328,7 +329,13 @@ indexTmpl.events({
 });
 
 // New
+let index;
 newTmpl.onCreated(function () {
+    if (Session.get('updateType') == "work") {
+        index = Session.get('lastIndex') + 1;
+    } else {
+        index = 1;
+    }
     // State
     this.itemId = new ReactiveVar();
     this.itemDoc = new ReactiveVar();
@@ -375,6 +382,8 @@ newTmpl.onRendered(function () {
     $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
     $('[name="purchasePrice"]').hide();
+    $('[name="discount"]').hide();
+    $('[name="amount"]').hide();
 });
 
 newTmpl.helpers({
@@ -552,10 +561,10 @@ newTmpl.events({
         //         }
         //     );
         // } else {
-        if(itemId != "" && qty != "" && orderPrice != 0) {
+        if (itemId != "" && qty != "" && orderPrice != 0) {
             itemsCollection.insert({
                 // _id: itemId,
-                date: Date(),
+                orderIndex: index,
                 itemId: itemId,
                 itemName: itemName,
                 memoItem: memoItem,
@@ -574,6 +583,8 @@ newTmpl.events({
                 memo: memo
             });
         }
+        index++;
+
         // clear all value because problem open form edit when key press enter it work on insert form
         $('[name="itemId"]').val(null).trigger('change');
         instance.$('[name="memo"]').val(null);
@@ -621,7 +632,7 @@ editTmpl.onCreated(function () {
             return false;
         }
         // keypress `
-        if(Session.get('openForm') == "open") {
+        if (Session.get('openForm') == "open") {
             // keypress tab
             if (e.keyCode == 192) {
                 $('[name="qty"]').trigger("focus");
@@ -634,7 +645,7 @@ editTmpl.onCreated(function () {
                 $('.itemIdEdit').select2('open');
             }
 
-            if(count >= 2 ){
+            if (count >= 2) {
                 count = 0;
             }
         }
@@ -645,6 +656,8 @@ editTmpl.onRendered(function () {
     $('[name="currencyId"]').hide();
     $('[name="price"]').hide();
     $('[name="khrPrice"]').hide();
+    $('[name="discount"]').hide();
+    $('[name="amount"]').hide();
 });
 
 editTmpl.helpers({
@@ -826,9 +839,10 @@ let hooksObject = {
             } else {
                 let itemName = Session.get('update') == true ? _.split($('[name="itemId"] option:selected').text(), " : ")[1] : _.split($('[name="itemId"] option:selected').text(), " : ")[2];
                 let discountType = Session.get('discountType') == "Percentage" ? "%" : itemCurrency;
+
                 itemsCollection.insert({
                     _id: currentDoc._id,
-                    date: Date(),
+                    orderIndex: currentDoc.orderIndex,
                     itemId: insertDoc.itemId,
                     itemName: itemName,
                     memoItem: insertDoc.memoItem,

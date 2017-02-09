@@ -43,6 +43,7 @@ export const invoiceVipReport = new ValidatedMethod({
                 {
                     $unwind: "$items"
                 },
+                {$sort:{"items.orderIndex": -1}},
                 {
                     $lookup: {
                         from: "moto_item",
@@ -70,7 +71,7 @@ export const invoiceVipReport = new ValidatedMethod({
                         lastOrderBalanceThb: {$last: "$lastOrderBalanceThb"},
                         balanceThb: {$last: "$balanceThb"},
                         items: {
-                            $addToSet: {
+                            $push: {
                                 _id: "$items._id",
                                 itemId: "$items.itemId",
                                 itemName: "$itemDoc.name",
