@@ -94,9 +94,6 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                {{> afQuickField name="memo" placeholder="Memo"}}
-            </div>
-            <div class="col-sm-6">
                 <div class="form-group{{#if afFieldIsInvalid
                                             name='qty'}} has-error{{/if}}"
                      data-required="true">
@@ -112,7 +109,9 @@
                 </div>
                 {{> afQuickField type="hidden" name="unit" value=itemDoc.unitDoc.name label=false placeholder="Unit"}}
             </div>
-
+            <div class="col-sm-6">
+                {{> afQuickField name="memo" placeholder="Memo"}}
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
@@ -120,7 +119,8 @@
                 {{> afQuickField name="purchasePrice" value=itemDoc.purchase label=false placeholder="Purchase Price" readonly=true}}
             </div>
             <div class="col-sm-6">
-                {{> afQuickField name="discount" value=discount placeholder="Discount"}}
+                {{> afQuickField name="totalAmount" value=totalAmount placeholder="Total Amount" readonly=true}}
+                {{> afFieldInput name="discount" value=discount placeholder="Discount"}}
                 {{> afQuickField name="currencyId" value=itemDoc.currencyId label=false placeholder="Currency" readonly=true}}
                 {{> afQuickField name="price" value=itemDoc.price label=false placeholder="Price" readonly=true}}
                 {{> afQuickField name="khrPrice" value=itemDoc.khrPrice label=false placeholder="KHR Price" readonly=true}}
@@ -128,11 +128,11 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                {{> afQuickField name="amount" value=amount placeholder="Amount" readonly=true}}
+                {{> afFieldInput name="amount" value=amount placeholder="Amount" readonly=true}}
             </div>
-            <div class="col-sm-6">
-                {{> afQuickField name="totalAmount" value=totalAmount placeholder="Total Amount" readonly=true}}
-            </div>
+            <!--<div class="col-sm-6">-->
+                <!--{{> afQuickField name="totalAmount" value=totalAmount placeholder="Total Amount" readonly=true}}-->
+            <!--</div>-->
         </div>
 
         <div class="row">
@@ -182,18 +182,19 @@
                             {{> afQuickField name="khrPrice" label=false value=itemDoc.khrPrice readonly=true}}
                         </div>
                         <div class="col-md-6">
-                            {{> afQuickField name="discount" placeholder="Discount"}}
+                            {{> afQuickField name="totalAmount" value=totalAmount readonly="true"}}
+                            {{> afFieldInput name="discount" placeholder="Discount"}}
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
                             {{> afQuickField type="hidden" name="discountType" value=discountType placeholder="Discount"}}
-                            {{> afQuickField name="amount" value=amount readonly=true}}
+                            {{> afFieldInput name="amount" value=amount readonly=true}}
                         </div>
-                        <div class="col-md-6">
-                            {{> afQuickField name="totalAmount" value=totalAmount readonly="true"}}
-                        </div>
+                        <!--<div class="col-md-6">-->
+                            <!--{{> afQuickField name="totalAmount" value=totalAmount readonly="true"}}-->
+                        <!--</div>-->
                     </div>
 
                 </div>

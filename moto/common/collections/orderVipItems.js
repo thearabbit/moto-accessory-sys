@@ -22,6 +22,11 @@ export const OrderVipItemsSchema = new SimpleSchema({
         type: Date,
         optional: true
     },
+    orderIndex: {
+        type: Number,
+        label: 'Order Index',
+        optional: true
+    },
     itemId: {
         type: String,
         label: 'Item',
@@ -187,10 +192,12 @@ export const OrderVipItemsSchema = new SimpleSchema({
                     return type;
                 }
             }
-        }
+        },
+        optional: true
     },
     discountType: {
         type: String,
+        optional: true
     },
     totalAmount: {
         type: Number,
