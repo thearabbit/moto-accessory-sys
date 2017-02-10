@@ -348,6 +348,7 @@ newTmpl.onCreated(function () {
     this.discountType = new ReactiveVar();
     this.discount = new ReactiveVar(0);
     this.totalAmount = new ReactiveVar(0);
+    this.currencyId = new ReactiveVar();
 
     let count = 0;
     $(document).on('keyup', (e) => {
@@ -392,9 +393,13 @@ newTmpl.helpers({
     },
     orderPrice: function () {
         const instance = Template.instance();
-        let result, customerType = Session.get('customerType');
+        let result, currencyId = instance.currencyId.get(), customerType = Session.get('customerType');
         if (customerType == "Vip") {
             result = instance.price.get();
+        }
+
+        if (customerType == "Vip" && currencyId == "KHR") {
+            result = roundKhrCurrency(instance.price.get());
         }
 
         return result;
@@ -404,13 +409,20 @@ newTmpl.helpers({
     },
     amount: function () {
         const instance = Template.instance();
-        let amount, customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
+        let amount, tmpAmount, currencyId = instance.currencyId.get(), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
         if (customerType == "Vip") {
             amount = instance.qty.get() * instance.price.get();
+            tmpAmount = orderPrice > 0 ? instance.qty.get() * orderPrice : amount;
         }
 
-        instance.amount.set(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
-        return orderPrice > 0 ? instance.qty.get() * orderPrice : amount;
+        if (customerType == "Vip" && currencyId == "KHR") {
+            amount = roundKhrCurrency(instance.qty.get() * instance.price.get());
+            tmpAmount = roundKhrCurrency(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
+        }
+
+
+        instance.amount.set(tmpAmount);
+        return tmpAmount;
     },
     totalAmount: function () {
         const instance = Template.instance();
@@ -670,10 +682,14 @@ editTmpl.helpers({
     },
     orderPrice: function () {
         const instance = Template.instance();
-        let result, exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType');
+        let result,currencyId = instance.currencyId.get(), exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType');
 
         if (customerType == "Vip") {
             result = instance.price.get();
+        }
+
+        if (customerType == "Vip" && currencyId == "KHR") {
+            result = roundKhrCurrency(instance.price.get());
         }
 
         return result;
@@ -683,14 +699,20 @@ editTmpl.helpers({
     },
     amount: function () {
         const instance = Template.instance();
-        let amount, customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
+        let amount,tmpAmount, currencyId = instance.currencyId.get(), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
 
         if (customerType == "Vip") {
             amount = instance.qty.get() * instance.price.get();
+            tmpAmount = orderPrice > 0 ? instance.qty.get() * orderPrice : amount;
         }
 
-        instance.amount.set(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
-        return orderPrice > 0 ? instance.qty.get() * orderPrice : amount;
+        if (customerType == "Vip" && currencyId == "KHR") {
+            amount = roundKhrCurrency(instance.qty.get() * instance.price.get());
+            tmpAmount = roundKhrCurrency(orderPrice > 0 ? instance.qty.get() * orderPrice : amount);
+        }
+
+        instance.amount.set(tmpAmount);
+        return tmpAmount;
     },
     totalAmount: function () {
         const instance = Template.instance();
