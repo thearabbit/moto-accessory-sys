@@ -152,7 +152,10 @@ OrderVip.schema = new SimpleSchema({
         type: String,
         label: 'Customer',
         autoform: {
-            type: 'select2'
+            type: 'select2',
+            options: function () {
+                return SelectOpts.customer("selectOne", true);
+            }
         }
     },
     customerType: {

@@ -60,17 +60,6 @@ indexTmpl.onCreated(function () {
     createNewAlertify('orderShow');
 
     this.subscribe('moto.orderVipPayment');
-
-    //get customer vip from server
-    Meteor.call('findCustomerVip', {
-        selectOne: true,
-        customerType: "Vip",
-        branch: Session.get('currentBranch')
-    }, (err, result)=> {
-        if (result) {
-            Session.set('findCustomerVip', result);
-        }
-    });
 });
 
 indexTmpl.helpers({
@@ -188,7 +177,7 @@ formTmpl.onCreated(function () {
                 });
 
                 //get last index
-                let lastIndex = itemsCollection.find().count();
+                let lastIndex = itemsCollection.findOne({}, {sort: {orderIndex: -1}}).orderIndex;
                 Session.set('lastIndex', lastIndex);
 
                 self.lastOrderBalanceKhr.set(result.lastOrderBalanceKhr);
@@ -203,6 +192,18 @@ formTmpl.onCreated(function () {
         }
 
         this.subscribe('core.exchange');
+        this.subscribe('moto.customerForOrder');
+
+        //get customer vip from server
+        // Meteor.call('findCustomerVip', {
+        //     selectOne: true,
+        //     customerType: "Vip",
+        //     branch: Session.get('currentBranch')
+        // }, (err, result)=> {
+        //     if (result) {
+        //         Session.set('findCustomerVip', result);
+        //     }
+        // });
     });
 });
 
