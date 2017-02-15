@@ -8,10 +8,13 @@ import {Bert} from 'meteor/themeteorchef:bert';
 import 'meteor/theara:autoprint';
 import 'printthis';
 import {_} from 'meteor/erasaur:meteor-lodash';
+import fx from "money";
+import {round2} from 'meteor/theara:round2';
 
 // Lib
 import {displaySuccess, displayError} from '../../../core/client/libs/display-alert.js';
 import {selectElementContents}  from '../../../moto/common/libs/selectAndCopy';
+import {roundKhrCurrency}  from '../../../moto/common/libs/roundKhrCurrency';
 
 // Component
 import '../../../core/imports/layouts/report/content.html';
@@ -67,7 +70,27 @@ indexTmpl.helpers({
     },
     rptData: function () {
         let instance = Template.instance();
-        return instance.rptData.get();
+        let data = instance.rptData.get();
+        data.rptContent.forEach(function (obj) {
+            fx.rates = data.exchangeRate;
+
+            obj.exKhr = roundKhrCurrency(fx.convert(obj.price, {
+                from: obj.currencyId,
+                to: "KHR"
+            }));
+
+            obj.exUsd = round2(fx.convert(obj.price, {
+                from: obj.currencyId,
+                to: "USD"
+            }), 2);
+
+            obj.exThb = round2(fx.convert(obj.price, {
+                from: obj.currencyId,
+                to: "THB"
+            }), 2);
+        });
+
+        return data;
     },
     increaseIndex(index){
         return index += 1;
