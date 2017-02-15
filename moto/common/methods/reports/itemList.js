@@ -8,6 +8,7 @@ import {moment} from  'meteor/momentjs:moment';
 // Collection
 import {Company} from '../../../../core/common/collections/company';
 import {Item} from '../../collections/item';
+import {Exchange} from '../../../../core/common/collections/exchange';
 
 export const itemListReport = new ValidatedMethod({
     name: 'moto.itemListReport',
@@ -17,10 +18,16 @@ export const itemListReport = new ValidatedMethod({
         if (!this.isSimulation) {
             Meteor._sleepForMs(2000);
 
-            let rptTitle, rptHeader, rptContent;
+            let rptTitle, rptHeader, rptContent, exchangeRate;
 
             // --- Title ---
             rptTitle = Company.findOne();
+
+            // --- Header ---
+            let exchangeDoc = Exchange.findOne({}, {sort: {exDate: -1}});
+            let exchangeHeader = JSON.stringify(exchangeDoc.rates, null, ' ');
+            exchangeRate = exchangeDoc.rates;
+            rptHeader = exchangeHeader;
 
             // --- Content ---
             rptContent = Item.aggregate([
@@ -32,7 +39,7 @@ export const itemListReport = new ValidatedMethod({
                         as: "unitDoc"
                     }
                 },
-                { $unwind: { path: "$unitDoc", preserveNullAndEmptyArrays: true } },
+                {$unwind: {path: "$unitDoc", preserveNullAndEmptyArrays: true}},
                 {
                     $project: {
                         code: 1,
@@ -40,10 +47,10 @@ export const itemListReport = new ValidatedMethod({
                         currencyId: 1,
                         currency: {
                             $cond: {
-                                if: { $eq: ["$currencyId", "KHR"] },
+                                if: {$eq: ["$currencyId", "KHR"]},
                                 then: "៛",
                                 else: {
-                                    $cond: { if: { $eq: ["$currencyId", "USD"] }, then: " $", else: "B" }
+                                    $cond: {if: {$eq: ["$currencyId", "USD"]}, then: " $", else: "B"}
                                 }
                             }
                         },
@@ -57,7 +64,7 @@ export const itemListReport = new ValidatedMethod({
                 {$sort: {_id: 1}}
             ]);
 
-            return {rptTitle, rptHeader, rptContent};
+            return {rptTitle, rptHeader, rptContent, exchangeRate};
         }
     }
 });
