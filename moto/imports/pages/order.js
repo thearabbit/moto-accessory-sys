@@ -188,7 +188,7 @@ formTmpl.onCreated(function () {
                     itemsCollection.insert(value);
                 });
 
-                let lastIndex = itemsCollection.find().count();
+                let lastIndex = itemsCollection.findOne({}, {sort: {orderIndex: -1}}).orderIndex;
                 Session.set('lastIndex', lastIndex);
 
                 self.lastOrderBalance.set(result.lastOrderBalance);
