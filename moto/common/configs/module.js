@@ -13,11 +13,19 @@ Module.Moto = {
     ],
     dump: {
         setting: [
-            'moto_location'
+            'moto_item',
+            'moto_employee',
+            'moto_supplier',
+            'moto_location',
+            'moto_lookupValue',
+            'moto_unit'
         ],
         data: [
             'moto_customer',
-            'moto_order'
+            'moto_order',
+            'moto_orderPayment',
+            'moto_orderVip',
+            'moto_orderVipPayment'
         ]
     }
 };
