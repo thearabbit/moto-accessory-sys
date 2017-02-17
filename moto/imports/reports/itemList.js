@@ -79,15 +79,15 @@ indexTmpl.helpers({
                 to: "KHR"
             }));
 
-            obj.exUsd = round2(fx.convert(obj.price, {
-                from: obj.currencyId,
-                to: "USD"
-            }), 2);
-
-            obj.exThb = round2(fx.convert(obj.price, {
-                from: obj.currencyId,
-                to: "THB"
-            }), 2);
+            // obj.exUsd = round2(fx.convert(obj.price, {
+            //     from: obj.currencyId,
+            //     to: "USD"
+            // }), 2);
+            //
+            // obj.exThb = round2(fx.convert(obj.price, {
+            //     from: obj.currencyId,
+            //     to: "THB"
+            // }), 2);
         });
 
         return data;
