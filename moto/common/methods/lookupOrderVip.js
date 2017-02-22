@@ -139,6 +139,7 @@ export const lookupOrderVip = new ValidatedMethod({
                                 orderIndex: "$items.orderIndex",
                                 itemId: "$items.itemId",
                                 itemName: "$itemName",
+                                secretCode:"$items.secretCode",
                                 currencyId: "$items.currencyId",
                                 itemCurrency: "$itemCurrency",
                                 qty: "$items.qty",

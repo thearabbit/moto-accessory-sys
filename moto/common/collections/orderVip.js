@@ -29,6 +29,10 @@ OrderVip.itemsSchema = new SimpleSchema({
         type: String,
         label: 'Item'
     },
+    secretCode: {
+        type: String,
+        optional: true
+    },
     qty: {
         type: Number,
         label: 'Qty',

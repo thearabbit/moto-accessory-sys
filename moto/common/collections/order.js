@@ -25,6 +25,10 @@ Order.itemsSchema = new SimpleSchema({
         type: String,
         label: 'Item'
     },
+    secretCode: {
+        type: String,
+        optional: true
+    },
     memoItem: {
         type: String,
         label: 'Memo Item',

@@ -150,6 +150,11 @@ Item.schema = new SimpleSchema({
         //     }
         // }
     },
+    secretCode: {
+        label: "Secret Code",
+        type: String,
+        optional: true
+    },
     supplierId: {
         type: String,
         optional: true,
