@@ -349,6 +349,7 @@ newTmpl.onCreated(function () {
     this.discount = new ReactiveVar(0);
     this.totalAmount = new ReactiveVar(0);
     this.currencyId = new ReactiveVar();
+    this.secretCode = new ReactiveVar('None');
 
     let count = 0;
     $(document).on('keyup', (e) => {
@@ -453,6 +454,9 @@ newTmpl.helpers({
     },
     itemsOpt(){
         return Session.get('findItems');
+    },
+    secretCode(){
+        return Template.instance().secretCode.get();
     }
 });
 
@@ -476,6 +480,7 @@ newTmpl.events({
                 Session.set("image", result.photo);
                 instance.itemDoc.set(result);
                 instance.orderPrice.set(0);
+                instance.secretCode.set(_.isUndefined(result.secretCode) ? 'None' : result.secretCode);
 
                 Meteor.setTimeout(() => {
                     $.unblockUI();
@@ -579,6 +584,7 @@ newTmpl.events({
                 orderIndex: index,
                 itemId: itemId,
                 itemName: itemName,
+                secretCode: instance.secretCode.get(),
                 memoItem: memoItem,
                 qty: qty,
                 unit: unit,
@@ -607,6 +613,7 @@ newTmpl.events({
         instance.$('[name="amount"]').val(null);
         instance.$('[name="totalAmount"]').val(null);
         AutoForm.resetForm("Moto_orderVipItemsNew");
+        instance.secretCode.set('None');
         // }
     }
 });
@@ -624,6 +631,7 @@ editTmpl.onCreated(function () {
     this.discount = new ReactiveVar(0);
     this.discountType = new ReactiveVar();
     this.totalAmount = new ReactiveVar(0);
+    this.secretCode = new ReactiveVar('None');
 
     this.autorun(() => {
         let data = Template.currentData();
@@ -633,6 +641,7 @@ editTmpl.onCreated(function () {
         this.khrPrice.set(data.khrPrice);
         this.discount.set(data.discount);
         this.discountType.set(data.discountType);
+        this.secretCode.set(data.secretCode);
     });
 
     let count = 0;
@@ -744,6 +753,9 @@ editTmpl.helpers({
     },
     itemsOpt(){
         return Session.get('findItems');
+    },
+    secretCode(){
+        return Template.instance().secretCode.get();
     }
 });
 
@@ -766,6 +778,8 @@ editTmpl.events({
                 Session.set("image", result.photo);
                 instance.itemDoc.set(result);
                 instance.orderPrice.set(0);
+                instance.secretCode.set(_.isUndefined(result.secretCode) ? 'None' : result.secretCode);
+
                 Meteor.setTimeout(() => {
                     $.unblockUI();
                 }, 100);
@@ -867,6 +881,7 @@ let hooksObject = {
                     orderIndex: currentDoc.orderIndex,
                     itemId: insertDoc.itemId,
                     itemName: itemName,
+                    secretCode: insertDoc.secretCode,
                     memoItem: insertDoc.memoItem,
                     qty: insertDoc.qty,
                     unit: insertDoc.unit,

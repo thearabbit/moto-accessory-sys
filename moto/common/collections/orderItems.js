@@ -29,6 +29,10 @@ export const OrderItemsSchema = new SimpleSchema({
             type: "select2"
         }
     },
+    secretCode: {
+        type: String,
+        optional: true
+    },
     memoItem: {
         type: String,
         label: 'Memo Item',

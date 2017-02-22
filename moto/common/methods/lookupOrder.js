@@ -106,6 +106,7 @@ export const lookupOrder = new ValidatedMethod({
                                 orderIndex: "$items.orderIndex",
                                 itemId: "$items.itemId",
                                 itemName: "$itemName",
+                                secretCode:"$items.secretCode",
                                 memoItem: "$items.memoItem",
                                 currencyId: "$items.currencyId",
                                 qty: "$items.qty",

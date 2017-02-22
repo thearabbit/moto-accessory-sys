@@ -50,7 +50,24 @@
     {{#autoForm schema=schema id="Moto_orderItemsNew"}}
         <div class="row">
             <div class="col-sm-12">
-                {{> afQuickField name="itemId" placeholder="Item" options=itemsOpt }}
+                <div class="form-group{{#if afFieldIsInvalid
+                                            name='itemId'}} has-error{{/if}}"
+                     data-required="true">
+                    <label class="control-label" for="itemId">
+                        Item
+                    </label>
+                    <b>|</b>
+
+                    <span class="label label-primary" style="font-size: 14px;">Secret Code : {{secretCode}}</span>
+
+                    <div class="form-group">
+                        {{> afFieldInput name='itemId' class="itemId" placeholder="Item" options=itemsOpt}}
+                    </div>
+
+                    {{#if afFieldIsInvalid name='itemId'}}
+                        <span class="help-block">{{afFieldMessage name='itemId'}}</span>
+                    {{/if}}
+                </div>
             </div>
         </div>
         <div class="row">
@@ -124,7 +141,26 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            {{> afQuickField name="itemId" class="itemIdEdit" placeholder="Item" options=itemsOpt}}
+                            <div class="form-group{{#if afFieldIsInvalid
+                                                        name='itemId'}} has-error{{/if}}"
+                                 data-required="true">
+                                <label class="control-label" for="itemId">
+                                    Item
+                                </label>
+                                <b>|</b>
+
+                                <span class="label label-primary" style="font-size: 14px;">Secret Code : {{secretCode}}</span>
+
+                                <div class="form-group">
+                                    {{> afFieldInput name='itemId' class="itemIdEdit" placeholder="Item" options=itemsOpt}}
+                                </div>
+
+                                {{#if afFieldIsInvalid name='itemId'}}
+                                    <span class="help-block">{{afFieldMessage name='itemId'}}</span>
+                                {{/if}}
+                            </div>
+
+                            {{> afFieldInput type="hidden" name='secretCode' value=secretCode}}
                         </div>
                     </div>
 
