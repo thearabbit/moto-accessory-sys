@@ -43,7 +43,8 @@ export const CustomerVipLogSchema = new SimpleSchema({
                 optionsMethod: 'moto.selectOptsMethod.customerVipForReport',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
-                        return {type: "Vip"};
+                        let currentBranch = Session.get('currentBranch');
+                        return {branchId: currentBranch, type: "Vip"};
                     }
                 }
             }
