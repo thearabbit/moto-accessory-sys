@@ -80,7 +80,6 @@ export const customerLogReport = new ValidatedMethod({
                 {
                     $unwind: "$branchDoc"
                 },
-                {$sort: {_id: -1}},
                 {
                     $lookup: {
                         from: "moto_orderPayment",
@@ -90,39 +89,39 @@ export const customerLogReport = new ValidatedMethod({
                     }
                 },
                 {
-                    $unwind: {path: "$orderPaymentDoc", preserveNullAndEmptyArrays: true}
+                    $unwind: { path: "$orderPaymentDoc", preserveNullAndEmptyArrays: true }
                 },
                 {
                     $group: {
                         _id: "$_id",
-                        orderDate: {$last: "$orderDate"},
-                        branchId: {$last: "$branchId"},
-                        branchDoc: {$last: "$branchDoc"},
-                        employeeId: {$last: "$employeeId"},
-                        customerId: {$last: "$customerId"},
-                        customerDoc: {$last: "$customerDoc"},
-                        type: {$last: "$type"},
-                        items: {$last: "$items"},
-                        subTotal: {$last: "$subTotal"},
-                        discountAmount: {$last: "$discountAmount"},
-                        total: {$last: "$total"},
-                        lastOrderBalance: {$last: "$lastOrderBalance"},
-                        realTotal: {$last: "$balance"},
+                        orderDate: { $last: "$orderDate" },
+                        branchId: { $last: "$branchId" },
+                        branchDoc: { $last: "$branchDoc" },
+                        employeeId: { $last: "$employeeId" },
+                        customerId: { $last: "$customerId" },
+                        customerDoc: { $last: "$customerDoc" },
+                        type: { $last: "$type" },
+                        items: { $last: "$items" },
+                        subTotal: { $last: "$subTotal" },
+                        discountAmount: { $last: "$discountAmount" },
+                        total: { $last: "$total" },
+                        lastOrderBalance: { $last: "$lastOrderBalance" },
+                        realTotal: { $last: "$balance" },
                         paid: {
                             $sum: {
                                 $cond: [{
-                                    $and: [{$ne: ["$orderPaymentDoc", null]},
-                                        {$eq: ["$orderPaymentDoc.status", "Partial"]}
+                                    $and: [{ $ne: ["$orderPaymentDoc", null] },
+                                        { $eq: ["$orderPaymentDoc.status", "Partial"] }
                                     ]
                                 },
                                     "$orderPaymentDoc.paidAmount",
                                     0]
                             }
                         },
-                        orderPaymentDoc: {$push: "$orderPaymentDoc"}
+                        orderPaymentDoc: { $push: "$orderPaymentDoc" }
                     }
                 },
-                {$sort: {_id : -1}},
+                { $sort: { _id: -1 } },
                 {
                     $project: {
                         _id: 1,
@@ -143,7 +142,7 @@ export const customerLogReport = new ValidatedMethod({
                         orderPaymentDoc: 1,
                         balance: {
                             $subtract: ["$realTotal", "$paid"]
-                        },
+                        }
                     }
                 },
                 {
@@ -151,14 +150,14 @@ export const customerLogReport = new ValidatedMethod({
                         _id: {
                             branchId: "$branchId"
                         },
-                        branchDoc: {$last: "$branchDoc"},
-                        subTotal: {$sum: "$subTotal"},
-                        discountAmount: {$sum: "$discountAmount"},
-                        total: {$sum: "$total"},
-                        lastOrderBalance: {$sum: "$lastOrderBalance"},
-                        paid: {$sum: "$paid"},
-                        balance: {$sum: "$balance"},
-                        dataOrder: {$push: "$$ROOT"}
+                        branchDoc: { $first: "$branchDoc" },
+                        subTotal: { $first: "$subTotal" },
+                        discountAmount: { $first: "$discountAmount" },
+                        total: { $first: "$total" },
+                        lastOrderBalance: { $first: "$lastOrderBalance" },
+                        paid: { $first: "$paid" },
+                        balance: { $first: "$balance" },
+                        dataOrder: {$push: "$$ROOT" }
                     }
                 },
                 {

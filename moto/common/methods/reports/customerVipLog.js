@@ -80,7 +80,6 @@ export const customerVipLogReport = new ValidatedMethod({
                 {
                     $unwind: "$branchDoc"
                 },
-                {$sort: {_id: -1}},
                 {
                     $lookup: {
                         from: "moto_orderVipPayment",
@@ -201,25 +200,25 @@ export const customerVipLogReport = new ValidatedMethod({
                         _id: {
                             branchId: "$branchId"
                         },
-                        branchDoc: {$last: "$branchDoc"},
-                        subTotal: {$sum: "$subTotal"},
-                        discountAmount: {$sum: "$discountAmount"},
-                        total: {$sum: "$total"},
-                        lastOrderBalance: {$sum: "$lastOrderBalance"},
-                        paid: {$sum: "$paid"},
-                        balance: {$sum: "$balance"},
-                        subTotalUsd: {$sum: "$subTotalUsd"},
-                        discountAmountUsd: {$sum: "$discountAmountUsd"},
-                        totalUsd: {$sum: "$totalUsd"},
-                        lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
-                        paidUsd: {$sum: "$paidUsd"},
-                        balanceUsd: {$sum: "$balanceUsd"},
-                        subTotalThb: {$sum: "$subTotalThb"},
-                        discountAmountThb: {$sum: "$discountAmountThb"},
-                        totalThb: {$sum: "$totalThb"},
-                        lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
-                        paidThb: {$sum: "$paidThb"},
-                        balanceThb: {$sum: "$balanceThb"},
+                        branchDoc: {$first: "$branchDoc"},
+                        subTotal: {$first: "$subTotal"},
+                        discountAmount: {$first: "$discountAmount"},
+                        total: {$first: "$total"},
+                        lastOrderBalance: {$first: "$lastOrderBalance"},
+                        paid: {$first: "$paid"},
+                        balance: {$first: "$balance"},
+                        subTotalUsd: {$first: "$subTotalUsd"},
+                        discountAmountUsd: {$first: "$discountAmountUsd"},
+                        totalUsd: {$first: "$totalUsd"},
+                        lastOrderBalanceUsd: {$first: "$lastOrderBalanceUsd"},
+                        paidUsd: {$first: "$paidUsd"},
+                        balanceUsd: {$first: "$balanceUsd"},
+                        subTotalThb: {$first: "$subTotalThb"},
+                        discountAmountThb: {$first: "$discountAmountThb"},
+                        totalThb: {$first: "$totalThb"},
+                        lastOrderBalanceThb: {$first: "$lastOrderBalanceThb"},
+                        paidThb: {$first: "$paidThb"},
+                        balanceThb: {$first: "$balanceThb"},
                         dataOrderVip: {$push: "$$ROOT"}
                     }
                 },

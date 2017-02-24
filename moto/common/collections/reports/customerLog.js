@@ -43,7 +43,8 @@ export const CustomerLogSchema = new SimpleSchema({
                 optionsMethod: 'moto.selectOptsMethod.customerForReport',
                 optionsMethodParams: function () {
                     if (Meteor.isClient) {
-                        return {type: "Vip"};
+                        let currentBranch = Session.get('currentBranch');
+                        return {branchId: currentBranch, type: "Vip"};
                     }
                 }
             }
