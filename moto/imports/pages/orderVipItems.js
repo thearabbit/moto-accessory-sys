@@ -356,19 +356,20 @@ newTmpl.onCreated(function () {
         // keypress enter
         if (e.keyCode == 13) {
             $('.js-add-item').click();
+            $('[name="qty"]').trigger("focus");
             event.stopPropagation();
             return false;
         }
         // keypress `
         if (Session.get('openForm') == null) {
-            if (e.keyCode == 192) {
+            if (e.keyCode == 192 || e.keyCode == 226) {
                 $('[name="qty"]').trigger("focus");
                 event.stopPropagation();
                 count++;
                 // return false;
             }
             // double keypress `
-            if (e.keyCode == 192 && count == 2) {
+            if (e.keyCode == 192 && count == 2 || e.keyCode == 226 && count == 2) {
                 $("[name='itemId']").select2('open');
             }
 
@@ -615,6 +616,9 @@ newTmpl.events({
         AutoForm.resetForm("Moto_orderVipItemsNew");
         instance.secretCode.set('None');
         // }
+
+        //open item after insert
+        $("[name='itemId']").select2('open');
     }
 });
 
@@ -655,14 +659,14 @@ editTmpl.onCreated(function () {
         // keypress `
         if (Session.get('openForm') == "open") {
             // keypress tab
-            if (e.keyCode == 192) {
+            if (e.keyCode == 192 || e.keyCode == 226) {
                 $('[name="qty"]').trigger("focus");
                 event.stopPropagation();
                 count++;
                 // return false;
             }
             // double keypress `
-            if (e.keyCode == 192 && count == 2) {
+            if (e.keyCode == 192 && count == 2 || e.keyCode == 226 && count == 2 ) {
                 $('.itemIdEdit').select2('open');
             }
 
