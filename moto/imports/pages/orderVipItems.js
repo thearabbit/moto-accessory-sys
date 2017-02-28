@@ -98,6 +98,7 @@ indexTmpl.helpers({
                 {
                     key: 'purchasePrice',
                     label: 'Purchase Price',
+                    hidden: true,
                     fn(value, obj, key){
                         let currency;
                         if (obj.currencyId == "KHR") {
@@ -350,6 +351,8 @@ newTmpl.onCreated(function () {
     this.totalAmount = new ReactiveVar(0);
     this.currencyId = new ReactiveVar();
     this.secretCode = new ReactiveVar('None');
+    this.purchasePrice = new ReactiveVar(0);
+    this.purchasePriceHideAndShow = new ReactiveVar();
 
     let count = 0;
     $(document).on('keyup', (e) => {
@@ -458,6 +461,18 @@ newTmpl.helpers({
     },
     secretCode(){
         return Template.instance().secretCode.get();
+    },
+    purchasePrice(){
+        let currency = Template.instance().currencyId.get(), result, purchasePrice = Template.instance().purchasePrice.get();
+        if (currency == "KHR") {
+            result = "៛ " + purchasePrice;
+        } else if (currency == "USD") {
+            result = "$ " + numeral(purchasePrice).format('0,0.00');
+        } else {
+            result = "B " + numeral(purchasePrice).format('0,0.00');
+        }
+
+        return Template.instance().purchasePriceHideAndShow.get() == "show" ? result : "***";
     }
 });
 
@@ -478,6 +493,7 @@ newTmpl.events({
                 instance.price.set(result.price);
                 instance.khrPrice.set(result.khrPrice);
                 instance.currencyId.set(result.currencyId);
+                instance.purchasePrice.set(result.purchase);
                 Session.set("image", result.photo);
                 instance.itemDoc.set(result);
                 instance.orderPrice.set(0);
@@ -615,10 +631,17 @@ newTmpl.events({
         instance.$('[name="totalAmount"]').val(null);
         AutoForm.resetForm("Moto_orderVipItemsNew");
         instance.secretCode.set('None');
+        instance.purchasePrice.set(0);
         // }
 
         //open item after insert
         $("[name='itemId']").select2('open');
+    },
+    'click .purchasePrice': function (event, instance) {
+        instance.purchasePriceHideAndShow.set('show');
+    },
+    'dblclick .purchasePrice': function (event, instance) {
+        instance.purchasePriceHideAndShow.set('hide');
     }
 });
 
