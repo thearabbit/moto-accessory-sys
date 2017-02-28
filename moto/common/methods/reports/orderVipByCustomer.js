@@ -79,7 +79,7 @@ export const orderVipByCustomerReport = new ValidatedMethod({
                 {
                     $unwind: "$branchDoc"
                 },
-                {$sort: {orderDate: -1}},
+                // {$sort: {orderDate: -1}},
                 {
                     $group: {
                         _id: {
@@ -105,6 +105,7 @@ export const orderVipByCustomerReport = new ValidatedMethod({
                         dataOrder: {$push: "$$ROOT"},
                     }
                 },
+                {$sort: {orderDate: -1}},
                 {
                     $project: {
                         _id: 0,

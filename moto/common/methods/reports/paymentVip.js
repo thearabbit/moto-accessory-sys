@@ -85,7 +85,7 @@ export const paymentVipReport = new ValidatedMethod({
                 {
                     $unwind: "$branchDoc"
                 },
-                { $sort: { paidDate: -1 } },
+                // { $sort: { paidDate: -1 } },
                 {
                     $group: {
                         _id: {
@@ -110,6 +110,7 @@ export const paymentVipReport = new ValidatedMethod({
                         dataPaymentVip: { $push: "$$ROOT" },
                     }
                 },
+                { $sort: { paidDate: -1 } },
                 {
                     $project: {
                         _id: 0,
