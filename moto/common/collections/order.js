@@ -228,18 +228,19 @@ Order.schema = new SimpleSchema({
         optional: true,
         autoform: {
             afFieldInput: {
-                type: 'summernote',
-                class: 'editor', // optional
-                settings: {
-                    height: 75,                 // set editor height
-                    minHeight: null,             // set minimum height of editor
-                    maxHeight: null,             // set maximum height of editor
-                    toolbar: [
-                        ['font', ['bold', 'italic', 'underline', 'clear']], //['font', ['bold', 'italic', 'underline', 'clear']],
-                        ['para', ['ul', 'ol']] //['para', ['ul', 'ol', 'paragraph']],
-                        //['insert', ['link', 'picture']], //['insert', ['link', 'picture', 'hr']],
-                    ]
-                } // summernote options goes here
+                type: 'textarea',
+                // type: 'summernote',
+                // class: 'editor', // optional
+                // settings: {
+                //     height: 75,                 // set editor height
+                //     minHeight: null,             // set minimum height of editor
+                //     maxHeight: null,             // set maximum height of editor
+                //     toolbar: [
+                //         ['font', ['bold', 'italic', 'underline', 'clear']], //['font', ['bold', 'italic', 'underline', 'clear']],
+                //         ['para', ['ul', 'ol']] //['para', ['ul', 'ol', 'paragraph']],
+                //         //['insert', ['link', 'picture']], //['insert', ['link', 'picture', 'hr']],
+                //     ]
+                // } // summernote options goes here
             }
         }
     },
