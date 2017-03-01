@@ -29,7 +29,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return moment(val).format('DD/MM/YYYY hh:mm:ss');
             }
         },
-        {data: "customerId", title: "Customer"},
+        {data: "_customer.name", title: "Customer"},
         {
             data: "subTotal",
             title: "SubTotal",
@@ -75,7 +75,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             tmpl: Meteor.isClient && Template.Moto_paymentVipLinkAction
         }
     ],
-    extraFields: ['employeeId', 'items', 'subTotalUsd', 'discountAmountUsd', 'totalUsd','subTotalThb', 'discountAmountThb', 'totalThb','lastOrderBalanceUsd','lastOrderBalanceThb','balanceUsd','balanceThb']
+    extraFields: ['customerId','employeeId', 'items', 'subTotalUsd', 'discountAmountUsd', 'totalUsd','subTotalThb', 'discountAmountThb', 'totalThb','lastOrderBalanceUsd','lastOrderBalanceThb','balanceUsd','balanceThb']
 });
 
 export const OrderVipTabular = new Tabular.Table(tabularData);
