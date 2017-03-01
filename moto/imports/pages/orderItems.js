@@ -305,6 +305,13 @@ newTmpl.onCreated(function () {
                 count = 0;
             }
         }
+
+        //key press for save
+        if( e.which === 83 && e.shiftKey ) {
+            $('.js-save').click();
+            event.stopPropagation();
+            return false;
+        }
     });
 
 
@@ -623,6 +630,13 @@ editTmpl.onCreated(function () {
             if (count >= 2) {
                 count = 0;
             }
+        }
+
+        //key press for save
+        if( e.which === 83 && e.shiftKey ) {
+            $('.js-save').click();
+            event.stopPropagation();
+            return false;
         }
     });
 });

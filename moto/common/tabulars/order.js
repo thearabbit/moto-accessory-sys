@@ -29,7 +29,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
                 return moment(val).format('DD/MM/YYYY hh:mm:ss');
             }
         },
-        {data: "customerId", title: "Customer"},
+        {data: "_customer.name", title: "Customer"},
         {
             data: "subTotal",
             title: "SubTotal",
@@ -80,7 +80,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             tmpl: Meteor.isClient && Template.Moto_paymentLinkAction
         }
     ],
-    extraFields:['employeeId','items','exchangeId','printId']
+    extraFields:['employeeId','items','exchangeId','printId','customerId']
 });
 
 export const OrderTabular = new Tabular.Table(tabularData);

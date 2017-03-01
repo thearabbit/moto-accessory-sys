@@ -7,19 +7,19 @@ import {OrderPayment} from '../../common/collections/orderPayment.js';
 
 Order.before.insert(function (userId, doc) {
     let prefix = `${doc.branchId}-`;
-    doc.printId =  doc._id;
+    doc.printId = doc._id;
     doc._id = idGenerator.genWithPrefix(Order, prefix, 12);
     doc.balance = doc.total + doc.lastOrderBalance;
 });
 
-Order.before.update(function (userId, doc, fieldNames, modifier, options) {
-    modifier.$set = modifier.$set || {};
+Order.after.update(function (userId, doc) {
 
-    if (modifier.$set.discountAmount == null) {
-        modifier.$set.discountAmount = 0;
+    if (doc.discountAmount == null) {
+        doc.discountAmount = 0;
     }
 
-    modifier.$set.balance = modifier.$set.total + modifier.$set.lastOrderBalance;
+    let balance = doc.total + doc.lastOrderBalance;
+    Order.direct.update({_id: doc._id}, {$set: {balance: balance}});
 });
 
 Order.after.remove(function (userId, doc) {
