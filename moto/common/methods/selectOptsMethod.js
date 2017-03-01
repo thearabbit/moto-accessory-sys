@@ -301,7 +301,6 @@ SelectOptsMethod.orderItem = new ValidatedMethod({
             if (searchText) {
 
                 let regTerm = new RegExp("^" + searchText, 'm');
-                console.log(regTerm);
                 selector = {
                     $or: [
                         {code: regTerm},
@@ -309,7 +308,6 @@ SelectOptsMethod.orderItem = new ValidatedMethod({
                     ]
                 };
             } else if (values.length) {
-                console.log("kk " + values);
                 selector = {_id: {$in: values}};
             }
             selector.type = 'I';
@@ -342,10 +340,14 @@ SelectOptsMethod.order = new ValidatedMethod({
             let list = [], selector = {};
             let searchText = options.searchText;
             let values = options.values;
+            let params = options.params || {};
 
-            if (searchText) {
+            if (searchText && params.branchId) {
                 selector = {
-                    _id: {$regex: searchText, $options: 'i'},
+                    $or: [
+                        {_id: {$regex: searchText, $options: 'i'}},
+                        {name: {$regex: searchText, $options: 'i'}}
+                    ],
                     branchId: params.branchId
                 };
             } else if (values.length) {
@@ -373,10 +375,14 @@ SelectOptsMethod.orderVip = new ValidatedMethod({
             let list = [], selector = {};
             let searchText = options.searchText;
             let values = options.values;
+            let params = options.params || {};
 
-            if (searchText) {
+            if (searchText && params.branchId) {
                 selector = {
-                    _id: {$regex: searchText, $options: 'i'},
+                    $or: [
+                        {_id: {$regex: searchText, $options: 'i'}},
+                        {name: {$regex: searchText, $options: 'i'}}
+                    ],
                     branchId: params.branchId
                 };
             } else if (values.length) {
@@ -385,7 +391,7 @@ SelectOptsMethod.orderVip = new ValidatedMethod({
 
             let data = OrderVip.find(selector, {limit: 10});
             data.forEach(function (value) {
-                let label = `${value._id} | Date: ` + moment(value.orderDate).format('DD/MM/YYYY') + ` | Amount: ` + `${value.total} ៛ : ${value.totalUsd} $ : ${value.totalThb} B`;
+                let label = `${value._id} | Date: ` + moment(value.orderDate).format('DD/MM/YYYY') + ` | Amount: ` + `${value.total} ៛ / ${value.totalUsd} $ / ${value.totalThb} B`;
                 list.push({label: label, value: value._id});
             });
 
@@ -507,32 +513,6 @@ SelectOptsMethod.customerVipForReport = new ValidatedMethod({
     run(options) {
         if (!this.isSimulation) {
             this.unblock();
-
-            // let list = [], selector = {};
-            // let searchText = options.searchText;
-            // let values = options.values;
-            // let params = options.params || {};
-            //
-            // if (searchText && params.branchId) {
-            //     selector = {
-            //         $or: [
-            //             {_id: {$regex: searchText, $options: 'i'}},
-            //             {name: {$regex: searchText, $options: 'i'}}
-            //         ],
-            //         branchId: params.branchId
-            //     };
-            // } else if (values.length) {
-            //     selector = {_id: {$in: values}};
-            // } else if (params.type) {
-            //     selector = {type: {$eq: params.type}};
-            // }
-            //
-            //
-            // let data = Customer.find(selector, {limit: 10});
-            // data.forEach(function (value) {
-            //     let label = `${value._id}  :  ${value.name} (${value.type}) | ${value.address}`;
-            //     list.push({label: label, value: value._id});
-            // });
 
             let list = [], selector = {};
             let searchText = options.searchText;
