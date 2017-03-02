@@ -50,13 +50,13 @@ export const lookupOrderLog = new ValidatedMethod({
                 {
                     $group: {
                         _id: "$_id",
-                        customerId: { $last: "$customerId" },
-                        customerDoc: { $last: "$customerDoc" },
-                        orderDate: { $last: "$orderDate" },
-                        balance: { $last: "$balance" },
-                        total: { $last: "$total" },
-                        paymentBalance: { $last: "$paymentDoc.balance" },
-                        des: { $last: "$des" }
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
+                        orderDate: {$last: "$orderDate"},
+                        balance: {$last: "$balance"},
+                        total: {$last: "$total"},
+                        paymentBalance: {$last: "$paymentDoc.balance"},
+                        des: {$last: "$des"}
                     }
                 },
                 {
@@ -80,20 +80,20 @@ export const lookupOrderLog = new ValidatedMethod({
                 {
                     $group: {
                         _id: "$_id",
-                        customerId: { $last: "$customerId" },
-                        customerDoc: { $last: "$customerDoc" },
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
                         orderLog: {
                             $addToSet: {
                                 oldOrderRefId: "$_id",
                                 oldOrderDate: "$orderDate",
                                 oldOrderTotal: {
                                     $cond: [
-                                        { $eq: ["$paymentBalance", null] }, "$balance", "$paymentBalance"
+                                        {$eq: ["$paymentBalance", null]}, "$balance", "$paymentBalance"
                                     ]
-                                },
-                                des: "$des"
+                                }
                             }
-                        }
+                        },
+                        des: {$last:"$des"}
                     }
                 },
                 {
@@ -101,7 +101,7 @@ export const lookupOrderLog = new ValidatedMethod({
                         path: '$orderLog', preserveNullAndEmptyArrays: true
                     }
                 },
-                {$sort: {_id : 1}},
+                {$sort: {_id: 1}},
                 {
                     $project: {
                         _id: 1,
@@ -111,7 +111,7 @@ export const lookupOrderLog = new ValidatedMethod({
                         des: 1,
                         totalOrderLog: {
                             $cond: {
-                                if: { $lte: ["$orderLog.oldOrderTotal", 0] },
+                                if: {$lte: ["$orderLog.oldOrderTotal", 0]},
                                 then: "$orderLog.oldOrderTotal",
                                 else: {
                                     $sum: "$orderLog.oldOrderTotal"
@@ -124,12 +124,13 @@ export const lookupOrderLog = new ValidatedMethod({
                 {
                     $group: {
                         _id: "$customerId",
-                        customerId: { $last: "$customerId" },
-                        customerDoc: { $last: "$customerDoc" },
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
                         orderLog: {
                             $addToSet: "$orderLog"
                         },
-                        totalOrderLog: { $last: "$totalOrderLog" }
+                        totalOrderLog: {$last: "$totalOrderLog"},
+                        des: {$last: "$des"}
                     }
                 }
 

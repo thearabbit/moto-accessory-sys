@@ -102,10 +102,10 @@ export const lookupOrderVipLog = new ValidatedMethod({
                                     $cond: [
                                         {$eq: ["$paymentBalanceThb", null]}, "$balanceThb", "$paymentBalanceThb"
                                     ]
-                                },
-                                des: "$des"
+                                }
                             }
-                        }
+                        },
+                        des: {$first: "$des"}
                     }
                 },
                 {
@@ -113,7 +113,7 @@ export const lookupOrderVipLog = new ValidatedMethod({
                         path: '$orderVipLog', preserveNullAndEmptyArrays: true
                     }
                 },
-                {$sort: {_id : 1}},
+                {$sort: {_id: 1}},
                 {
                     $project: {
                         _id: 1,
@@ -164,6 +164,7 @@ export const lookupOrderVipLog = new ValidatedMethod({
                         totalOrderVipLogKhr: {$last: "$totalOrderVipLogKhr"},
                         totalOrderVipLogUsd: {$last: "$totalOrderVipLogUsd"},
                         totalOrderVipLogThb: {$last: "$totalOrderVipLogThb"},
+                        des: {$last: "$des"}
                     }
                 }
             ]);

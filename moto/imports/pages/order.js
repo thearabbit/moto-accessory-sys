@@ -156,6 +156,7 @@ formTmpl.onCreated(function () {
     self.orderDoc = new ReactiveVar();
     self.orderLog = new ReactiveVar(0);
     self.lastOrderBalance = new ReactiveVar(0);
+    self.des = new ReactiveVar();
 
     Session.set('customerType', 'Retail');
     if (!Template.currentData()) {
@@ -275,6 +276,10 @@ formTmpl.helpers({
         let instance = Template.instance();
         let lastOrderBalance = _.isUndefined(instance.lastOrderBalance.get()) ? 0 : instance.lastOrderBalance.get();
         return roundKhrCurrency(lastOrderBalance);
+    },
+    description(){
+        let instance = Template.instance();
+        return instance.des.get();
     }
 });
 
@@ -313,6 +318,7 @@ formTmpl.events({
             }
             else {
                 instance.lastOrderBalance.set(data.totalOrderLog);
+                instance.des.set(data.des);
             }
 
             instance.orderLog.set(data);
@@ -495,6 +501,7 @@ let hooksObject = {
         $('[name="discountAmount"]').val(null);
         $('[name="total"]').val(null);
         $('[name="lastOrderBalance"]').val(null);
+        $('[name="des"]').val(null);
 
         // For Insert
         if (saveAndPayment == "fire") {
