@@ -150,6 +150,7 @@ formTmpl.onCreated(function () {
     self.isLoading = new ReactiveVar(false);
     self.orderVipDoc = new ReactiveVar();
     self.orderVipLog = new ReactiveVar(0);
+    self.des = new ReactiveVar();
     Session.set('customerType', 'Vip');
     if (!Template.currentData()) {
         Session.set('discountType', 'Percentage');
@@ -274,6 +275,10 @@ formTmpl.helpers({
     },
     customerVipOpt(){
         return Session.get('findCustomerVip');
+    },
+    description(){
+        let instance = Template.instance();
+        return instance.des.get();
     }
 });
 
@@ -303,6 +308,7 @@ formTmpl.events({
         }).then((result) => {
             // instance.orderVipLog.set(result || 0);
             let data = result;
+   
             if (_.isUndefined(result)) {
                 data = 0;
             }
@@ -320,6 +326,7 @@ formTmpl.events({
                 instance.lastOrderBalanceKhr.set(data.totalOrderVipLogKhr);
                 instance.lastOrderBalanceUsd.set(data.totalOrderVipLogUsd);
                 instance.lastOrderBalanceThb.set(data.totalOrderVipLogThb);
+                instance.des.set(data.des);
             }
 
             instance.orderVipLog.set(data);
@@ -482,6 +489,7 @@ let hooksObject = {
         $('[name="lastOrderBalanceUsd"]').val(null);
         $('[name="lastOrderBalanceThb"]').val(null);
         $('[name="customerId"]').val(null);
+        $('[name="des"]').val(null);
 
         // For Insert
         if (saveAndPayment == "fire") {

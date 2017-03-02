@@ -30,22 +30,22 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         },
         {data: "_customer.name", title: "Customer"},
-        {
-            data: "subTotal",
-            title: "SubTotal",
-            render: function (val, type, doc) {
-                let result = `KHR : ${val} <br> USD : ${doc.subTotalUsd} <br> THB : ${doc.subTotalThb}`;
-                return result;
-            }
-        },
-        {
-            data: "discountAmount",
-            title: "Discount Amount",
-            render: function (val, type, doc) {
-                let result = `KHR : ${val} <br> USD : ${doc.discountAmountUsd} <br> THB : ${doc.discountAmountThb}`;
-                return result;
-            }
-        },
+        // {
+        //     data: "subTotal",
+        //     title: "SubTotal",
+        //     render: function (val, type, doc) {
+        //         let result = `KHR : ${val} <br> USD : ${doc.subTotalUsd} <br> THB : ${doc.subTotalThb}`;
+        //         return result;
+        //     }
+        // },
+        // {
+        //     data: "discountAmount",
+        //     title: "Discount Amount",
+        //     render: function (val, type, doc) {
+        //         let result = `KHR : ${val} <br> USD : ${doc.discountAmountUsd} <br> THB : ${doc.discountAmountThb}`;
+        //         return result;
+        //     }
+        // },
         {
             data: "total",
             title: "Total",
@@ -75,7 +75,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             tmpl: Meteor.isClient && Template.Moto_paymentVipLinkAction
         }
     ],
-    extraFields: ['customerId','employeeId', 'items', 'subTotalUsd', 'discountAmountUsd', 'totalUsd','subTotalThb', 'discountAmountThb', 'totalThb','lastOrderBalanceUsd','lastOrderBalanceThb','balanceUsd','balanceThb']
+    extraFields: ['customerId', 'employeeId', 'items', 'subTotalUsd', 'discountAmount', 'discountAmountUsd', 'total', 'totalUsd', 'subTotalThb', 'discountAmountThb', 'totalThb', 'lastOrderBalanceUsd', 'lastOrderBalanceThb', 'balanceUsd', 'balanceThb']
 });
 
 export const OrderVipTabular = new Tabular.Table(tabularData);

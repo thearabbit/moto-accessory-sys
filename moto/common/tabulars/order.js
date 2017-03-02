@@ -30,20 +30,20 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             }
         },
         {data: "_customer.name", title: "Customer"},
-        {
-            data: "subTotal",
-            title: "SubTotal",
-            render(val, type, doc){
-                return `${val} ៛`;
-            }
-        },
-        {
-            data: "discountAmount",
-            title: "Discount Amount",
-            render(val, type, doc){
-                return `${val} ៛`;
-            }
-        },
+        // {
+        //     data: "subTotal",
+        //     title: "SubTotal",
+        //     render(val, type, doc){
+        //         return `${val} ៛`;
+        //     }
+        // },
+        // {
+        //     data: "discountAmount",
+        //     title: "Discount Amount",
+        //     render(val, type, doc){
+        //         return `${val} ៛`;
+        //     }
+        // },
         {
             data: "total",
             title: "Total",
@@ -80,7 +80,7 @@ let tabularData = _.assignIn(_.clone(tabularOpts), {
             tmpl: Meteor.isClient && Template.Moto_paymentLinkAction
         }
     ],
-    extraFields:['employeeId','items','exchangeId','printId','customerId']
+    extraFields:['employeeId','items','exchangeId','printId','customerId','subTotal','discountAmount']
 });
 
 export const OrderTabular = new Tabular.Table(tabularData);
