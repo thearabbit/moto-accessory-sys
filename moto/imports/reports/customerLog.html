@@ -11,6 +11,7 @@
                     </div>
                     <div class="col-md-6">
                         {{> afQuickField name="repDate"}}
+                        {{> afQuickField name="mode"}}
                         {{> reportFormFooterWithButton}}
                     </div>
                 </div>
@@ -111,66 +112,101 @@
                                             <td><u>{{objBranch.balance}}</u></td>
                                         </tr>
 
-                                            {{#each objOder in objBranch.dataOrder}}
+                                        {{#each objOder in objBranch.dataOrder}}
+                                            <tr class="text-bold">
+                                                <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order Log :</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                        @index}}</td>
+                                                <td>{{objOder._id}}</td>
+                                                <td>{{moFormat objOder.orderDate "DD/MM/YYYY hh:mm:ss A"}}</td>
+                                                <!--<td>{{objOder.customerDoc.name}} ({{objOder.customerDoc.type}})</td>-->
+                                                <td>{{objOder.subTotal}}</td>
+                                                <td>{{objOder.discountAmount}}</td>
+                                                <td>{{objOder.total}}</td>
+                                                <td>{{objOder.lastOrderBalance}}</td>
+                                                <td>{{objOder.paid}}</td>
+                                                <td>{{objOder.balance}}</td>
+                                            </tr>
+                                            {{#if detailMode}}
                                                 <tr class="text-bold">
-                                                    <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order Log :</td>
+                                                    <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        Order Detail :
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
-                                                            @index}}</td>
-                                                    <td>{{objOder._id}}</td>
-                                                    <td>{{moFormat objOder.orderDate "DD/MM/YYYY hh:mm:ss A"}}</td>
-                                                    <!--<td>{{objOder.customerDoc.name}} ({{objOder.customerDoc.type}})</td>-->
-                                                    <td>{{objOder.subTotal}}</td>
-                                                    <td>{{objOder.discountAmount}}</td>
-                                                    <td>{{objOder.total}}</td>
-                                                    <td>{{objOder.lastOrderBalance}}</td>
-                                                    <td>{{objOder.paid}}</td>
-                                                    <td>{{objOder.balance}}</td>
-                                                </tr>
-                                                {{#if objOder.orderPaymentDoc}}
-                                                    <tr class="text-bold">
-                                                        <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment
-                                                            Log :
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="9">
-                                                            <table class="rpt" style="width: 100%;">
-                                                                <thead class="rpt-content-header">
+                                                    <td colspan="9">
+                                                        <table class="rpt" style="width: 100%;">
+                                                            <thead class="rpt-content-header">
+                                                            <tr>
+                                                                <th>N<sup>o</sup></th>
+                                                                <th>Item</th>
+                                                                <th>Qty</th>
+                                                                <th>Order Price</th>
+                                                                <th>Total Amount</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody class="rpt-content-body">
+                                                            {{#each objOrderDetail in objOder.items}}
                                                                 <tr>
-                                                                    <th>N<sup>o</sup></th>
-                                                                    <!--<th>ID</th>-->
-                                                                    <th>Paid Date</th>
-                                                                    <th>Employee Id</th>
-                                                                    <th>Due</th>
-                                                                    <th>Paid</th>
-                                                                    <th>Balance</th>
-                                                                    <th>Status</th>
+                                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                                            @index}}</td>
+                                                                    <td>{{objOrderDetail.itemName}}</td>
+                                                                    <td>{{objOrderDetail.qty}} {{objOrderDetail.unit}}</td>
+                                                                    <td>{{objOrderDetail.orderPrice}}</td>
+                                                                    <td>{{objOrderDetail.totalAmount}}</td>
                                                                 </tr>
-                                                                </thead>
-                                                                <tbody class="rpt-content-body">
-                                                                {{#each objOrderPayment in objOder.orderPaymentDoc}}
-                                                                    <tr>
-                                                                        <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
-                                                                                @index}}</td>
-                                                                        <!--<td>{{objOrderPayment._id}}</td>-->
-                                                                        <td>{{moFormat objOrderPayment.paidDate
-                                                                                       "DD/MM/YYYY hh:mm:ss A"}}</td>
-                                                                        <td>{{objOrderPayment.employeeId}}</td>
-                                                                        <td>{{objOrderPayment.dueAmount}}</td>
-                                                                        <td>{{objOrderPayment.paidAmount}}</td>
-                                                                        <td>{{objOrderPayment.balance}}</td>
-                                                                        <td>{{objOrderPayment.status}}</td>
-                                                                    </tr>
-                                                                {{/each}}
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                {{/if}}
+                                                            {{/each}}
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            {{/if}}
 
-                                            {{/each}}
+                                            {{#if objOder.orderPaymentDoc}}
+                                                <tr class="text-bold">
+                                                    <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment
+                                                        Log :
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="9">
+                                                        <table class="rpt" style="width: 100%;">
+                                                            <thead class="rpt-content-header">
+                                                            <tr>
+                                                                <th>N<sup>o</sup></th>
+                                                                <!--<th>ID</th>-->
+                                                                <th>Paid Date</th>
+                                                                <th>Employee Id</th>
+                                                                <th>Due</th>
+                                                                <th>Paid</th>
+                                                                <th>Balance</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody class="rpt-content-body">
+                                                            {{#each objOrderPayment in objOder.orderPaymentDoc}}
+                                                                <tr>
+                                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                                            @index}}</td>
+                                                                    <!--<td>{{objOrderPayment._id}}</td>-->
+                                                                    <td>{{moFormat objOrderPayment.paidDate
+                                                                                   "DD/MM/YYYY hh:mm:ss A"}}</td>
+                                                                    <td>{{objOrderPayment.employeeId}}</td>
+                                                                    <td>{{objOrderPayment.dueAmount}}</td>
+                                                                    <td>{{objOrderPayment.paidAmount}}</td>
+                                                                    <td>{{objOrderPayment.balance}}</td>
+                                                                    <td>{{objOrderPayment.status}}</td>
+                                                                </tr>
+                                                            {{/each}}
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            {{/if}}
+
+                                        {{/each}}
 
                                     {{/each}}
                                 {{/with}}
