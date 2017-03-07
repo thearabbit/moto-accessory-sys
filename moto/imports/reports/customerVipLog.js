@@ -36,6 +36,7 @@ let formDataState = new ReactiveVar(null);
 indexTmpl.onCreated(function () {
     this.rptInit = new ReactiveVar(false);
     this.rptData = new ReactiveVar(null);
+    this.detailMode = new ReactiveVar(null);
 
     this.autorun(() => {
         // Report Data
@@ -85,6 +86,12 @@ indexTmpl.helpers({
     },
     increaseIndex(index){
         return index += 1;
+    },
+    detailMode(){
+        let instance = Template.instance();
+        if (instance.detailMode.get() == "Detail Mode") {
+            return true;
+        }
     }
 });
 
@@ -122,6 +129,10 @@ indexTmpl.events({
             message: 'Press "C" For Copy',
             icon: 'fa-lightbulb-o'
         });
+    },
+    'change [name="mode"]'(event, instance){
+        let mode = event.currentTarget.value;
+        instance.detailMode.set(mode);
     }
 });
 

@@ -11,6 +11,7 @@
                     </div>
                     <div class="col-md-6">
                         {{> afQuickField name="repDate"}}
+                        {{> afQuickField name="mode"}}
                         {{> reportFormFooterWithButton}}
                     </div>
                 </div>
@@ -74,7 +75,7 @@
                             {{/with}}
 
                             <!--Content-->
-                            <table class="rpt rpt-content"  id="item-list-tbl">
+                            <table class="rpt rpt-content" id="item-list-tbl">
                                 <thead class="rpt-content-header">
                                 <tr>
                                     <th>N<sup>o</sup></th>
@@ -175,150 +176,193 @@
                                             </td>
                                         </tr>
 
-                                        <!--{{#each objDate in objBranch.dataVipDate}}-->
-                                            <!--<tr class="text-bold">-->
-                                                <!--<td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat-->
-                                                        <!--objDate.orderDate "DD/MM/YYYY"}}</td>-->
-                                                <!--<td>-->
-                                                    <!--KHR: {{objDate.subTotal}}<br>-->
-                                                    <!--USD: {{numFormat objDate.subTotalUsd "0,0.00"}}<br>-->
-                                                    <!--THB: {{numFormat objDate.subTotalThb "0,0.00"}}-->
-                                                <!--</td>-->
-                                                <!--<td>-->
-                                                    <!--KHR: {{objDate.discountAmount}}<br>-->
-                                                    <!--USD: {{numFormat objDate.discountAmountUsd "0,0.00"}}<br>-->
-                                                    <!--THB: {{numFormat objDate.discountAmountThb "0,0.00"}}-->
-                                                <!--</td>-->
-                                                <!--<td>-->
-                                                    <!--<u>-->
-                                                        <!--KHR: {{objDate.total}}<br>-->
-                                                        <!--USD: {{numFormat objDate.totalUsd "0,0.00"}}<br>-->
-                                                        <!--THB: {{numFormat objDate.totalThb "0,0.00"}}-->
-                                                    <!--</u>-->
-                                                <!--</td>-->
-                                                <!--<td>-->
-                                                    <!--<u>-->
-                                                        <!--KHR: {{objDate.lastOrderBalance}}<br>-->
-                                                        <!--USD: {{numFormat objDate.lastOrderBalanceUsd "0,0.00"}}<br>-->
-                                                        <!--THB: {{numFormat objDate.lastOrderBalanceThb "0,0.00"}}-->
-                                                    <!--</u>-->
-                                                <!--</td>-->
-                                                <!--<td>-->
-                                                    <!--<u>-->
-                                                        <!--KHR: {{objDate.paid}}<br>-->
-                                                        <!--USD: {{numFormat objDate.paidUsd "0,0.00"}}<br>-->
-                                                        <!--THB: {{numFormat objDate.paidThb "0,0.00"}}-->
-                                                    <!--</u>-->
-                                                <!--</td>-->
-                                                <!--<td>-->
-                                                    <!--<u>-->
-                                                        <!--KHR: {{objDate.balance}}<br>-->
-                                                        <!--USD: {{numFormat objDate.balanceUsd "0,0.00"}}<br>-->
-                                                        <!--THB: {{numFormat objDate.balanceThb "0,0.00"}}-->
-                                                    <!--</u>-->
-                                                <!--</td>-->
-                                            <!--</tr>-->
-                                            {{#each objOrderVip in objBranch.dataOrderVip}}
+                                                <!--{{#each objDate in objBranch.dataVipDate}}-->
+                                        <!--<tr class="text-bold">-->
+                                        <!--<td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date : {{moFormat-->
+                                        <!--objDate.orderDate "DD/MM/YYYY"}}</td>-->
+                                        <!--<td>-->
+                                        <!--KHR: {{objDate.subTotal}}<br>-->
+                                        <!--USD: {{numFormat objDate.subTotalUsd "0,0.00"}}<br>-->
+                                        <!--THB: {{numFormat objDate.subTotalThb "0,0.00"}}-->
+                                        <!--</td>-->
+                                        <!--<td>-->
+                                        <!--KHR: {{objDate.discountAmount}}<br>-->
+                                        <!--USD: {{numFormat objDate.discountAmountUsd "0,0.00"}}<br>-->
+                                        <!--THB: {{numFormat objDate.discountAmountThb "0,0.00"}}-->
+                                        <!--</td>-->
+                                        <!--<td>-->
+                                        <!--<u>-->
+                                        <!--KHR: {{objDate.total}}<br>-->
+                                        <!--USD: {{numFormat objDate.totalUsd "0,0.00"}}<br>-->
+                                        <!--THB: {{numFormat objDate.totalThb "0,0.00"}}-->
+                                        <!--</u>-->
+                                        <!--</td>-->
+                                        <!--<td>-->
+                                        <!--<u>-->
+                                        <!--KHR: {{objDate.lastOrderBalance}}<br>-->
+                                        <!--USD: {{numFormat objDate.lastOrderBalanceUsd "0,0.00"}}<br>-->
+                                        <!--THB: {{numFormat objDate.lastOrderBalanceThb "0,0.00"}}-->
+                                        <!--</u>-->
+                                        <!--</td>-->
+                                        <!--<td>-->
+                                        <!--<u>-->
+                                        <!--KHR: {{objDate.paid}}<br>-->
+                                        <!--USD: {{numFormat objDate.paidUsd "0,0.00"}}<br>-->
+                                        <!--THB: {{numFormat objDate.paidThb "0,0.00"}}-->
+                                        <!--</u>-->
+                                        <!--</td>-->
+                                        <!--<td>-->
+                                        <!--<u>-->
+                                        <!--KHR: {{objDate.balance}}<br>-->
+                                        <!--USD: {{numFormat objDate.balanceUsd "0,0.00"}}<br>-->
+                                        <!--THB: {{numFormat objDate.balanceThb "0,0.00"}}-->
+                                        <!--</u>-->
+                                        <!--</td>-->
+                                        <!--</tr>-->
+                                        {{#each objOrderVip in objBranch.dataOrderVip}}
+                                            <tr class="text-bold">
+                                                <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order Log :</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                        @index}}</td>
+                                                <td>{{objOrderVip._id}}</td>
+                                                <td>{{moFormat objOrderVip.orderDate "DD/MM/YYYY hh:mm:ss A"}}
+                                                </td>
+                                                <td>
+                                                    KHR: {{objOrderVip.subTotal}}<br>
+                                                    USD: {{numFormat objOrderVip.subTotalUsd "0,0.00"}}<br>
+                                                    THB: {{numFormat objOrderVip.subTotalThb "0,0.00"}}
+                                                </td>
+                                                <td>
+                                                    KHR: {{objOrderVip.discountAmount}}<br>
+                                                    USD: {{numFormat objOrderVip.discountAmountUsd "0,0.00"}}<br>
+                                                    THB: {{numFormat objOrderVip.discountAmountThb "0,0.00"}}
+                                                </td>
+                                                <td>
+                                                    KHR: {{objOrderVip.total}}<br>
+                                                    USD: {{numFormat objOrderVip.totalUsd "0,0.00"}}<br>
+                                                    THB: {{numFormat objOrderVip.totalThb "0,0.00"}}
+                                                </td>
+                                                <td>
+                                                    KHR: {{objOrderVip.lastOrderBalance}}<br>
+                                                    USD: {{numFormat objOrderVip.lastOrderBalanceUsd "0,0.00"}}<br>
+                                                    THB: {{numFormat objOrderVip.lastOrderBalanceThb "0,0.00"}}
+                                                </td>
+                                                <td>
+                                                    KHR: {{objOrderVip.paid}}<br>
+                                                    USD: {{numFormat objOrderVip.paidUsd "0,0.00"}}<br>
+                                                    THB: {{numFormat objOrderVip.paidThb "0,0.00"}}
+                                                </td>
+                                                <td>
+                                                    KHR: {{objOrderVip.balance}}<br>
+                                                    USD: {{numFormat objOrderVip.balanceUsd "0,0.00"}}<br>
+                                                    THB: {{numFormat objOrderVip.balanceThb "0,0.00"}}
+                                                </td>
+                                            </tr>
+                                            {{#if detailMode}}
                                                 <tr class="text-bold">
-                                                    <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order Log :</td>
+                                                    <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        Order Detail :
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
-                                                            @index}}</td>
-                                                    <td>{{objOrderVip._id}}</td>
-                                                    <td>{{moFormat objOrderVip.orderDate "DD/MM/YYYY hh:mm:ss A"}}
-                                                    </td>
-                                                    <td>
-                                                        {{objOrderVip.subTotal}}<br>
-                                                        {{numFormat objOrderVip.subTotalUsd "0,0.00"}}<br>
-                                                        {{numFormat objOrderVip.subTotalThb "0,0.00"}}
-                                                    </td>
-                                                    <td>
-                                                        KHR: {{objOrderVip.discountAmount}}<br>
-                                                        USD: {{numFormat objOrderVip.discountAmountUsd "0,0.00"}}<br>
-                                                        THB: {{numFormat objOrderVip.discountAmountThb "0,0.00"}}
-                                                    </td>
-                                                    <td>
-                                                        KHR: {{objOrderVip.total}}<br>
-                                                        USD: {{numFormat objOrderVip.totalUsd "0,0.00"}}<br>
-                                                        THB: {{numFormat objOrderVip.totalThb "0,0.00"}}
-                                                    </td>
-                                                    <td>
-                                                        KHR: {{objOrderVip.lastOrderBalance}}<br>
-                                                        USD: {{numFormat objOrderVip.lastOrderBalanceUsd "0,0.00"}}<br>
-                                                        THB: {{numFormat objOrderVip.lastOrderBalanceThb "0,0.00"}}
-                                                    </td>
-                                                    <td>
-                                                        KHR: {{objOrderVip.paid}}<br>
-                                                        USD: {{numFormat objOrderVip.paidUsd "0,0.00"}}<br>
-                                                        THB: {{numFormat objOrderVip.paidThb "0,0.00"}}
-                                                    </td>
-                                                    <td>
-                                                        KHR: {{objOrderVip.balance}}<br>
-                                                        USD: {{numFormat objOrderVip.balanceUsd "0,0.00"}}<br>
-                                                        THB: {{numFormat objOrderVip.balanceThb "0,0.00"}}
+                                                    <td colspan="9">
+                                                        <table class="rpt" style="width: 100%;">
+                                                            <thead class="rpt-content-header">
+                                                            <tr>
+                                                                <th>N<sup>o</sup></th>
+                                                                <th>Item</th>
+                                                                <th>Qty</th>
+                                                                <th>Order Price</th>
+                                                                <th>Total Amount</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody class="rpt-content-body">
+                                                            {{#each objOrderDetail in objOrderVip.items}}
+                                                                <tr>
+                                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                                            @index}}</td>
+                                                                    <td>{{objOrderDetail.itemName}}</td>
+                                                                    <td>{{objOrderDetail.qty}} {{objOrderDetail.unit}}</td>
+                                                                    <td>{{objOrderDetail.orderPrice}}</td>
+                                                                    <td>{{objOrderDetail.totalAmount}}</td>
+                                                                </tr>
+                                                            {{/each}}
+                                                            </tbody>
+                                                        </table>
                                                     </td>
                                                 </tr>
-                                                {{#if objOrderVip.orderVipPaymentDoc}}
-                                                    <tr class="text-bold">
-                                                        <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment
-                                                            Log :
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="9">
-                                                            <table class="rpt" style="width: 100%;">
-                                                                <thead class="rpt-content-header">
-                                                                <tr>
-                                                                    <th>N<sup>o</sup></th>
-                                                                    <!--<th>ID</th>-->
-                                                                    <th>Paid Date</th>
-                                                                    <th>Employee Id</th>
-                                                                    <th>Due</th>
-                                                                    <th>Paid</th>
-                                                                    <th>Balance</th>
-                                                                    <th>Status</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody class="rpt-content-body">
-                                                                {{#each objOrderVipPayment in
-                                                                        objOrderVip.orderVipPaymentDoc}}
-                                                                    <tr>
-                                                                        <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
-                                                                                @index}}</td>
-                                                                        <!--<td>{{objOrderVipPayment._id}}</td>-->
-                                                                        <td>{{moFormat objOrderVipPayment.paidDate
-                                                                                       "DD/MM/YYYY hh:mm:ss A"}}</td>
-                                                                        <td>{{objOrderVipPayment.employeeId}}</td>
-                                                                        <td>
-                                                                            KHR: {{objOrderVipPayment.dueAmountKhr}}<br>
-                                                                            USD: {{numFormat objOrderVipPayment.dueAmountUsd "0,0.00"}}<br>
-                                                                            THB: {{numFormat objOrderVipPayment.dueAmountThb "0,0.00"}}
-                                                                        </td>
-                                                                        <td>
-                                                                            KHR: {{objOrderVipPayment.paidAmountKhr}}
-                                                                            <br>
-                                                                            USD: {{numFormat objOrderVipPayment.paidAmountUsd "0,0.00"}}
-                                                                            <br>
-                                                                            THB: {{numFormat objOrderVipPayment.paidAmountThb "0,0.00"}}
-                                                                        </td>
-                                                                        <td>
-                                                                            KHR: {{objOrderVipPayment.paymentBalanceKhr}}
-                                                                            <br>
-                                                                            USD: {{numFormat objOrderVipPayment.paymentBalanceUsd "0,0.00"}}
-                                                                            <br>
-                                                                            THB: {{numFormat objOrderVipPayment.paymentBalanceThb "0,0.00"}}
-                                                                        </td>
-                                                                        <td>{{objOrderVipPayment.status}}</td>
-                                                                    </tr>
-                                                                {{/each}}
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                {{/if}}
+                                            {{/if}}
 
-                                            <!--{{/each}}-->
+                                            {{#if objOrderVip.orderVipPaymentDoc}}
+                                                <tr class="text-bold">
+                                                    <td colspan="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment
+                                                        Log :
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="9">
+                                                        <table class="rpt" style="width: 100%;">
+                                                            <thead class="rpt-content-header">
+                                                            <tr>
+                                                                <th>N<sup>o</sup></th>
+                                                                <!--<th>ID</th>-->
+                                                                <th>Paid Date</th>
+                                                                <th>Employee Id</th>
+                                                                <th>Due</th>
+                                                                <th>Paid</th>
+                                                                <th>Balance</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody class="rpt-content-body">
+                                                            {{#each objOrderVipPayment in
+                                                                    objOrderVip.orderVipPaymentDoc}}
+                                                                <tr>
+                                                                    <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{increaseIndex
+                                                                            @index}}</td>
+                                                                    <!--<td>{{objOrderVipPayment._id}}</td>-->
+                                                                    <td>{{moFormat objOrderVipPayment.paidDate
+                                                                                   "DD/MM/YYYY hh:mm:ss A"}}</td>
+                                                                    <td>{{objOrderVipPayment.employeeId}}</td>
+                                                                    <td>
+                                                                        KHR: {{objOrderVipPayment.dueAmountKhr}}<br>
+                                                                        USD: {{numFormat objOrderVipPayment.dueAmountUsd
+                                                                                         "0,0.00"}}<br>
+                                                                        THB: {{numFormat objOrderVipPayment.dueAmountThb
+                                                                                         "0,0.00"}}
+                                                                    </td>
+                                                                    <td>
+                                                                        KHR: {{objOrderVipPayment.paidAmountKhr}}
+                                                                        <br>
+                                                                        USD: {{numFormat
+                                                                            objOrderVipPayment.paidAmountUsd "0,0.00"}}
+                                                                        <br>
+                                                                        THB: {{numFormat
+                                                                            objOrderVipPayment.paidAmountThb "0,0.00"}}
+                                                                    </td>
+                                                                    <td>
+                                                                        KHR: {{objOrderVipPayment.paymentBalanceKhr}}
+                                                                        <br>
+                                                                        USD: {{numFormat
+                                                                            objOrderVipPayment.paymentBalanceUsd
+                                                                            "0,0.00"}}
+                                                                        <br>
+                                                                        THB: {{numFormat
+                                                                            objOrderVipPayment.paymentBalanceThb
+                                                                            "0,0.00"}}
+                                                                    </td>
+                                                                    <td>{{objOrderVipPayment.status}}</td>
+                                                                </tr>
+                                                            {{/each}}
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            {{/if}}
+
+                                                    <!--{{/each}}-->
 
                                         {{/each}}
 

@@ -62,5 +62,20 @@ export const CustomerLogSchema = new SimpleSchema({
             }
         },
         optional: true
+    },
+    mode: {
+        type: String,
+        label: 'Mode',
+        defaultValue: "Simple Mode",
+        autoform: {
+            type: "select2",
+            options: function () {
+                return [
+                    {label: "Simple Mode", value: 'Simple Mode'},
+                    {label: "Detail Mode", value: 'Detail Mode'},
+                ];
+            }
+        },
+        optional: true
     }
 });

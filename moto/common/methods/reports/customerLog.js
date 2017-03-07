@@ -58,6 +58,149 @@ export const customerLogReport = new ValidatedMethod({
                 {
                     $match: selector
                 },
+                // {
+                //     $lookup: {
+                //         from: "moto_customer",
+                //         localField: "customerId",
+                //         foreignField: "_id",
+                //         as: "customerDoc"
+                //     }
+                // },
+                // {
+                //     $unwind: "$customerDoc"
+                // },
+                // {
+                //     $lookup: {
+                //         from: "core_branch",
+                //         localField: "branchId",
+                //         foreignField: "_id",
+                //         as: "branchDoc"
+                //     }
+                // },
+                // {
+                //     $unwind: "$branchDoc"
+                // },
+                // {
+                //     $lookup: {
+                //         from: "moto_orderPayment",
+                //         localField: "_id",
+                //         foreignField: "orderId",
+                //         as: "orderPaymentDoc"
+                //     }
+                // },
+                // {
+                //     $unwind: { path: "$orderPaymentDoc", preserveNullAndEmptyArrays: true }
+                // },
+                // {
+                //     $group: {
+                //         _id: "$_id",
+                //         orderDate: { $last: "$orderDate" },
+                //         branchId: { $last: "$branchId" },
+                //         branchDoc: { $last: "$branchDoc" },
+                //         employeeId: { $last: "$employeeId" },
+                //         customerId: { $last: "$customerId" },
+                //         customerDoc: { $last: "$customerDoc" },
+                //         type: { $last: "$type" },
+                //         items: { $last: "$items" },
+                //         subTotal: { $last: "$subTotal" },
+                //         discountAmount: { $last: "$discountAmount" },
+                //         total: { $last: "$total" },
+                //         lastOrderBalance: { $last: "$lastOrderBalance" },
+                //         realTotal: { $last: "$balance" },
+                //         paid: {
+                //             $sum: {
+                //                 $cond: [{
+                //                     $and: [{ $ne: ["$orderPaymentDoc", null] },
+                //                         { $eq: ["$orderPaymentDoc.status", "Partial"] }
+                //                     ]
+                //                 },
+                //                     "$orderPaymentDoc.paidAmount",
+                //                     0]
+                //             }
+                //         },
+                //         orderPaymentDoc: { $push: "$orderPaymentDoc" }
+                //     }
+                // },
+                // { $sort: { _id: -1 } },
+                // {
+                //     $project: {
+                //         _id: 1,
+                //         orderDate: 1,
+                //         branchId: 1,
+                //         branchDoc: 1,
+                //         employeeId: 1,
+                //         customerId: 1,
+                //         customerDoc: 1,
+                //         type: 1,
+                //         items: 1,
+                //         subTotal: 1,
+                //         discountAmount: 1,
+                //         total: 1,
+                //         lastOrderBalance: 1,
+                //         realTotal: 1,
+                //         paid: 1,
+                //         orderPaymentDoc: 1,
+                //         balance: {
+                //             $subtract: ["$realTotal", "$paid"]
+                //         }
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: {
+                //             branchId: "$branchId"
+                //         },
+                //         branchDoc: { $first: "$branchDoc" },
+                //         subTotal: { $first: "$subTotal" },
+                //         discountAmount: { $first: "$discountAmount" },
+                //         total: { $first: "$total" },
+                //         lastOrderBalance: { $first: "$lastOrderBalance" },
+                //         paid: { $first: "$paid" },
+                //         balance: { $first: "$balance" },
+                //         dataOrder: {$push: "$$ROOT" }
+                //     }
+                // },
+                // {
+                //     $project: {
+                //         _id: 0,
+                //         branchId: "$_id.branchId",
+                //         branchDoc: 1,
+                //         orderDate: 1,
+                //         subTotal: 1,
+                //         discountAmount: 1,
+                //         total: 1,
+                //         lastOrderBalance: 1,
+                //         paid: 1,
+                //         balance: 1,
+                //         dataOrder: 1
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: "$branchId",
+                //         branchDoc: {$last: "$branchDoc"},
+                //         subTotal: {$sum: "$subTotal"},
+                //         discountAmount: {$sum: "$discountAmount"},
+                //         total: {$sum: "$total"},
+                //         lastOrderBalance: {$sum: "$lastOrderBalance"},
+                //         paid: {$sum: "$paid"},
+                //         balance: {$sum: "$balance"},
+                //         dataOrder: {$last: "$dataOrder"}
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: null,
+                //         subTotal: {$sum: "$subTotal"},
+                //         discountAmount: {$sum: "$discountAmount"},
+                //         total: {$sum: "$total"},
+                //         lastOrderBalance: {$sum: "$lastOrderBalance"},
+                //         paid: {$sum: "$paid"},
+                //         balance: {$sum: "$balance"},
+                //         dataBranch: {$push: "$$ROOT"}
+                //     }
+                // }
+
                 {
                     $lookup: {
                         from: "moto_customer",
@@ -121,6 +264,64 @@ export const customerLogReport = new ValidatedMethod({
                         orderPaymentDoc: { $push: "$orderPaymentDoc" }
                     }
                 },
+                {
+                    $unwind: { path: "$items", preserveNullAndEmptyArrays: true }
+                },
+                {
+                    $lookup: {
+                        from: "moto_item",
+                        localField: "items.itemId",
+                        foreignField: "_id",
+                        as: "itemDoc"
+                    }
+                },
+                {
+                    $unwind: { path: "$itemDoc", preserveNullAndEmptyArrays: true }
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        orderDate: { $last: "$orderDate" },
+                        branchId: { $last: "$branchId" },
+                        branchDoc: { $last: "$branchDoc" },
+                        employeeId: { $last: "$employeeId" },
+                        customerId: { $last: "$customerId" },
+                        customerDoc: { $last: "$customerDoc" },
+                        type: { $last: "$type" },
+                        items: {
+                            $push: {
+                                _id: "$items._id",
+                                itemId: "$items.itemId",
+                                itemName: "$itemDoc.name",
+
+                                orderIndex: "$items.orderIndex",
+
+                                secretCode: "$items.secretCode",
+                                qty: "$items.qty",
+                                unit: "$items.unit",
+                                currencyId: "$items.currencyId",
+                                price: "$items.price",
+                                purchasePrice: "$items.purchasePrice",
+                                khrPrice: "$items.khrPrcie",
+                                orderPrice: "$items.orderPrice",
+                                discount: "$items.discount",
+                                discountType: "$items.discountType",
+                                amount: "$items.amount",
+                                totalAmount: "$items.totalAmount"
+                            }
+
+                        },
+                        subTotal: { $last: "$subTotal" },
+                        discountAmount: { $last: "$discountAmount" },
+                        total: { $last: "$total" },
+                        lastOrderBalance: { $last: "$lastOrderBalance" },
+                        realTotal: { $last: "$realTotal" },
+                        paid: {
+                            $last: "$paid"
+                        },
+                        orderPaymentDoc: { $last: "$orderPaymentDoc" }
+                    }
+                },
                 { $sort: { _id: -1 } },
                 {
                     $project: {
@@ -157,7 +358,7 @@ export const customerLogReport = new ValidatedMethod({
                         lastOrderBalance: { $first: "$lastOrderBalance" },
                         paid: { $first: "$paid" },
                         balance: { $first: "$balance" },
-                        dataOrder: {$push: "$$ROOT" }
+                        dataOrder: { $push: "$$ROOT" }
                     }
                 },
                 {
@@ -178,26 +379,26 @@ export const customerLogReport = new ValidatedMethod({
                 {
                     $group: {
                         _id: "$branchId",
-                        branchDoc: {$last: "$branchDoc"},
-                        subTotal: {$sum: "$subTotal"},
-                        discountAmount: {$sum: "$discountAmount"},
-                        total: {$sum: "$total"},
-                        lastOrderBalance: {$sum: "$lastOrderBalance"},
-                        paid: {$sum: "$paid"},
-                        balance: {$sum: "$balance"},
-                        dataOrder: {$last: "$dataOrder"}
+                        branchDoc: { $last: "$branchDoc" },
+                        subTotal: { $sum: "$subTotal" },
+                        discountAmount: { $sum: "$discountAmount" },
+                        total: { $sum: "$total" },
+                        lastOrderBalance: { $sum: "$lastOrderBalance" },
+                        paid: { $sum: "$paid" },
+                        balance: { $sum: "$balance" },
+                        dataOrder: { $last: "$dataOrder" }
                     }
                 },
                 {
                     $group: {
                         _id: null,
-                        subTotal: {$sum: "$subTotal"},
-                        discountAmount: {$sum: "$discountAmount"},
-                        total: {$sum: "$total"},
-                        lastOrderBalance: {$sum: "$lastOrderBalance"},
-                        paid: {$sum: "$paid"},
-                        balance: {$sum: "$balance"},
-                        dataBranch: {$push: "$$ROOT"}
+                        subTotal: { $sum: "$subTotal" },
+                        discountAmount: { $sum: "$discountAmount" },
+                        total: { $sum: "$total" },
+                        lastOrderBalance: { $sum: "$lastOrderBalance" },
+                        paid: { $sum: "$paid" },
+                        balance: { $sum: "$balance" },
+                        dataBranch: { $push: "$$ROOT" }
                     }
                 }
             ])[0];

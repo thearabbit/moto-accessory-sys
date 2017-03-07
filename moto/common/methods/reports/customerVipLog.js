@@ -58,6 +58,247 @@ export const customerVipLogReport = new ValidatedMethod({
                 {
                     $match: selector
                 },
+                // {
+                //     $lookup: {
+                //         from: "moto_customer",
+                //         localField: "customerId",
+                //         foreignField: "_id",
+                //         as: "customerDoc"
+                //     }
+                // },
+                // {
+                //     $unwind: "$customerDoc"
+                // },
+                // {
+                //     $lookup: {
+                //         from: "core_branch",
+                //         localField: "branchId",
+                //         foreignField: "_id",
+                //         as: "branchDoc"
+                //     }
+                // },
+                // {
+                //     $unwind: "$branchDoc"
+                // },
+                // {
+                //     $lookup: {
+                //         from: "moto_orderVipPayment",
+                //         localField: "_id",
+                //         foreignField: "orderVipId",
+                //         as: "orderVipPaymentDoc"
+                //     }
+                // },
+                // {
+                //     $unwind: {path: "$orderVipPaymentDoc", preserveNullAndEmptyArrays: true}
+                // },
+                // {
+                //     $group: {
+                //         _id: "$_id",
+                //         orderDate: {$last: "$orderDate"},
+                //         branchId: {$last: "$branchId"},
+                //         branchDoc: {$last: "$branchDoc"},
+                //         employeeId: {$last: "$employeeId"},
+                //         customerId: {$last: "$customerId"},
+                //         customerDoc: {$last: "$customerDoc"},
+                //         type: {$last: "$type"},
+                //         items: {$last: "$items"},
+                //         subTotal: {$last: "$subTotal"},
+                //         discountAmount: {$last: "$discountAmount"},
+                //         total: {$last: "$total"},
+                //         lastOrderBalance: {$last: "$lastOrderBalanceKhr"},
+                //         realTotalKhr: {$last: "$balanceKhr"},
+                //         paid: {
+                //             $sum: {
+                //                 $cond: [{
+                //                     $and: [{$ne: ["$ordervipPaymentDoc", null]},
+                //                         {$eq: ["$orderVipPaymentDoc.status", "Partial"]}
+                //                     ]
+                //                 },
+                //                     "$orderVipPaymentDoc.paidAmountKhr",
+                //                     0]
+                //             }
+                //         },
+                //         subTotalUsd: {$last: "$subTotalUsd"},
+                //         discountAmountUsd: {$last: "$discountAmountUsd"},
+                //         totalUsd: {$last: "$totalUsd"},
+                //         lastOrderBalanceUsd: {$last: "$lastOrderBalanceUsd"},
+                //         realTotalUsd: {$last: "$balanceUsd"},
+                //         paidUsd: {
+                //             $sum: {
+                //                 $cond: [{
+                //                     $and: [{$ne: ["$ordervipPaymentDoc", null]},
+                //                         {$eq: ["$orderVipPaymentDoc.status", "Partial"]}
+                //                     ]
+                //                 },
+                //                     "$orderVipPaymentDoc.paidAmountUsd",
+                //                     0]
+                //             }
+                //         },
+                //         subTotalThb: {$last: "$subTotalThb"},
+                //         discountAmountThb: {$last: "$discountAmountThb"},
+                //         totalThb: {$last: "$totalThb"},
+                //         lastOrderBalanceThb: {$last: "$lastOrderBalanceThb"},
+                //         realTotalThb: {$last: "$balanceThb"},
+                //         paidThb: {
+                //             $sum: {
+                //                 $cond: [{
+                //                     $and: [{$ne: ["$ordervipPaymentDoc", null]},
+                //                         {$eq: ["$orderVipPaymentDoc.status", "Partial"]}
+                //                     ]
+                //                 },
+                //                     "$orderVipPaymentDoc.paidAmountThb",
+                //                     0]
+                //             }
+                //         },
+                //         orderVipPaymentDoc: {$push: "$orderVipPaymentDoc"}
+                //     }
+                // },
+                // {$sort: {_id : -1}},
+                // {
+                //     $project: {
+                //         _id: 1,
+                //         orderDate: 1,
+                //         branchId: 1,
+                //         branchDoc: 1,
+                //         employeeId: 1,
+                //         customerId: 1,
+                //         customerDoc: 1,
+                //         type: 1,
+                //         items: 1,
+                //         subTotal: 1,
+                //         discountAmount: 1,
+                //         total: 1,
+                //         lastOrderBalance: 1,
+                //         realTotalKhr: 1,
+                //         paid: 1,
+                //         balance: {
+                //             $subtract: ["$realTotalKhr", "$paid"]
+                //         },
+                //         subTotalUsd: 1,
+                //         discountAmountUsd: 1,
+                //         totalUsd: 1,
+                //         lastOrderBalanceUsd: 1,
+                //         realTotalUsd: 1,
+                //         paidUsd: 1,
+                //         balanceUsd: {
+                //             $subtract: ["$realTotalUsd", "$paidUsd"]
+                //         },
+                //         subTotalThb: 1,
+                //         discountAmountThb: 1,
+                //         totalThb: 1,
+                //         lastOrderBalanceThb: 1,
+                //         realTotalThb: 1,
+                //         paidThb: 1,
+                //         balanceThb: {
+                //             $subtract: ["$realTotalThb", "$paidThb"]
+                //         },
+                //         orderVipPaymentDoc: 1
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: {
+                //             branchId: "$branchId"
+                //         },
+                //         branchDoc: {$first: "$branchDoc"},
+                //         subTotal: {$first: "$subTotal"},
+                //         discountAmount: {$first: "$discountAmount"},
+                //         total: {$first: "$total"},
+                //         lastOrderBalance: {$first: "$lastOrderBalance"},
+                //         paid: {$first: "$paid"},
+                //         balance: {$first: "$balance"},
+                //         subTotalUsd: {$first: "$subTotalUsd"},
+                //         discountAmountUsd: {$first: "$discountAmountUsd"},
+                //         totalUsd: {$first: "$totalUsd"},
+                //         lastOrderBalanceUsd: {$first: "$lastOrderBalanceUsd"},
+                //         paidUsd: {$first: "$paidUsd"},
+                //         balanceUsd: {$first: "$balanceUsd"},
+                //         subTotalThb: {$first: "$subTotalThb"},
+                //         discountAmountThb: {$first: "$discountAmountThb"},
+                //         totalThb: {$first: "$totalThb"},
+                //         lastOrderBalanceThb: {$first: "$lastOrderBalanceThb"},
+                //         paidThb: {$first: "$paidThb"},
+                //         balanceThb: {$first: "$balanceThb"},
+                //         dataOrderVip: {$push: "$$ROOT"}
+                //     }
+                // },
+                // {
+                //     $project: {
+                //         _id: 0,
+                //         branchId: "$_id.branchId",
+                //         branchDoc: 1,
+                //         orderDate: 1,
+                //         subTotal: 1,
+                //         discountAmount: 1,
+                //         total: 1,
+                //         lastOrderBalance: 1,
+                //         paid: 1,
+                //         balance: 1,
+                //         subTotalUsd: 1,
+                //         discountAmountUsd: 1,
+                //         totalUsd: 1,
+                //         lastOrderBalanceUsd: 1,
+                //         paidUsd: 1,
+                //         balanceUsd: 1,
+                //         subTotalThb: 1,
+                //         discountAmountThb: 1,
+                //         totalThb: 1,
+                //         lastOrderBalanceThb: 1,
+                //         paidThb: 1,
+                //         balanceThb: 1,
+                //         dataOrderVip: 1
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: "$branchId",
+                //         branchDoc: {$last: "$branchDoc"},
+                //         subTotal: {$sum: "$subTotal"},
+                //         discountAmount: {$sum: "$discountAmount"},
+                //         total: {$sum: "$total"},
+                //         lastOrderBalance: {$sum: "$lastOrderBalance"},
+                //         paid: {$sum: "$paid"},
+                //         balance: {$sum: "$balance"},
+                //         subTotalUsd: {$sum: "$subTotalUsd"},
+                //         discountAmountUsd: {$sum: "$discountAmountUsd"},
+                //         totalUsd: {$sum: "$totalUsd"},
+                //         lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
+                //         paidUsd: {$sum: "$paidUsd"},
+                //         balanceUsd: {$sum: "$balanceUsd"},
+                //         subTotalThb: {$sum: "$subTotalThb"},
+                //         discountAmountThb: {$sum: "$discountAmountThb"},
+                //         totalThb: {$sum: "$totalThb"},
+                //         lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
+                //         paidThb: {$sum: "$paidThb"},
+                //         balanceThb: {$sum: "$balanceThb"},
+                //         dataOrderVip: {$last: "$dataOrderVip"}
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: null,
+                //         subTotal: {$sum: "$subTotal"},
+                //         discountAmount: {$sum: "$discountAmount"},
+                //         total: {$sum: "$total"},
+                //         lastOrderBalance: {$sum: "$lastOrderBalance"},
+                //         paid: {$sum: "$paid"},
+                //         balance: {$sum: "$balance"},
+                //         subTotalUsd: {$sum: "$subTotalUsd"},
+                //         discountAmountUsd: {$sum: "$discountAmountUsd"},
+                //         totalUsd: {$sum: "$totalUsd"},
+                //         lastOrderBalanceUsd: {$sum: "$lastOrderBalanceUsd"},
+                //         paidUsd: {$sum: "$paidUsd"},
+                //         balanceUsd: {$sum: "$balanceUsd"},
+                //         subTotalThb: {$sum: "$subTotalThb"},
+                //         discountAmountThb: {$sum: "$discountAmountThb"},
+                //         totalThb: {$sum: "$totalThb"},
+                //         lastOrderBalanceThb: {$sum: "$lastOrderBalanceThb"},
+                //         paidThb: {$sum: "$paidThb"},
+                //         balanceThb: {$sum: "$balanceThb"},
+                //         dataVipBranch: {$push: "$$ROOT"}
+                //     }
+                // }
+
                 {
                     $lookup: {
                         from: "moto_customer",
@@ -151,6 +392,80 @@ export const customerVipLogReport = new ValidatedMethod({
                             }
                         },
                         orderVipPaymentDoc: {$push: "$orderVipPaymentDoc"}
+                    }
+                },
+                {
+                    $unwind: { path: "$items", preserveNullAndEmptyArrays: true }
+                },
+                {
+                    $lookup: {
+                        from: "moto_item",
+                        localField: "items.itemId",
+                        foreignField: "_id",
+                        as: "itemDoc"
+                    }
+                },
+                {
+                    $unwind: { path: "$itemDoc", preserveNullAndEmptyArrays: true }
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        orderDate: {$last: "$orderDate"},
+                        branchId: {$last: "$branchId"},
+                        branchDoc: {$last: "$branchDoc"},
+                        employeeId: {$last: "$employeeId"},
+                        customerId: {$last: "$customerId"},
+                        customerDoc: {$last: "$customerDoc"},
+                        type: {$last: "$type"},
+                        items: {
+                            $push: {
+                                _id: "$items._id",
+                                itemId: "$items.itemId",
+                                itemName: "$itemDoc.name",
+
+                                orderIndex: "$items.orderIndex",
+
+                                secretCode: "$items.secretCode",
+                                qty: "$items.qty",
+                                unit: "$items.unit",
+                                currencyId: "$items.currencyId",
+                                price: "$items.price",
+                                purchasePrice: "$items.purchasePrice",
+                                khrPrice: "$items.khrPrcie",
+                                orderPrice: "$items.orderPrice",
+                                discount: "$items.discount",
+                                discountType: "$items.discountType",
+                                amount: "$items.amount",
+                                totalAmount: "$items.totalAmount"
+                            }
+
+                        },
+                        subTotal: {$last: "$subTotal"},
+                        discountAmount: {$last: "$discountAmount"},
+                        total: {$last: "$total"},
+                        lastOrderBalance: {$last: "$lastOrderBalanceKhr"},
+                        realTotalKhr: {$last: "$realTotalKhr"},
+                        paid: {
+                            $last: "$paid"
+                        },
+                        subTotalUsd: {$last: "$subTotalUsd"},
+                        discountAmountUsd: {$last: "$discountAmountUsd"},
+                        totalUsd: {$last: "$totalUsd"},
+                        lastOrderBalanceUsd: {$last: "$lastOrderBalanceUsd"},
+                        realTotalUsd: {$last: "$realTotalUsd"},
+                        paidUsd: {
+                            $last: "$paidUsd"
+                        },
+                        subTotalThb: {$last: "$subTotalThb"},
+                        discountAmountThb: {$last: "$discountAmountThb"},
+                        totalThb: {$last: "$totalThb"},
+                        lastOrderBalanceThb: {$last: "$lastOrderBalanceThb"},
+                        realTotalThb: {$last: "$realTotalThb"},
+                        paidThb: {
+                            $last: "$paidThb"
+                        },
+                        orderVipPaymentDoc: {$last: "$orderVipPaymentDoc"}
                     }
                 },
                 {$sort: {_id : -1}},
