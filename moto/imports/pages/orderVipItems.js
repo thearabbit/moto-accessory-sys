@@ -382,7 +382,7 @@ newTmpl.onCreated(function () {
         }
 
         //key press for save
-        if( e.which === 83 && e.shiftKey ) {
+        if( e.which === 45) {
             $('.js-save').click();
             event.stopPropagation();
             return false;
@@ -706,7 +706,7 @@ editTmpl.onCreated(function () {
         }
 
         //key press for save
-        if( e.which === 83 && e.shiftKey ) {
+        if( e.which === 45) {
             $('.js-save').click();
             event.stopPropagation();
             return false;
