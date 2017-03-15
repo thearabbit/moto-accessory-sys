@@ -103,7 +103,8 @@ export const lookupOrderVip = new ValidatedMethod({
 
                         },
                         closedDate: 1,
-                        printId: 1
+                        printId: 1,
+                        convertCurrency: 1
                     }
                 },
                 {
@@ -139,7 +140,7 @@ export const lookupOrderVip = new ValidatedMethod({
                                 orderIndex: "$items.orderIndex",
                                 itemId: "$items.itemId",
                                 itemName: "$itemName",
-                                secretCode:"$items.secretCode",
+                                secretCode: "$items.secretCode",
                                 currencyId: "$items.currencyId",
                                 itemCurrency: "$itemCurrency",
                                 qty: "$items.qty",
@@ -156,7 +157,8 @@ export const lookupOrderVip = new ValidatedMethod({
                             }
                         },
                         closedDate: {$last: "$closedDate"},
-                        printId: {$last: "$printId"}
+                        printId: {$last: "$printId"},
+                        convertCurrency: {$last: "$convertCurrency"}
                     }
                 }
             ]);

@@ -421,6 +421,21 @@ OrderVip.schema = new SimpleSchema({
         type: String,
         optional: true
     },
+    convertCurrency: {
+        type: String,
+        label: 'Convert Currency',
+        optional: true,
+        defaultValue: "inActive",
+        autoform: {
+            type: "select",
+            options: function () {
+                return [
+                    {label: "Normal", value: "inActive"},
+                    {label: "KHR & THB > USD", value: "active"}
+                ];
+            }
+        }
+    },
     branchId: {
         type: String
     }

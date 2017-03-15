@@ -11,7 +11,6 @@ import {$} from 'meteor/jquery';
 import {TAPi18n} from 'meteor/tap:i18n';
 import {ReactiveTable} from 'meteor/aslagle:reactive-table';
 import {round2} from 'meteor/theara:round2';
-import fx from "money";
 
 // Lib
 import {createNewAlertify} from '../../../core/client/libs/create-new-alertify.js';
@@ -30,8 +29,6 @@ import '../../../core/client/components/form-footer.js';
 // Method
 import {lookupItem} from '../../common/methods/lookupItem.js';
 
-// Collection
-
 // Page
 import './orderVipItems.html';
 import {OrderVipItemsSchema} from "../../common/collections/orderVipItems";
@@ -44,6 +41,10 @@ let indexTmpl = Template.Moto_orderVipItems,
 
 // Local collection
 let itemsCollection;
+
+// convert Khr & Thb currency to Usd currency
+let totalKhrConvertToUsd = new ReactiveVar(0),
+    totalThbConvertToUsd = new ReactiveVar(0);
 
 // Index
 indexTmpl.onCreated(function () {
@@ -181,6 +182,10 @@ indexTmpl.helpers({
             }
         });
 
+        if (Session.get('convertCurrency') == "active") {
+            return 0;
+        }
+
         return total;
     },
     total: function () {
@@ -204,24 +209,47 @@ indexTmpl.helpers({
         });
 
         Session.set('total', roundKhrCurrency(total - discountAmount));
+
+        Meteor.call('convertCurrencyToUsd', {
+            amount: roundKhrCurrency(total - discountAmount),
+            currencyId: "KHR"
+        }, (err, result)=> {
+            if (result) {
+                totalKhrConvertToUsd.set(result);
+            }
+        });
+
+        if (Session.get('convertCurrency') == "active") {
+            return 0;
+        }
+
         return roundKhrCurrency(total - discountAmount);
     },
     subTotalUsd: function () {
         let total = 0;
         let getItems = itemsCollection.find();
+        let calculate = 0;
+
         getItems.forEach((obj) => {
             if (obj.currencyId == "USD") {
                 total += round2(obj.totalAmount, 2);
             }
         });
 
-        return total;
+        if (Session.get('convertCurrency') == "active") {
+            calculate = total + totalKhrConvertToUsd.get() + totalThbConvertToUsd.get();
+            return round2(calculate, 2);
+        }
+
+        return round2(total, 2);
     },
     totalUsd: function () {
         const instance = Template.instance();
         let total = 0;
         let getItems = itemsCollection.find();
         let discountAmountUsd = 0;
+        let calculate = 0;
+
         if (_.isNull(instance.discountAmountUsd.get()) || _.isUndefined(instance.discountAmountUsd.get())) {
             discountAmountUsd = 0;
         } else if (instance.discountAmountUsd.get()) {
@@ -236,6 +264,13 @@ indexTmpl.helpers({
             }
         });
 
+        if (Session.get('convertCurrency') == "active") {
+            calculate = (total - discountAmountUsd) + totalKhrConvertToUsd.get() + totalThbConvertToUsd.get();
+            Session.set('totalUsd', round2(calculate, 2));
+
+            return round2(calculate, 2);
+        }
+
         Session.set('totalUsd', round2(total - discountAmountUsd, 2));
         return round2(total - discountAmountUsd, 2);
     },
@@ -247,6 +282,10 @@ indexTmpl.helpers({
                 total += round2(obj.totalAmount, 2);
             }
         });
+
+        if (Session.get('convertCurrency') == "active") {
+            return 0;
+        }
 
         return total;
     },
@@ -269,6 +308,19 @@ indexTmpl.helpers({
                 total += obj.totalAmount;
             }
         });
+
+        Meteor.call('convertCurrencyToUsd', {
+            amount: round2(total - discountAmountThb, 2),
+            currencyId: "THB"
+        }, (err, result)=> {
+            if (result) {
+                totalThbConvertToUsd.set(result);
+            }
+        });
+
+        if (Session.get('convertCurrency') == "active") {
+            return 0;
+        }
 
         Session.set('totalThb', round2(total - discountAmountThb, 2));
         return round2(total - discountAmountThb, 2);
@@ -382,7 +434,7 @@ newTmpl.onCreated(function () {
         }
 
         //key press for save
-        if( e.which === 45) {
+        if (e.which === 45) {
             $('.js-save').click();
             event.stopPropagation();
             return false;
@@ -513,6 +565,11 @@ newTmpl.events({
             }).catch((err) => {
                 console.log(err.message);
             });
+
+            Session.set('convertCurrency' , null);
+            totalKhrConvertToUsd.set(0);
+            totalThbConvertToUsd.set(0);
+            $('[name="convertCurrency"]').val('');
         } else {
             instance.price.set(0);
             instance.khrPrice.set(0);
@@ -522,6 +579,7 @@ newTmpl.events({
         // Clear
         // instance.$('[name="qty"]').val(1);
         instance.qty.set(null);
+
 
         //animate for member
         $('#animation').removeClass().addClass('animated bounceIn').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
@@ -652,6 +710,12 @@ newTmpl.events({
     }
 });
 
+newTmpl.onDestroyed(function () {
+    //clear reactiveVar
+    totalKhrConvertToUsd.set(null);
+    totalThbConvertToUsd.set(null);
+});
+
 // Edit
 editTmpl.onCreated(function () {
     this.itemId = new ReactiveVar();
@@ -696,7 +760,7 @@ editTmpl.onCreated(function () {
                 // return false;
             }
             // double keypress `
-            if (e.keyCode == 192 && count == 2 || e.keyCode == 226 && count == 2 ) {
+            if (e.keyCode == 192 && count == 2 || e.keyCode == 226 && count == 2) {
                 $('.itemIdEdit').select2('open');
             }
 
@@ -706,7 +770,7 @@ editTmpl.onCreated(function () {
         }
 
         //key press for save
-        if( e.which === 45) {
+        if (e.which === 45) {
             $('.js-save').click();
             event.stopPropagation();
             return false;
@@ -732,7 +796,7 @@ editTmpl.helpers({
     },
     orderPrice: function () {
         const instance = Template.instance();
-        let result,currencyId = instance.currencyId.get(), exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType');
+        let result, currencyId = instance.currencyId.get(), exchangeDoc = Session.get('exchangeDoc'), customerType = Session.get('customerType');
 
         if (customerType == "Vip") {
             result = instance.price.get();
@@ -749,7 +813,7 @@ editTmpl.helpers({
     },
     amount: function () {
         const instance = Template.instance();
-        let amount,tmpAmount, currencyId = instance.currencyId.get(), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
+        let amount, tmpAmount, currencyId = instance.currencyId.get(), customerType = Session.get('customerType'), orderPrice = instance.orderPrice.get();
 
         if (customerType == "Vip") {
             amount = instance.qty.get() * instance.price.get();

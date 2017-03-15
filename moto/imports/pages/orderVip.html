@@ -45,29 +45,30 @@
                         resetOnSuccess=false}}
                 <div class="row">
                     <!--<div class="col-md-3">-->
-                        <!--<form>-->
-                            <!--<div class="form-group">-->
-                                <!--<label for="exampleInputEmail1">Image</label>-->
-                                <!--<div id="animation">-->
-                                    <!--<img src="{{image}}" class="img-thumbnail custom-image img-responsive">-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</form>-->
+                    <!--<form>-->
+                    <!--<div class="form-group">-->
+                    <!--<label for="exampleInputEmail1">Image</label>-->
+                    <!--<div id="animation">-->
+                    <!--<img src="{{image}}" class="img-thumbnail custom-image img-responsive">-->
                     <!--</div>-->
-                    <div class="col-md-9">
+                    <!--</div>-->
+                    <!--</form>-->
+                    <!--</div>-->
+                    <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 {{> afQuickField name="orderDate"}}
                                 {{> afQuickField type="hidden" name="customerType"}}
                                 {{> afFieldInput type="hidden" name="printId"}}
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group{{#if afFieldIsInvalid name='employeeId'}} has-error{{/if}}"
                                      data-required="true">
                                     <label class="control-label" for="employeeId">Employee</label>
                                     <div class="input-group select2-bootstrap-append">
                                         <span class="input-group-btn">
-                                           <a href="#" class="employeeAddOn btn btn-flat btn-default" style="margin-top: -4px;">
+                                           <a href="#" class="employeeAddOn btn btn-flat btn-default"
+                                              style="margin-top: -4px;">
                                                {{fa "plus-square"}}
                                            </a>
                                         </span>
@@ -78,9 +79,12 @@
                                     {{/if}}
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                {{> afQuickField name="des" value=description}}
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group{{#if afFieldIsInvalid
                                                             name='customerId'}} has-error{{/if}}"
                                      data-required="true">
@@ -109,7 +113,7 @@
                                     {{/if}}
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <div class="row">
                                     <div class="col-md-4">
                                         {{> afQuickField name="lastOrderBalanceKhr" value=lastOrderBalanceKhr readOnly=true}}
@@ -122,6 +126,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                {{> afQuickField name="convertCurrency"}}
+                            </div>
                         </div>
 
                         <div class="row">
@@ -130,9 +137,6 @@
                             </div>
                         </div>
 
-                    </div>
-                    <div class="col-md-3">
-                        {{> afQuickField name="des" value=description}}
                         {{> afQuickField type="hidden" name="branchId" value=currentBranch}}
                     </div>
                 </div>
@@ -150,10 +154,12 @@
                                             <button type="submit" class="btn btn-primary js-save" {{disabledSubmitBtn}}>
                                                 <i class="fa fa-floppy-o"></i> {{_ "form.btnSave"}}
                                             </button>
-                                            <button type="submit" class="btn bg-olive js-save-and-payment" {{disabledSubmitBtn}}>
+                                            <button type="submit"
+                                                    class="btn bg-olive js-save-and-payment" {{disabledSubmitBtn}}>
                                                 <i class="fa fa-star"></i> Save & Payment
                                             </button>
-                                            <button type="submit" class="btn bg-orange js-save-and-print" {{disabledSubmitBtn}}>
+                                            <button type="submit"
+                                                    class="btn bg-orange js-save-and-print" {{disabledSubmitBtn}}>
                                                 <i class="fa fa-print"></i> Save & Print
                                             </button>
                                             <button type="reset" class="btn btn-default">
