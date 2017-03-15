@@ -187,6 +187,7 @@ formTmpl.onCreated(function () {
                 self.orderVipDoc.set(result);
                 self.isLoading.set(false);
                 Session.set('updateType', "work");
+                Session.set('convertCurrency', result.convertCurrency);
             }).catch((err) => {
                 console.log(err);
             });
@@ -224,7 +225,6 @@ formTmpl.helpers({
         let currentData = Template.currentData();
         if (currentData) {
             data.formType = 'update';
-
             data.doc = Template.instance().orderVipDoc.get();
 
             Session.set('discountAmountUpdate', data.doc.discountAmount);
@@ -357,6 +357,10 @@ formTmpl.events({
     },
     'click .employeeAddOn': function (e, t) {
         alertify.employeeAddOn(fa("plus", "Employee"), renderTemplate(Template.Moto_employeeForm));
+    },
+    'change [name="convertCurrency"]': function (event, instance) {
+        let convertCurrency = event.currentTarget.value;
+        Session.set('convertCurrency', convertCurrency);
     }
 });
 
@@ -379,6 +383,7 @@ formTmpl.onDestroyed(function () {
     Session.set('employeeIdForSaveAndPayment', null);
     Session.set('lastIndex', null);
     Session.set('updateType', null);
+    Session.set('convertCurrency', null);
     $(document).off('keyup');
 });
 
