@@ -338,7 +338,7 @@ indexTmpl.events({
         alertify.item(fa('pencil', 'Items'), renderTemplate(editTmpl, this));
     },
     'click .js-destroy-item': function (event, instance) {
-        destroyAction(
+        destroyActionCustom(
             itemsCollection,
             {_id: this._id},
             {title: 'Items', itemTitle: this.itemId}
@@ -566,7 +566,7 @@ newTmpl.events({
                 console.log(err.message);
             });
 
-            Session.set('convertCurrency' , null);
+            Session.set('convertCurrency', null);
             totalKhrConvertToUsd.set(0);
             totalThbConvertToUsd.set(0);
             $('[name="convertCurrency"]').val('');
@@ -1016,3 +1016,42 @@ let hooksObject = {
     }
 };
 AutoForm.addHooks(['Moto_orderVipItemsEdit'], hooksObject);
+
+// remove item and clear totalKhrConvertToUsd & totalThbConvertToUsd session
+function destroyActionCustom(collection, selector = {}, options = {}){
+    check(collection, Mongo.Collection);
+    check(selector, Object);
+    check(options, Object);
+
+    _.defaults(options, {
+        title: 'Delete',
+        itemTitle: 'this item',
+        successMsg: null,
+        errorMsg: null,
+        i18n: true
+    });
+
+    swal({
+        title: 'Are you sure?',
+        text: `You won't be able to revert this <span class="text-red text-bold">[${options.itemTitle}]</span>!`,
+        type: 'warning',
+        allowEscapeKey: false,
+        allowOutsideClick: true,
+        showCloseButton: true,
+        showConfirmButton: true,
+        confirmButtonColor: "#dd4b39",
+        confirmButtonText: 'Yes, delete it!',
+        showCancelButton: true
+    }).then(function () {
+        collection.remove(selector, function (error) {
+            if (error) {
+                // sAlert.error(options.errorMsg ? options.errorMsg : error.message);
+                displayError(options.errorMsg, options.i18n);
+            } else {
+                displaySuccess(`Your doc <span class="text-red">[${options.itemTitle}]</span> has been deleted`);
+                totalKhrConvertToUsd.set(null);
+                totalThbConvertToUsd.set(null);
+            }
+        });
+    }).done();
+};
