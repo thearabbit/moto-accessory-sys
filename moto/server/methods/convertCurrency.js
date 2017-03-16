@@ -10,10 +10,9 @@ import {Exchange} from '../../../core/common/collections/exchange.js';
 
 Meteor.methods({
     convertCurrencyToUsd({amount, currencyId}) {
-
         let exchangeDoc = Exchange.findOne({}, {sort: {exDate: -1}}), result;
 
-        fx.base = exchangeDoc.base;
+        fx.base = "USD";
         fx.rates = exchangeDoc.rates;
 
         result = fx.convert(amount, {
@@ -22,6 +21,5 @@ Meteor.methods({
         });
 
         return result;
-
     }
 });
