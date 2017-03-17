@@ -32,15 +32,6 @@ OrderVip.before.insert(function (userId, doc) {
 // });
 
 OrderVip.after.update(function (userId, doc) {
-
-    if (doc.discountAmount == null) {
-        doc.discountAmount = 0;
-    } else if (doc.discountAmountUsd == null) {
-        doc.discountAmountUsd = 0;
-    } else if (doc.discountAmountThb == null) {
-        doc.discountAmountThb = 0;
-    }
-
     let balanceKhr = doc.total + doc.lastOrderBalanceKhr;
     let balanceUsd = doc.totalUsd + doc.lastOrderBalanceUsd;
     let balanceThb = doc.totalThb + doc.lastOrderBalanceThb;

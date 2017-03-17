@@ -243,8 +243,9 @@ indexTmpl.events({
         );
     },
     'keyup [name="discountAmount"]': function (event, instance) {
-        let discountAmount = event.currentTarget.value;
-        instance.discountAmount.set(discountAmount);
+        let discountAmount = event.currentTarget.value , result;
+        result = discountAmount == null ? 0 : discountAmount ;
+        instance.discountAmount.set(result);
     },
     'click .purchasePrice': function (event, instance) {
         instance.purchasePriceHideAndShow.set('show');
