@@ -245,7 +245,6 @@ indexTmpl.events({
     'keyup [name="discountAmount"]': function (event, instance) {
         let discountAmount = event.currentTarget.value , result;
         result = discountAmount == null ? 0 : discountAmount ;
-console.log(result);
         instance.discountAmount.set(result);
     },
     'click .purchasePrice': function (event, instance) {
