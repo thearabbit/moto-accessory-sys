@@ -362,16 +362,19 @@ indexTmpl.events({
         );
     },
     'keyup [name="discountAmount"]': function (event, instance) {
-        let discountAmount = event.currentTarget.value;
-        instance.discountAmount.set(discountAmount);
+        let discountAmount = event.currentTarget.value , result;
+        result = discountAmount == null ? 0 : discountAmount;
+        instance.discountAmount.set(result);
     },
     'keyup [name="discountAmountUsd"]': function (event, instance) {
-        let discountAmountUsd = event.currentTarget.value;
-        instance.discountAmountUsd.set(discountAmountUsd);
+        let discountAmountUsd = event.currentTarget.value ,resultUsd;
+        resultUsd = discountAmountUsd == null ? 0 : discountAmountUsd;
+        instance.discountAmountUsd.set(resultUsd);
     },
     'keyup [name="discountAmountThb"]': function (event, instance) {
-        let discountAmountThb = event.currentTarget.value;
-        instance.discountAmountThb.set(discountAmountThb);
+        let discountAmountThb = event.currentTarget.value , resultThb;
+        resultThb = discountAmountThb == null ? 0 : discountAmountThb;
+        instance.discountAmountThb.set(resultThb);
     },
     'click .purchasePrice': function (event, instance) {
         instance.purchasePriceHideAndShow.set('show');

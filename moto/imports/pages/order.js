@@ -60,8 +60,6 @@ indexTmpl.onCreated(function () {
     createNewAlertify('employeeAddOn', {size: 'sm'});
     this.subscribe('moto.orderPayment');
     this.subscribe('moto.exchange');
-
-
 });
 
 indexTmpl.helpers({

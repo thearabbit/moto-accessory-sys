@@ -13,11 +13,6 @@ Order.before.insert(function (userId, doc) {
 });
 
 Order.after.update(function (userId, doc) {
-
-    if (doc.discountAmount == null) {
-        doc.discountAmount = 0;
-    }
-
     let balance = doc.total + doc.lastOrderBalance;
     Order.direct.update({_id: doc._id}, {$set: {balance: balance}});
 });
